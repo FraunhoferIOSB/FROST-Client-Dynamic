@@ -63,9 +63,9 @@ import java.util.List;
  */
 public class SensorThingsMultiDatastreamV11 {
 
-    private static final String NAME_MULTI_DATASTREAM = "MultiDatastream";
-    private static final String NAME_MULTI_DATASTREAMS = "MultiDatastreams";
-    private static final String NAME_MULTIOBSERVATIONDATATYPES = "multiObservationDataTypes";
+    public static final String NAME_MULTI_DATASTREAM = "MultiDatastream";
+    public static final String NAME_MULTI_DATASTREAMS = "MultiDatastreams";
+    public static final String NAME_MULTIOBSERVATIONDATATYPES = "multiObservationDataTypes";
 
     public static final EntityPropertyMain<List<String>> EP_MULTIOBSERVATIONDATATYPES = new EntityPropertyMain<>(NAME_MULTIOBSERVATIONDATATYPES, new TypeSimpleSet(EDM_STRING, TYPE_REFERENCE_LIST_STRING));
     public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeSimpleSet(SensorThingsSensingV11.ept_Uom, TYPE_REFERENCE_LIST_UOM));
