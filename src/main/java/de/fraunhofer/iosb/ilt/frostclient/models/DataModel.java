@@ -20,40 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.json;
+package de.fraunhofer.iosb.ilt.frostclient.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import de.fraunhofer.iosb.ilt.frostclient.json.serialize.MomentSerializer;
-import net.time4j.Moment;
+import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 
 /**
- * A mapper handler for simple json serialisations.
+ * The interface for classes that implement a data model.
  */
-public class SimpleJsonMapper {
-
-    private static ObjectMapper simpleObjectMapper;
-
-    private SimpleJsonMapper() {
-        // Utility class.
-    }
+public interface DataModel {
 
     /**
-     * get an ObjectMapper for generic, non-STA use.
+     * Initialise the data model in the given ModelRegistry.
      *
-     * @return an ObjectMapper for generic, non-STA use.
+     * @param mrSensing The ModelRegistry to initialise the data model in.
      */
-    public static ObjectMapper getSimpleObjectMapper() {
-        if (simpleObjectMapper == null) {
-            SimpleModule module = new SimpleModule();
-            module.addSerializer(Moment.class, new MomentSerializer());
-            simpleObjectMapper = new ObjectMapper()
-                    .setSerializationInclusion(JsonInclude.Include.ALWAYS)
-                    .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                    .registerModule(module);
-        }
-        return simpleObjectMapper;
-    }
+    public void init(ModelRegistry mrSensing);
+
+    /**
+     * Check if the model is initialised.
+     *
+     * @return true if initialised.
+     */
+    public boolean isInitialised();
 }

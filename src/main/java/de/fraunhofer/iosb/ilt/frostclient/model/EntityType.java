@@ -25,6 +25,8 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyAbstract;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -156,10 +158,26 @@ public class EntityType implements Comparable<EntityType> {
         return null;
     }
 
+    public NavigationPropertyEntity getNavigationPropertyEntity(String name) {
+        Property property = propertiesByName.get(name);
+        if (property instanceof NavigationPropertyEntity npe) {
+            return npe;
+        }
+        return null;
+    }
+
+    public NavigationPropertyEntitySet getNavigationPropertySet(String name) {
+        Property property = propertiesByName.get(name);
+        if (property instanceof NavigationPropertyEntitySet npes) {
+            return npes;
+        }
+        return null;
+    }
+
     public NavigationPropertyAbstract getNavigationProperty(String name) {
         Property property = propertiesByName.get(name);
-        if (property instanceof NavigationPropertyAbstract navigationPropertyMain) {
-            return navigationPropertyMain;
+        if (property instanceof NavigationPropertyAbstract npa) {
+            return npa;
         }
         return null;
     }

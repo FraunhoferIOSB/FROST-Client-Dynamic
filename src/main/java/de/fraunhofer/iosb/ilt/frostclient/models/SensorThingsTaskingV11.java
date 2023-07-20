@@ -37,9 +37,9 @@ import de.fraunhofer.iosb.ilt.swe.common.complex.DataRecord;
 import java.util.Map;
 
 /**
- *
+ * The Data Model implements the SensorThings Tasking extension.
  */
-public class SensorThingsTaskingV11 {
+public class SensorThingsTaskingV11 implements DataModel {
 
     private static final String NAME_ACTUATOR = "Actuator";
     private static final String NAME_ACTUATORS = "Actuators";
@@ -68,14 +68,18 @@ public class SensorThingsTaskingV11 {
     public final EntityType etTask = new EntityType(NAME_TASK, NAME_TASKS);
     public final EntityType etTaskingCapability = new EntityType(NAME_TASKING_CAPABILITY, NAME_TASKING_CAPABILITIES);
 
-    public final ModelRegistry mr;
+    private ModelRegistry mr;
 
-    public SensorThingsTaskingV11(SensorThingsSensingV11 modelSensing) {
-        this(modelSensing.getModelRegistry());
+    public SensorThingsTaskingV11() {
     }
 
-    public SensorThingsTaskingV11(ModelRegistry mrSensing) {
-        this.mr = mrSensing;
+    @Override
+    public final void init(ModelRegistry modelRegistry) {
+        if (this.mr != null) {
+            throw new IllegalArgumentException("Already initialised.");
+        }
+        this.mr = modelRegistry;
+
         mr.registerEntityType(etActuator);
         mr.registerEntityType(etTask);
         mr.registerEntityType(etTaskingCapability);
@@ -106,6 +110,11 @@ public class SensorThingsTaskingV11 {
                 .registerProperty(npTaskcapThing);
 
         mr.getEntityTypeForName(SensorThingsSensingV11.NAME_THING).registerProperty(npThingTaskingcapabilities);
+    }
+
+    @Override
+    public boolean isInitialised() {
+        return mr != null;
     }
 
     public ModelRegistry getModelRegistry() {

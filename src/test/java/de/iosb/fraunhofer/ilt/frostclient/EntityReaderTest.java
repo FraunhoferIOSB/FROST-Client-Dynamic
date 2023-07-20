@@ -59,8 +59,8 @@ public class EntityReaderTest {
     @BeforeEach
     public void setUp() throws MalformedURLException {
         modelSensing = new SensorThingsSensingV11();
-        modelTasking = new SensorThingsTaskingV11(modelSensing);
-        service = new SensorThingsService(modelTasking.getModelRegistry(), new URL("http://localhost:8080/FROST-Server/v1.0"));
+        modelTasking = new SensorThingsTaskingV11();
+        service = new SensorThingsService(new URL("http://localhost:8080/FROST-Server/v1.0"), modelSensing, modelTasking);
     }
 
     @Test

@@ -59,9 +59,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * The Data Model implements the SensorThings MultiDatastream extension.
  */
-public class SensorThingsMultiDatastreamV11 {
+public class SensorThingsMultiDatastreamV11 implements DataModel {
 
     public static final String NAME_MULTI_DATASTREAM = "MultiDatastream";
     public static final String NAME_MULTI_DATASTREAMS = "MultiDatastreams";
@@ -84,14 +84,18 @@ public class SensorThingsMultiDatastreamV11 {
 
     public final EntityType etMultiDatastream = new EntityType(NAME_MULTI_DATASTREAM, NAME_MULTI_DATASTREAMS);
 
-    public final ModelRegistry mr;
+    private ModelRegistry mr;
 
-    public SensorThingsMultiDatastreamV11(SensorThingsSensingV11 modelSensing) {
-        this(modelSensing.getModelRegistry());
+    public SensorThingsMultiDatastreamV11() {
     }
 
-    public SensorThingsMultiDatastreamV11(ModelRegistry mrSensing) {
-        this.mr = mrSensing;
+    @Override
+    public final void init(ModelRegistry modelRegistry) {
+        if (this.mr != null) {
+            throw new IllegalArgumentException("Already initialised.");
+        }
+        this.mr = modelRegistry;
+
         mr.registerEntityType(etMultiDatastream);
 
         etMultiDatastream
@@ -121,6 +125,11 @@ public class SensorThingsMultiDatastreamV11 {
                 .registerProperty(npObservationMultidatastream);
     }
 
+    @Override
+    public boolean isInitialised() {
+        return mr != null;
+    }
+
     public ModelRegistry getModelRegistry() {
         return mr;
     }
@@ -135,8 +144,12 @@ public class SensorThingsMultiDatastreamV11 {
     }
 
     public Entity newMultiDatastream(String name, String description, UnitOfMeasurement... uoms) {
+        return newMultiDatastream(name, description, Arrays.asList(uoms));
+    }
+
+    public Entity newMultiDatastream(String name, String description, List<UnitOfMeasurement> uoms) {
         List<String> obsTypes = new ArrayList<>();
-        for (int i = 0; i < uoms.length; i++) {
+        for (int i = 0; i < uoms.size(); i++) {
             obsTypes.add(Constants.OM_MEASUREMENT);
         }
         return newMultiDatastream()
@@ -144,7 +157,7 @@ public class SensorThingsMultiDatastreamV11 {
                 .setProperty(EP_DESCRIPTION, description)
                 .setProperty(EP_OBSERVATIONTYPE, Constants.OM_COMPLEXOBSERVATION)
                 .setProperty(EP_MULTIOBSERVATIONDATATYPES, obsTypes)
-                .setProperty(EP_UNITOFMEASUREMENTS, Arrays.asList(uoms));
+                .setProperty(EP_UNITOFMEASUREMENTS, uoms);
     }
 
     public Entity newObservation() {

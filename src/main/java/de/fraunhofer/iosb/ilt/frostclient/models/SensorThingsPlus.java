@@ -44,11 +44,12 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import java.util.Map;
 
 /**
  *
  */
-public class SensorThingsPlus {
+public class SensorThingsPlus implements DataModel {
 
     private static final String NAME_GROUP = "Group";
     private static final String NAME_GROUPS = "Groups";
@@ -84,8 +85,8 @@ public class SensorThingsPlus {
 
     public static final EntityPropertyMain<String> EP_AUTHID = new EntityPropertyMain<>(NAME_AUTHID, EDM_STRING);
     public static final EntityPropertyMain<String> EP_CLASSIFICATION = new EntityPropertyMain<>(NAME_CLASSIFICATION, EDM_STRING);
-    public static final EntityPropertyMain<String> EP_DEFINITION = new EntityPropertyMain<>(NAME_EP_DEFINITION, EDM_STRING);
-    public static final EntityPropertyMain<String> EP_DESCRIPTION = new EntityPropertyMain<>(NAME_EP_DESCRIPTION, EDM_STRING);
+    public static final EntityPropertyMain<String> EP_DEFINITION = SensorThingsSensingV11.EP_DEFINITION;
+    public static final EntityPropertyMain<String> EP_DESCRIPTION = SensorThingsSensingV11.EP_DESCRIPTION;
     public static final EntityPropertyMain<String> EP_DISPLAYNAME = new EntityPropertyMain<>(NAME_DISPLAYNAME, EDM_STRING);
     public static final EntityPropertyMain<String> EP_PURPOSE = new EntityPropertyMain<>(NAME_PURPOSE, EDM_STRING);
     public static final EntityPropertyMain<String> EP_ROLE = new EntityPropertyMain<>(NAME_ROLE, EDM_STRING);
@@ -94,8 +95,8 @@ public class SensorThingsPlus {
     public static final EntityPropertyMain<String> EP_CREATION_TIME = new EntityPropertyMain<>(NAME_CREATION_TIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<String> EP_TERMS_OF_USE = new EntityPropertyMain<>(NAME_TERMS_OF_USE, EDM_STRING);
     public static final EntityPropertyMain<String> EP_PRIVACY_POLICY = new EntityPropertyMain<>(NAME_PRIVACY_POLICY, EDM_STRING);
-    public static final EntityPropertyMain<String> EP_DATA_QUALITY = new EntityPropertyMain<>(NAME_DATA_QUALITY, STA_MAP);
-    public static final EntityPropertyMain<String> EP_PROPERTIES = new EntityPropertyMain<>(NAME_PROPERTIES, STA_MAP);
+    public static final EntityPropertyMain<Map<String,Object>> EP_DATA_QUALITY = new EntityPropertyMain<>(NAME_DATA_QUALITY, STA_MAP);
+    public static final EntityPropertyMain<Map<String,Object>> EP_PROPERTIES = SensorThingsSensingV11.EP_PROPERTIES;
     public static final EntityPropertyMain<String> EP_LOGO = new EntityPropertyMain<>(NAME_LOGO, EDM_STRING);
     public static final EntityPropertyMain<String> EP_ATTRIBUTION_TEXT = new EntityPropertyMain<>(NAME_ATTRIBUTION_TEXT, EDM_STRING);
     public static final EntityPropertyMain<String> EP_URL = new EntityPropertyMain<>(NAME_URL, EDM_STRING);
@@ -155,14 +156,17 @@ public class SensorThingsPlus {
     public final EntityType etProject = new EntityType(NAME_PROJECT, NAME_PROJECTS);
     public final EntityType etRelation = new EntityType(NAME_RELATION, NAME_RELATIONS);
 
-    public final ModelRegistry mr;
+    private ModelRegistry mr;
 
-    public SensorThingsPlus(SensorThingsSensingV11 modelSensing) {
-        this(modelSensing.getModelRegistry());
+    public SensorThingsPlus() {
     }
 
-    public SensorThingsPlus(ModelRegistry mrSensing) {
-        this.mr = mrSensing;
+    @Override
+    public final void init(ModelRegistry modelRegistry) {
+        if (this.mr != null) {
+            throw new IllegalArgumentException("Already initialised.");
+        }
+        this.mr = modelRegistry;
 
         final EntityType etDatastream = mr.getEntityTypeForName(NAME_DATASTREAM);
         final EntityType etThing = mr.getEntityTypeForName(NAME_THING);
@@ -253,8 +257,10 @@ public class SensorThingsPlus {
                 .registerProperty(npGroupsObservation)
                 .registerProperty(npSubjectsObservation)
                 .registerProperty(npObjectsObservation);
+
         etThing
                 .registerProperty(npPartyThing);
+
         etDatastream
                 .registerProperty(npLicenseDatastream)
                 .registerProperty(npPartyDatastream)
@@ -267,6 +273,11 @@ public class SensorThingsPlus {
                     .registerProperty(npPartyMultiDatastream)
                     .registerProperty(npProjectsMultiDatastream);
         }
+    }
+
+    @Override
+    public boolean isInitialised() {
+        return mr != null;
     }
 
     public ModelRegistry getModelRegistry() {

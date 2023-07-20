@@ -31,6 +31,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
+import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
@@ -39,7 +40,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -61,6 +64,7 @@ public class SensorThingsService {
      */
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SensorThingsService.class);
 
+    private Map<Class<? extends DataModel>, DataModel> dataModels = new HashMap<>();
     private final ModelRegistry modelRegistry;
     private final JsonReader jsonReader;
     private URL endpoint;
@@ -75,43 +79,54 @@ public class SensorThingsService {
     private int requestTimeoutMs = 120000;
 
     /**
-     * Creates a new SensorThingsService without an endpoint url set.The
-     * endpoint url MUST be set before the service can be used.
+     * Creates a new SensorThingsService without an endpoint url set. The
+     * endpoint url MUST be set before the service can be used. The models will
+     * be initialised in the order they have.
      *
-     * @param modelRegistry The registry with the model to use.
+     * @param models The data models to use.
      */
-    public SensorThingsService(ModelRegistry modelRegistry) {
-        this.modelRegistry = modelRegistry;
-        jsonReader = new JsonReader(modelRegistry);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param modelRegistry The registry with the model to use.
-     * @param endpoint the base URI of the SensorThings service
-     * @throws java.net.MalformedURLException when building the final url fails.
-     */
-    public SensorThingsService(ModelRegistry modelRegistry, URI endpoint) throws MalformedURLException {
-        this(modelRegistry, endpoint.toURL());
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param modelRegistry The registry with the model to use.
-     * @param endpoint the base URL of the SensorThings service
-     * @throws java.net.MalformedURLException when building the final url fails.
-     */
-    public SensorThingsService(ModelRegistry modelRegistry, URL endpoint) throws MalformedURLException {
-        this.modelRegistry = modelRegistry;
+    public SensorThingsService(DataModel... models) {
+        modelRegistry = new ModelRegistry();
+        for (DataModel model : models) {
+            model.init(modelRegistry);
+            dataModels.put(model.getClass(), model);
+        }
         modelRegistry.initFinalise();
         jsonReader = new JsonReader(modelRegistry);
+    }
+
+    /**
+     * Creates a new SensorThingsService with the given endpoint URI. The models
+     * will be initialised in the order they have.
+     *
+     * @param endpoint the base URI of the SensorThings service
+     * @param models The data models to use.
+     * @throws MalformedURLException when building the final URL fails.
+     */
+    public SensorThingsService(URI endpoint, DataModel... models) throws MalformedURLException {
+        this(models);
+        setEndpoint(endpoint);
+    }
+
+    /**
+     * Creates a new SensorThingsService with the given endpoint URL. The models
+     * will be initialised in the order they have.
+     *
+     * @param endpoint the base URL of the SensorThings service
+     * @param models The data models to use.
+     * @throws MalformedURLException when building the final URL fails.
+     */
+    public SensorThingsService(URL endpoint, DataModel... models) throws MalformedURLException {
+        this(models);
         setEndpoint(endpoint);
     }
 
     public ModelRegistry getModelRegistry() {
         return modelRegistry;
+    }
+
+    public <T extends DataModel> T getModel(Class<T> clazz) {
+        return (T) dataModels.get(clazz);
     }
 
     public JsonReader getJsonReader() {
@@ -134,7 +149,7 @@ public class SensorThingsService {
      * changed. The endpoint url MUST be set before the service can be used.
      *
      * @param endpoint The URL of the endpoint.
-     * @throws java.net.MalformedURLException when building the final url fails.
+     * @throws MalformedURLException when building the final URL fails.
      */
     public final void setEndpoint(URL endpoint) throws MalformedURLException {
         if (this.endpoint != null) {
@@ -387,6 +402,16 @@ public class SensorThingsService {
 
     public Version getVersion() {
         return version;
+    }
+
+    /**
+     * Explicitly set the version for servers that do not conform to the
+     * standard and do not have the version number in the URL.
+     *
+     * @param version the version to use.
+     */
+    public void setVersion(Version version) {
+        this.version = version;
     }
 
 }

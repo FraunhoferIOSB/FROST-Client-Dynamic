@@ -47,9 +47,9 @@ import java.util.Map;
 import org.geojson.GeoJsonObject;
 
 /**
- *
+ * The core SensorThings v1.1 Sensing data model.
  */
-public class SensorThingsSensingV11 {
+public class SensorThingsSensingV11 implements DataModel {
 
     public static final String NAME_DATASTREAM = "Datastream";
     public static final String NAME_DATASTREAMS = "Datastreams";
@@ -145,28 +145,26 @@ public class SensorThingsSensingV11 {
     public final NavigationPropertyEntitySet npHistlocLocations = new NavigationPropertyEntitySet(NAME_LOCATIONS, npLocationHistoricallocations);
     public final NavigationPropertyEntity npHistlocThing = new NavigationPropertyEntity(NAME_THING, npThingHistoricallocations);
 
-    public final EntityType etThing;
-    public final EntityType etSensor;
-    public final EntityType etObservedProperty;
-    public final EntityType etObservation;
-    public final EntityType etLocation;
-    public final EntityType etHistoricalLocation;
-    public final EntityType etFeatureOfInterest;
-    public final EntityType etDatastream;
+    public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS);
+    public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS);
+    public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES);
+    public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS);
+    public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS);
+    public final EntityType etHistoricalLocation = new EntityType(NAME_HISTORICALLOCATION, NAME_HISTORICALLOCATIONS);
+    public final EntityType etFeatureOfInterest = new EntityType(NAME_FEATUREOFINTEREST, NAME_FEATURESOFINTEREST);
+    public final EntityType etDatastream = new EntityType(NAME_DATASTREAM, NAME_DATASTREAMS);
 
-    public final ModelRegistry mr;
+    private ModelRegistry mr;
 
     public SensorThingsSensingV11() {
-        mr = new ModelRegistry();
+    }
 
-        etThing = new EntityType(NAME_THING, NAME_THINGS);
-        etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS);
-        etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES);
-        etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS);
-        etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS);
-        etHistoricalLocation = new EntityType(NAME_HISTORICALLOCATION, NAME_HISTORICALLOCATIONS);
-        etFeatureOfInterest = new EntityType(NAME_FEATUREOFINTEREST, NAME_FEATURESOFINTEREST);
-        etDatastream = new EntityType(NAME_DATASTREAM, NAME_DATASTREAMS);
+    @Override
+    public final void init(ModelRegistry modelRegistry) {
+        if (this.mr != null) {
+            throw new IllegalArgumentException("Already initialised.");
+        }
+        this.mr = modelRegistry;
 
         mr.registerPropertyType(ept_Uom)
                 .registerPropertyType(TypeComplex.STA_OBJECT)
@@ -181,6 +179,7 @@ public class SensorThingsSensingV11 {
                 .registerEntityType(etObservedProperty)
                 .registerEntityType(etSensor)
                 .registerEntityType(etThing);
+
         etDatastream
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -195,6 +194,7 @@ public class SensorThingsSensingV11 {
                 .registerProperty(npDatastreamSensor)
                 .registerProperty(npDatastreamThing)
                 .registerProperty(npDatastreamObservations);
+
         etFeatureOfInterest
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -203,11 +203,13 @@ public class SensorThingsSensingV11 {
                 .registerProperty(EP_FEATURE)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npFeatureObservations);
+
         etHistoricalLocation
                 .registerProperty(EP_ID)
                 .registerProperty(EP_TIME)
                 .registerProperty(npHistlocThing)
                 .registerProperty(npHistlocLocations);
+
         etLocation
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -217,6 +219,7 @@ public class SensorThingsSensingV11 {
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npLocationHistoricallocations)
                 .registerProperty(npLocationThings);
+
         etObservation
                 .registerProperty(EP_ID)
                 .registerProperty(EP_PHENOMENONTIME)
@@ -227,6 +230,7 @@ public class SensorThingsSensingV11 {
                 .registerProperty(EP_PARAMETERS)
                 .registerProperty(npObservationDatastream)
                 .registerProperty(npObservationFeatureofinterest);
+
         etObservedProperty
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -234,6 +238,7 @@ public class SensorThingsSensingV11 {
                 .registerProperty(EP_DESCRIPTION)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npObspropDatastreams);
+
         etSensor
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -242,6 +247,7 @@ public class SensorThingsSensingV11 {
                 .registerProperty(EP_METADATA)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npSensorDatastreams);
+
         etThing
                 .registerProperty(EP_ID)
                 .registerProperty(EP_NAME)
@@ -252,7 +258,15 @@ public class SensorThingsSensingV11 {
                 .registerProperty(npThingDatastreams);
     }
 
+    @Override
+    public boolean isInitialised() {
+        return mr != null;
+    }
+
     public ModelRegistry getModelRegistry() {
+        if (mr == null) {
+            init(new ModelRegistry());
+        }
         return mr;
     }
 
