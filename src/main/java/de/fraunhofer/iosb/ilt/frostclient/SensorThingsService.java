@@ -165,6 +165,10 @@ public class SensorThingsService {
         return (T) dataModels.get(clazz);
     }
 
+    public <T extends DataModel> boolean hasModel(Class<T> clazz) {
+        return dataModels.containsKey(clazz);
+    }
+
     public JsonReader getJsonReader() {
         return jsonReader;
     }
