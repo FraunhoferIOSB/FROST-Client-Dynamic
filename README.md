@@ -14,6 +14,7 @@ It aims to simplify development of SensorThings enabled client applications.
 * Loading of referenced entities
 * MultiDatastreams
 * Tasking
+* STA plus
 
 ## Unsupported
 
@@ -52,9 +53,9 @@ The source code below demonstrates the CRUD operations for Thing objects. Operat
 
 ```java
 SensorThingsSensingV11 modelSensing = new SensorThingsSensingV11();
-SensorThingsTaskingV11 modelTasking = new SensorThingsTaskingV11(modelSensing);
+SensorThingsTaskingV11 modelTasking = new SensorThingsTaskingV11();
 URL serviceEndpoint = new URL("http://example.org/v1.0/");
-SensorThingsService service = new SensorThingsService(modelTasking.getModelRegistry(), serviceEndpoint);
+SensorThingsService service = new SensorThingsService(serviceEndpoint, modelSensing, modelTasking);
 ```
 
 ```java

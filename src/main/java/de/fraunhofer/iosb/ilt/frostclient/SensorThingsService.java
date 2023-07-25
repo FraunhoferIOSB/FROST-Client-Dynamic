@@ -40,6 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class SensorThingsService {
      *
      * @param models The data models to use.
      */
-    public SensorThingsService(DataModel... models) {
+    public SensorThingsService(List<DataModel> models) {
         modelRegistry = new ModelRegistry();
         for (DataModel model : models) {
             model.init(modelRegistry);
@@ -93,6 +94,30 @@ public class SensorThingsService {
         }
         modelRegistry.initFinalise();
         jsonReader = new JsonReader(modelRegistry);
+    }
+
+    /**
+     * Creates a new SensorThingsService without an endpoint url set. The
+     * endpoint url MUST be set before the service can be used. The models will
+     * be initialised in the order they have.
+     *
+     * @param models The data models to use.
+     */
+    public SensorThingsService(DataModel... models) {
+        this(Arrays.asList(models));
+    }
+
+    /**
+     * Creates a new SensorThingsService with the given endpoint URI. The models
+     * will be initialised in the order they have.
+     *
+     * @param endpoint the base URI of the SensorThings service
+     * @param models The data models to use.
+     * @throws MalformedURLException when building the final URL fails.
+     */
+    public SensorThingsService(URI endpoint, List<DataModel> models) throws MalformedURLException {
+        this(models);
+        setEndpoint(endpoint);
     }
 
     /**
@@ -104,6 +129,18 @@ public class SensorThingsService {
      * @throws MalformedURLException when building the final URL fails.
      */
     public SensorThingsService(URI endpoint, DataModel... models) throws MalformedURLException {
+        this(endpoint, Arrays.asList(models));
+    }
+
+    /**
+     * Creates a new SensorThingsService with the given endpoint URL. The models
+     * will be initialised in the order they have.
+     *
+     * @param endpoint the base URL of the SensorThings service
+     * @param models The data models to use.
+     * @throws MalformedURLException when building the final URL fails.
+     */
+    public SensorThingsService(URL endpoint, List<DataModel> models) throws MalformedURLException {
         this(models);
         setEndpoint(endpoint);
     }
@@ -117,8 +154,7 @@ public class SensorThingsService {
      * @throws MalformedURLException when building the final URL fails.
      */
     public SensorThingsService(URL endpoint, DataModel... models) throws MalformedURLException {
-        this(models);
-        setEndpoint(endpoint);
+        this(endpoint, Arrays.asList(models));
     }
 
     public ModelRegistry getModelRegistry() {

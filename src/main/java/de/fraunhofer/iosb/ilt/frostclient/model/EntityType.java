@@ -83,12 +83,12 @@ public class EntityType implements Comparable<EntityType> {
     /**
      * The set of Navigation properties pointing to single entities.
      */
-    private final Set<NavigationProperty<Entity>> navigationEntities = new LinkedHashSet<>();
+    private final Set<NavigationPropertyEntity> navigationEntities = new LinkedHashSet<>();
 
     /**
      * The set of Navigation properties pointing to entity sets.
      */
-    private final Set<NavigationProperty<EntitySet>> navigationSets = new LinkedHashSet<>();
+    private final Set<NavigationPropertyEntitySet> navigationSets = new LinkedHashSet<>();
 
     /**
      * The ModelRegistry this EntityType is registered on.
@@ -133,10 +133,10 @@ public class EntityType implements Comparable<EntityType> {
                 }
 
                 navigationProperties.add(np);
-                if (np.isEntitySet()) {
-                    navigationSets.add(np);
-                } else {
-                    navigationEntities.add(np);
+                if (np instanceof NavigationPropertyEntitySet npes) {
+                    navigationSets.add(npes);
+                } else if (np instanceof NavigationPropertyEntity npe) {
+                    navigationEntities.add(npe);
                 }
             }
         }
@@ -144,6 +144,14 @@ public class EntityType implements Comparable<EntityType> {
 
     public PrimaryKey getPrimaryKey() {
         return primaryKey;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public String getPluralName() {
+        return plural;
     }
 
     public Property getProperty(String name) {
@@ -218,7 +226,7 @@ public class EntityType implements Comparable<EntityType> {
      *
      * @return The set of Navigation properties pointing to single entities.
      */
-    public Set<NavigationProperty<Entity>> getNavigationEntities() {
+    public Set<NavigationPropertyEntity> getNavigationEntities() {
         return navigationEntities;
     }
 
@@ -227,7 +235,7 @@ public class EntityType implements Comparable<EntityType> {
      *
      * @return The set of Navigation properties pointing to entity sets.
      */
-    public Set<NavigationProperty<EntitySet>> getNavigationSets() {
+    public Set<NavigationPropertyEntitySet> getNavigationSets() {
         return navigationSets;
     }
 

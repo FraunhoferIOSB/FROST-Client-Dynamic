@@ -22,9 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_DATETIMEOFFSET;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_STRING;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_UNTYPED;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_UNTYPED;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONTENT_TYPE_APPLICATION_GEOJSON;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UOM;
@@ -40,7 +40,8 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -88,38 +89,40 @@ public class SensorThingsSensingV11 implements DataModel {
     public static final String NAME_EP_RESULT = "result";
     public static final String NAME_EP_RESULTTIME = "resultTime";
     public static final String NAME_EP_RESULTQUALITY = "resultQuality";
+    public static final String NAME_EP_SYMBOL = "symbol";
     public static final String NAME_EP_TIME = "time";
     public static final String NAME_EP_UNITOFMEASUREMENT = "unitOfMeasurement";
     public static final String NAME_EP_VALIDTIME = "validTime";
 
-    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", TYPE_REFERENCE_UOM)
-            .addProperty(NAME_NAME, EDM_STRING, false)
-            .addProperty(NAME_SYMBOL, EDM_STRING, false)
-            .addProperty(NAME_DEFINITION, EDM_STRING, false);
-
     public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = new EntityPropertyMain<>(NAME_EP_CREATIONTIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<String> EP_DESCRIPTION = new EntityPropertyMain<>(NAME_EP_DESCRIPTION, EDM_STRING);
     public static final EntityPropertyMain<String> EP_DEFINITION = new EntityPropertyMain<>(NAME_EP_DEFINITION, EDM_STRING);
-    public static final EntityPropertyMain<Object> EP_FEATURE = new EntityPropertyMain<>(NAME_EP_FEATURE, TypeSimplePrimitive.EDM_GEOMETRY);
-    public static final EntityPropertyMain<Object> EP_LOCATION = new EntityPropertyMain<>(NAME_EP_LOCATION, TypeSimplePrimitive.EDM_GEOMETRY);
+    public static final EntityPropertyMain<Object> EP_FEATURE = new EntityPropertyMain<>(NAME_EP_FEATURE, TypePrimitive.EDM_GEOMETRY);
+    public static final EntityPropertyMain<Object> EP_LOCATION = new EntityPropertyMain<>(NAME_EP_LOCATION, TypePrimitive.EDM_GEOMETRY);
     public static final EntityPropertyMain<String> EP_METADATA = new EntityPropertyMain<>(NAME_EP_METADATA, EDM_STRING);
     public static final EntityPropertyMain<String> EP_NAME = new EntityPropertyMain<>(NAME_EP_NAME, EDM_STRING);
     public static final EntityPropertyMain<String> EP_OBSERVATIONTYPE = new EntityPropertyMain<>(NAME_EP_OBSERVATIONTYPE, EDM_STRING);
-    public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypeSimplePrimitive.EDM_GEOMETRY).setReadOnly(true);
+    public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypePrimitive.EDM_GEOMETRY).setReadOnly(true);
     public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = new EntityPropertyMain<>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEVALUE);
     public static final EntityPropertyMain<TimeInterval> EP_PHENOMENONTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);
     public static final EntityPropertyMain<Map<String, Object>> EP_PARAMETERS = new EntityPropertyMain<>(NAME_EP_PARAMETERS, TypeComplex.STA_MAP);
-    public static final EntityPropertyMain<Object> EP_RESULT = new EntityPropertyMain<>(NAME_EP_RESULT, TypeSimplePrimitive.EDM_UNTYPED, true);
+    public static final EntityPropertyMain<Object> EP_RESULT = new EntityPropertyMain<>(NAME_EP_RESULT, TypePrimitive.EDM_UNTYPED, true);
     public static final EntityPropertyMain<TimeInstant> EP_RESULTTIME = new EntityPropertyMain<>(NAME_EP_RESULTTIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInterval> EP_RESULTTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_RESULTTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);
     public static final EntityPropertyMain<Object> EP_RESULTQUALITY = new EntityPropertyMain<>(NAME_EP_RESULTQUALITY, TypeComplex.STA_OBJECT);
+    public static final EntityPropertyMain<String> EP_SYMBOL = new EntityPropertyMain<>(NAME_EP_SYMBOL, EDM_STRING);
     public static final EntityPropertyMain<TimeInstant> EP_TIME = new EntityPropertyMain<>(NAME_EP_TIME, EDM_DATETIMEOFFSET);
-    public static final EntityPropertyMain<UnitOfMeasurement> EP_UNITOFMEASUREMENT = new EntityPropertyMain<>(NAME_EP_UNITOFMEASUREMENT, ept_Uom);
     public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = new EntityPropertyMain<>(NAME_EP_VALIDTIME, TypeComplex.STA_TIMEINTERVAL);
-    public static final EntityPropertyMain<Map<String, Object>> EP_PROPERTIES = new EntityPropertyMain<>(NAME_EP_PROPERTIES, TypeComplex.STA_MAP);
+    public static final EntityPropertyMain<MapValue> EP_PROPERTIES = new EntityPropertyMain<>(NAME_EP_PROPERTIES, TypeComplex.STA_MAP);
     public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
 
     public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>(AT_IOT_ID, EDM_UNTYPED);
+
+    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", TYPE_REFERENCE_UOM, UnitOfMeasurement::new)
+            .registerProperty(EP_NAME)
+            .registerProperty(EP_SYMBOL)
+            .registerProperty(EP_DEFINITION);
+    public static final EntityPropertyMain<UnitOfMeasurement> EP_UNITOFMEASUREMENT = new EntityPropertyMain<>(NAME_EP_UNITOFMEASUREMENT, ept_Uom);
 
     public final NavigationPropertyEntity npObservationDatastream = new NavigationPropertyEntity(NAME_DATASTREAM);
     public final NavigationPropertyEntity npObservationFeatureofinterest = new NavigationPropertyEntity(NAME_FEATUREOFINTEREST);
@@ -171,14 +174,14 @@ public class SensorThingsSensingV11 implements DataModel {
                 .registerPropertyType(TypeComplex.STA_MAP)
                 .registerPropertyType(TypeComplex.STA_TIMEINTERVAL)
                 .registerPropertyType(TypeComplex.STA_TIMEVALUE)
-                .registerEntityType(etDatastream)
-                .registerEntityType(etFeatureOfInterest)
-                .registerEntityType(etHistoricalLocation)
+                .registerEntityType(etThing)
+                .registerEntityType(etSensor)
                 .registerEntityType(etLocation)
+                .registerEntityType(etDatastream)
                 .registerEntityType(etObservation)
                 .registerEntityType(etObservedProperty)
-                .registerEntityType(etSensor)
-                .registerEntityType(etThing);
+                .registerEntityType(etFeatureOfInterest)
+                .registerEntityType(etHistoricalLocation);
 
         etDatastream
                 .registerProperty(EP_ID)
@@ -286,6 +289,10 @@ public class SensorThingsSensingV11 implements DataModel {
     }
 
     public Entity newThing(String name, String description, Map<String, Object> properties) {
+        return newThing(name, description, new MapValue(properties));
+    }
+
+    public Entity newThing(String name, String description, MapValue properties) {
         return newThing(name, description)
                 .setProperty(EP_PROPERTIES, properties);
     }

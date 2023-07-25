@@ -33,7 +33,7 @@ public class TypeEntity extends TypeComplex {
     private EntityType entityType;
 
     public TypeEntity(EntityType entityType) {
-        super(entityType.entityName, "Entity Type " + entityType.entityName, TypeReferencesHelper.TYPE_REFERENCE_ENTITY, false);
+        super(entityType.entityName, "Entity Type " + entityType.entityName, TypeReferencesHelper.TYPE_REFERENCE_ENTITY, null, false);
     }
 
     public EntityType getEntityType() {

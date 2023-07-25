@@ -32,7 +32,7 @@ public class TypeSimpleSet extends PropertyType {
 
     private final PropertyType containtedType;
 
-    public TypeSimpleSet(TypeSimple containedType, TypeReference typeReference) {
+    public TypeSimpleSet(TypePrimitive containedType, TypeReference typeReference) {
         super(containedType.getName(), "Collection of " + containedType.getName(), typeReference);
         this.containtedType = containedType;
     }

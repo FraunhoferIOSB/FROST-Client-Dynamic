@@ -24,13 +24,20 @@ package de.fraunhofer.iosb.ilt.frostclient.model.ext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.Property;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11;
 import java.util.Objects;
 
 /**
  * Model class for UnitOfMeasurement. This is a complex property in STA.
  */
-public class UnitOfMeasurement implements ComplexValue {
+public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
+
+    public static final EntityPropertyMain<String> EP_NAME = SensorThingsSensingV11.EP_NAME;
+    public static final EntityPropertyMain<String> EP_DEFINITION = SensorThingsSensingV11.EP_DEFINITION;
+    public static final EntityPropertyMain<String> EP_SYMBOL = SensorThingsSensingV11.EP_SYMBOL;
 
     private String name;
     private String symbol;
@@ -49,17 +56,17 @@ public class UnitOfMeasurement implements ComplexValue {
     }
 
     @Override
-    public Object get(String name) {
-        switch (name) {
-            case "name":
-                return getName();
-            case "symbol":
-                return getSymbol();
-            case "definition":
-                return getDefinition();
-            default:
-                return null;
+    public <P> P getProperty(Property<P> property) {
+        if (property == EP_NAME) {
+            return (P) getName();
         }
+        if (property == EP_SYMBOL) {
+            return (P) getSymbol();
+        }
+        if (property == EP_DEFINITION) {
+            return (P) getDefinition();
+        }
+        throw new IllegalArgumentException("Unknown sub-property: " + property);
     }
 
     /**
@@ -81,6 +88,20 @@ public class UnitOfMeasurement implements ComplexValue {
      */
     public String getDefinition() {
         return definition;
+    }
+
+    @Override
+    public <P> UnitOfMeasurement setProperty(Property<P> property, P value) {
+        if (property == EP_NAME) {
+            return setName(Objects.toString(value));
+        }
+        if (property == EP_SYMBOL) {
+            return setSymbol(Objects.toString(value));
+        }
+        if (property == EP_DEFINITION) {
+            return setDefinition(Objects.toString(value));
+        }
+        throw new IllegalArgumentException("Unknown sub-property: " + property);
     }
 
     /**

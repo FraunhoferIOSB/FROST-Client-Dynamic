@@ -22,12 +22,12 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_STRING;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_SELF_LINK;
 
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -113,7 +113,7 @@ public class ModelRegistry {
         if (type != null) {
             return type;
         }
-        type = TypeSimplePrimitive.getType(name);
+        type = TypePrimitive.getType(name);
         if (type != null) {
             return type;
         }

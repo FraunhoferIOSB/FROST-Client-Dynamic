@@ -23,57 +23,25 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 
 /**
  * A simple Type.
  */
-public abstract class TypeSimple extends PropertyType {
+public abstract class TypeSimple extends TypePrimitive {
 
-    private Parser parser;
-    private final TypeSimplePrimitive underlyingType;
+    private final TypePrimitive underlyingType;
 
-    protected TypeSimple(String name, String description, TypeReference... typeReference) {
-        this(name, description, (Parser) null, typeReference);
+    protected TypeSimple(String name, String description, TypePrimitive underlyingType, Parser parser, TypeReference... typeReference) {
+        super(name, description, parser, typeReference);
+        this.underlyingType = underlyingType;
     }
 
-    protected TypeSimple(String name, String description, Parser parser, TypeReference... typeReference) {
-        super(name, description, typeReference);
-        if (this instanceof TypeSimplePrimitive) {
-            this.underlyingType = (TypeSimplePrimitive) this;
-        } else {
-            throw new IllegalArgumentException("This constuctor can only be used by subclass TypeSimplePrimitive or TypeSimpleSet");
-        }
-        this.parser = parser;
-    }
-
-    protected TypeSimple(String name, String description, TypeSimplePrimitive underlyingType, TypeReference... typeReference) {
+    protected TypeSimple(String name, String description, TypePrimitive underlyingType, TypeReference... typeReference) {
         this(name, description, underlyingType, null, typeReference);
     }
 
-    protected TypeSimple(String name, String description, TypeSimplePrimitive underlyingType, Parser parser, TypeReference... typeReference) {
-        super(name, description, typeReference);
-        this.underlyingType = underlyingType;
-        this.parser = parser;
-    }
-
-    public TypeSimplePrimitive getUnderlyingType() {
+    public TypePrimitive getUnderlyingType() {
         return underlyingType;
     }
 
-    @Override
-    public Object parseFromUrl(String input) {
-        if (parser != null) {
-            return parser.parseFromUrl(input);
-        }
-        if (underlyingType != this) {
-            return underlyingType.parseFromUrl(input);
-        }
-        return super.parseFromUrl(input);
-    }
-
-    public static interface Parser {
-
-        public Object parseFromUrl(String input);
-    }
 }

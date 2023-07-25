@@ -44,6 +44,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.ext.UnitOfMeasurement;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsTaskingV11;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.CollectionsHelper;
 import de.fraunhofer.iosb.ilt.swe.common.constraint.AllowedTokens;
 import de.fraunhofer.iosb.ilt.swe.common.simple.Category;
@@ -54,7 +55,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.geojson.Point;
@@ -100,7 +100,7 @@ public class EntityFormatterTest {
         entity.setProperty(EP_DESCRIPTION, "This thing is an oven.");
         entity.setSelfLink("http://example.org/Observations/1");
 
-        Map<String, Object> properties = CollectionsHelper.propertiesBuilder()
+        MapValue properties = CollectionsHelper.propertiesBuilder()
                 .addItem("owner", "John Doe")
                 .addItem("color", "Silver")
                 .build();
@@ -123,7 +123,7 @@ public class EntityFormatterTest {
                   }
                 }""";
 
-        Map<String, Object> properties = CollectionsHelper.propertiesBuilder()
+        MapValue properties = CollectionsHelper.propertiesBuilder()
                 .addItem("owner", "John Doe")
                 .addItem("color", "Silver")
                 .build();
@@ -322,7 +322,7 @@ public class EntityFormatterTest {
                     ]
                 }""";
         Entity thing = modelSensing.newThing("thing name 1", "thing 1");
-        Map<String, Object> properties = CollectionsHelper.propertiesBuilder()
+        MapValue properties = CollectionsHelper.propertiesBuilder()
                 .addItem("reference", "first")
                 .build();
         thing.setProperty(EP_PROPERTIES, properties);

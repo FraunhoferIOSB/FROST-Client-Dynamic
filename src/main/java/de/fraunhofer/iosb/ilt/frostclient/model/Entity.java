@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The Entity model element.
  */
-public class Entity {
+public class Entity implements ComplexValue<Entity> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Entity.class.getName());
 
@@ -67,10 +67,21 @@ public class Entity {
         this.entityType = entityType;
     }
 
+    /**
+     * Get the primary key definition of the (EntityType of the) Entity. This is
+     * a shorthand for getEntityType().getPrimaryKey();
+     *
+     * @return The primary key definition of the Entity.
+     */
     public final PrimaryKey getPrimaryKey() {
         return entityType.getPrimaryKey();
     }
 
+    /**
+     * Key the values of the primary key fields for this Entity.
+     *
+     * @return the primary key values.
+     */
     public final Object[] getPrimaryKeyValues() {
         List<EntityPropertyMain> keyProperties = entityType.getPrimaryKey().getKeyProperties();
         Object[] result = new Object[keyProperties.size()];
@@ -80,6 +91,17 @@ public class Entity {
             idx++;
         }
         return result;
+    }
+
+    public boolean primaryKeyFullySet() {
+        List<EntityPropertyMain> keyProperties = entityType.getPrimaryKey().getKeyProperties();
+        for (EntityPropertyMain keyProperty : keyProperties) {
+            Object value = getProperty(keyProperty);
+            if (value == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public final Entity setPrimaryKeyValues(Object... values) {
@@ -122,6 +144,7 @@ public class Entity {
         return setProperties.contains(property);
     }
 
+    @Override
     public <P> P getProperty(Property<P> property) {
         return getProperty(property, true);
     }
@@ -180,6 +203,7 @@ public class Entity {
         return null;
     }
 
+    @Override
     public <P> Entity setProperty(Property<P> property, P value) {
         if (property == ModelRegistry.EP_SELFLINK) {
             setSelfLink(String.valueOf(value));

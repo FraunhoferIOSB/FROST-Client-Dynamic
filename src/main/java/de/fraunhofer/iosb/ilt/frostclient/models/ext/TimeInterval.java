@@ -22,10 +22,10 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.ext;
 
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex.KEY_INTERVAL_END;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex.KEY_INTERVAL_START;
-
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.Property;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.text.ParseException;
 import java.time.Instant;
@@ -37,9 +37,16 @@ import net.time4j.range.MomentInterval;
 /**
  * Represent an ISO8601 time interval.
  */
-public class TimeInterval implements TimeObject, ComplexValue {
+public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
 
-    private final MomentInterval interval;
+    public static EntityPropertyMain<TimeInstant> EP_START_TIME = TypeComplex.EP_START_TIME;
+    public static EntityPropertyMain<TimeInstant> EP_END_TIME = TypeComplex.EP_END_TIME;
+
+    private MomentInterval interval;
+
+    public TimeInterval() {
+        this.interval = MomentInterval.between(Moment.nowInSystemTime(), Moment.nowInSystemTime());
+    }
 
     public TimeInterval(MomentInterval interval) {
         if (interval == null) {
@@ -108,15 +115,38 @@ public class TimeInterval implements TimeObject, ComplexValue {
     }
 
     @Override
-    public Object get(String name) {
-        switch (name) {
-            case KEY_INTERVAL_START:
-                return interval.getStartAsMoment();
-            case KEY_INTERVAL_END:
-                return interval.getEndAsMoment();
-            default:
-                throw new IllegalArgumentException("Unknown sub-property: " + name);
+    public <P> P getProperty(Property<P> property) {
+        if (property == EP_START_TIME) {
+            return (P) interval.getStartAsMoment();
         }
+        if (property == EP_END_TIME) {
+            return (P) interval.getStartAsMoment();
+        }
+        throw new IllegalArgumentException("Unknown sub-property: " + property);
+    }
+
+    @Override
+    public TimeInterval setProperty(Property property, Object value) {
+        if (value == null) {
+            return this;
+        }
+        Moment moment;
+        if (value instanceof Moment m) {
+            moment = m;
+        } else if (value instanceof Instant i) {
+            moment = Moment.from(i);
+        } else {
+            throw new IllegalArgumentException("TimeInterval only accepts Moment or Instant, not " + value.getClass().getName());
+        }
+        if (property == EP_START_TIME) {
+            interval = interval.withStart(moment);
+            return this;
+        }
+        if (property == EP_END_TIME) {
+            interval = interval.withEnd(moment).withOpenEnd();
+            return this;
+        }
+        throw new IllegalArgumentException("Unknown sub-property: " + property);
     }
 
     public Moment getStart() {

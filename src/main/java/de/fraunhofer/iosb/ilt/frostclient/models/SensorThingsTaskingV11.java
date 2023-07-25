@@ -32,6 +32,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.swe.common.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.swe.common.complex.DataRecord;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class SensorThingsTaskingV11 implements DataModel {
     public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
     };
-    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", TYPE_REFERENCE_DATARECORD, true);
+    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", TYPE_REFERENCE_DATARECORD, null, true);
     public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, STA_TASKINGPARAMETERS);
 
     public final NavigationPropertyEntity npTaskcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);
@@ -137,6 +138,10 @@ public class SensorThingsTaskingV11 implements DataModel {
     }
 
     public Entity newTaskingCapability(String name, String description, Map<String, Object> properties) {
+        return newTaskingCapability(name, description, new MapValue(properties));
+    }
+
+    public Entity newTaskingCapability(String name, String description, MapValue properties) {
         return newTaskingCapability(name, description)
                 .setProperty(SensorThingsSensingV11.EP_PROPERTIES, properties);
     }

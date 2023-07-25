@@ -23,16 +23,14 @@
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex.STA_MAP;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_DATETIMEOFFSET;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimplePrimitive.EDM_STRING;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsMultiDatastreamV11.NAME_MULTI_DATASTREAM;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsMultiDatastreamV11.NAME_MULTI_DATASTREAMS;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_NAME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_DATASTREAM;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_DATASTREAMS;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_EP_DEFINITION;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_EP_DESCRIPTION;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVATION;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVATIONS;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_THING;
@@ -44,7 +42,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
-import java.util.Map;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 
 /**
  *
@@ -95,8 +93,8 @@ public class SensorThingsPlus implements DataModel {
     public static final EntityPropertyMain<String> EP_CREATION_TIME = new EntityPropertyMain<>(NAME_CREATION_TIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<String> EP_TERMS_OF_USE = new EntityPropertyMain<>(NAME_TERMS_OF_USE, EDM_STRING);
     public static final EntityPropertyMain<String> EP_PRIVACY_POLICY = new EntityPropertyMain<>(NAME_PRIVACY_POLICY, EDM_STRING);
-    public static final EntityPropertyMain<Map<String,Object>> EP_DATA_QUALITY = new EntityPropertyMain<>(NAME_DATA_QUALITY, STA_MAP);
-    public static final EntityPropertyMain<Map<String,Object>> EP_PROPERTIES = SensorThingsSensingV11.EP_PROPERTIES;
+    public static final EntityPropertyMain<MapValue> EP_DATA_QUALITY = new EntityPropertyMain<>(NAME_DATA_QUALITY, STA_MAP);
+    public static final EntityPropertyMain<MapValue> EP_PROPERTIES = SensorThingsSensingV11.EP_PROPERTIES;
     public static final EntityPropertyMain<String> EP_LOGO = new EntityPropertyMain<>(NAME_LOGO, EDM_STRING);
     public static final EntityPropertyMain<String> EP_ATTRIBUTION_TEXT = new EntityPropertyMain<>(NAME_ATTRIBUTION_TEXT, EDM_STRING);
     public static final EntityPropertyMain<String> EP_URL = new EntityPropertyMain<>(NAME_URL, EDM_STRING);

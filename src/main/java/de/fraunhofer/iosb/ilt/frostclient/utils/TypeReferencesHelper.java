@@ -29,6 +29,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.ext.UnitOfMeasurement;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -82,6 +83,9 @@ public class TypeReferencesHelper {
         // Empty on purpose.
     };
     public static final TypeReference<Map<String, Object>> TYPE_REFERENCE_MAP = new TypeReference<Map<String, Object>>() {
+        // Empty on purpose.
+    };
+    public static final TypeReference<MapValue> TYPE_REFERENCE_MAPVALUE = new TypeReference<MapValue>() {
         // Empty on purpose.
     };
     public static final TypeReference<Number> TYPE_REFERENCE_NUMBER = new TypeReference<Number>() {

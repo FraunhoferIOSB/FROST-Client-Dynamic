@@ -20,13 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
+package de.fraunhofer.iosb.ilt.frostclient.model;
 
 /**
  * Interface that values of complex properties should implement to make it
  * easier to access sub-properties.
+ *
+ * @param <S> The type of the complex value (for fluent API)
  */
-public interface ComplexValue {
+public interface ComplexValue<S extends ComplexValue<S>> {
 
-    public Object get(String name);
+    /**
+     * Get the value of the given property.
+     *
+     * @param <P> The type of the property and value.
+     * @param property The property to get the value of.
+     * @return the value of the requested property.
+     */
+    public <P> P getProperty(Property<P> property);
+
+    /**
+     * Set the given property to the given value.
+     *
+     * @param <P> The type of the property.
+     * @param property The property to set.
+     * @param value The value to set the property to.
+     * @return this
+     */
+    public <P> S setProperty(Property<P> property, P value);
+
 }

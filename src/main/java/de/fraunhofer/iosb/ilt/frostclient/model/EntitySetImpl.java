@@ -33,6 +33,7 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -94,7 +95,6 @@ public class EntitySetImpl implements EntitySet {
     public Iterator<Entity> iterator() {
         return new Iterator<Entity>() {
             private Iterator<Entity> currentIterator = data.iterator();
-            private String nextLink = getNextLink();
 
             private void fetchNextList() {
                 if (nextLink == null) {
@@ -130,7 +130,7 @@ public class EntitySetImpl implements EntitySet {
     @Override
     public void fetchNext() {
         if (nextLink == null) {
-            data = new ArrayList<>();
+            data = Collections.emptyList();
             return;
         }
         HttpGet httpGet = new HttpGet(nextLink);
