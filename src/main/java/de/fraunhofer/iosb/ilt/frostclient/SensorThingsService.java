@@ -41,9 +41,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -65,7 +63,6 @@ public class SensorThingsService {
      */
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SensorThingsService.class);
 
-    private Map<Class<? extends DataModel>, DataModel> dataModels = new HashMap<>();
     private final ModelRegistry modelRegistry;
     private final JsonReader jsonReader;
     private URL endpoint;
@@ -82,7 +79,7 @@ public class SensorThingsService {
     /**
      * Creates a new SensorThingsService without an endpoint url set. The
      * endpoint url MUST be set before the service can be used. The models will
-     * be initialised in the order they have.
+     * be initialised in the order they are returned by the list.
      *
      * @param models The data models to use.
      */
@@ -90,8 +87,19 @@ public class SensorThingsService {
         modelRegistry = new ModelRegistry();
         for (DataModel model : models) {
             model.init(modelRegistry);
-            dataModels.put(model.getClass(), model);
         }
+        modelRegistry.initFinalise();
+        jsonReader = new JsonReader(modelRegistry);
+    }
+
+    /**
+     * Creates a new SensorThingsService without an endpoint url set. The
+     * endpoint url MUST be set before the service can be used.
+     *
+     * @param modelRegistry the data model to use.
+     */
+    public SensorThingsService(ModelRegistry modelRegistry) {
+        this.modelRegistry = modelRegistry;
         modelRegistry.initFinalise();
         jsonReader = new JsonReader(modelRegistry);
     }
@@ -162,11 +170,11 @@ public class SensorThingsService {
     }
 
     public <T extends DataModel> T getModel(Class<T> clazz) {
-        return (T) dataModels.get(clazz);
+        return modelRegistry.getModel(clazz);
     }
 
     public <T extends DataModel> boolean hasModel(Class<T> clazz) {
-        return dataModels.containsKey(clazz);
+        return modelRegistry.hasModel(clazz);
     }
 
     public JsonReader getJsonReader() {
@@ -178,10 +186,11 @@ public class SensorThingsService {
      * changed. The endpoint url MUST be set before the service can be used.
      *
      * @param endpoint The URI of the endpoint.
+     * @return this.
      * @throws java.net.MalformedURLException when building the final url fails.
      */
-    public final void setEndpoint(URI endpoint) throws MalformedURLException {
-        setEndpoint(endpoint.toURL());
+    public final SensorThingsService setEndpoint(URI endpoint) throws MalformedURLException {
+        return setEndpoint(endpoint.toURL());
     }
 
     /**
@@ -189,9 +198,10 @@ public class SensorThingsService {
      * changed. The endpoint url MUST be set before the service can be used.
      *
      * @param endpoint The URL of the endpoint.
+     * @return this.
      * @throws MalformedURLException when building the final URL fails.
      */
-    public final void setEndpoint(URL endpoint) throws MalformedURLException {
+    public final SensorThingsService setEndpoint(URL endpoint) throws MalformedURLException {
         if (this.endpoint != null) {
             throw new IllegalStateException("endpoint URL already set.");
         }
@@ -208,6 +218,7 @@ public class SensorThingsService {
         }
 
         this.endpoint = new URL(url + "/");
+        return this;
     }
 
     /**
@@ -218,9 +229,11 @@ public class SensorThingsService {
      *
      * @param urlReplace the endpoint url the server uses, that needs to be
      * replaced.
+     * @return this.
      */
-    public final void setUrlReplace(String urlReplace) {
+    public final SensorThingsService setUrlReplace(String urlReplace) {
         this.urlReplace = urlReplace;
+        return this;
     }
 
     /**
@@ -304,7 +317,7 @@ public class SensorThingsService {
         return client.execute(request);
     }
 
-    private void setTimeouts(HttpRequestBase request) {
+    private SensorThingsService setTimeouts(HttpRequestBase request) {
         RequestConfig.Builder configBuilder;
         if (request.getConfig() == null) {
             configBuilder = RequestConfig.copy(RequestConfig.DEFAULT);
@@ -317,6 +330,7 @@ public class SensorThingsService {
                 .setConnectionRequestTimeout(requestTimeoutMs)
                 .build();
         request.setConfig(config);
+        return this;
     }
 
     /**

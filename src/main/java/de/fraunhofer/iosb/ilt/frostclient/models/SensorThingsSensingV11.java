@@ -168,6 +168,7 @@ public class SensorThingsSensingV11 implements DataModel {
             throw new IllegalArgumentException("Already initialised.");
         }
         this.mr = modelRegistry;
+        mr.addDataModel(this);
 
         mr.registerPropertyType(ept_Uom)
                 .registerPropertyType(TypeComplex.STA_OBJECT)

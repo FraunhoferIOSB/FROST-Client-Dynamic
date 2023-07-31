@@ -95,6 +95,7 @@ public class SensorThingsMultiDatastreamV11 implements DataModel {
             throw new IllegalArgumentException("Already initialised.");
         }
         this.mr = modelRegistry;
+        mr.addDataModel(this);
 
         mr.registerEntityType(etMultiDatastream);
 

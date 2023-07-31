@@ -80,6 +80,7 @@ public class SensorThingsTaskingV11 implements DataModel {
             throw new IllegalArgumentException("Already initialised.");
         }
         this.mr = modelRegistry;
+        mr.addDataModel(this);
 
         mr.registerEntityType(etActuator);
         mr.registerEntityType(etTask);

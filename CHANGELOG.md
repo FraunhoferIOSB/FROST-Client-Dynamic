@@ -3,6 +3,7 @@
 ## Development Version
 
 **Updates**
+* Allow Service to be initialised with an existing ModelRegistry.
 
 
 ## Release Version 2.2

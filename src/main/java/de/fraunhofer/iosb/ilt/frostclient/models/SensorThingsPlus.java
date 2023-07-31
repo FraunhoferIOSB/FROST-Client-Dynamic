@@ -165,6 +165,7 @@ public class SensorThingsPlus implements DataModel {
             throw new IllegalArgumentException("Already initialised.");
         }
         this.mr = modelRegistry;
+        mr.addDataModel(this);
 
         final EntityType etDatastream = mr.getEntityTypeForName(NAME_DATASTREAM);
         final EntityType etThing = mr.getEntityTypeForName(NAME_THING);

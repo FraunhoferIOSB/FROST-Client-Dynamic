@@ -28,6 +28,8 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_SELF_
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
+import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +63,12 @@ public class ModelRegistry {
      * All property types by their name.
      */
     private final Map<String, PropertyType> propertyTypes = new TreeMap<>();
+
+    /**
+     * The data models used in this ModelRegistry.
+     */
+    private Map<Class<? extends DataModel>, DataModel> dataModels = new HashMap<>();
+
     private boolean initialised;
 
     /**
@@ -126,6 +134,19 @@ public class ModelRegistry {
 
     public Map<String, PropertyType> getPropertyTypes() {
         return propertyTypes;
+    }
+
+    public <T extends DataModel> T getModel(Class<T> clazz) {
+        return (T) dataModels.get(clazz);
+    }
+
+    public <T extends DataModel> boolean hasModel(Class<T> clazz) {
+        return dataModels.containsKey(clazz);
+    }
+
+    public ModelRegistry addDataModel(DataModel model) {
+        dataModels.put(model.getClass(), model);
+        return this;
     }
 
     public synchronized void initFinalise() {
