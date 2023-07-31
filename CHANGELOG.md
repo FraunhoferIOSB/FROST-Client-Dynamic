@@ -1,8 +1,11 @@
 # Changelog
 
-## Development Version
+## Release Version 2.2
 
 **Updates**
+* Reworked PropertyTypes.
+* Updated the model handling, service will initialise models.
+* Added STAplus data model.
 * Added checks when setting or getting properties, throw IllegalArgumentException
   when the EntityType does not have the property.
 
