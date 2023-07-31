@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version
+## Release Version 2.3
 
 **Updates**
 * Allow Service to be initialised with an existing ModelRegistry.
