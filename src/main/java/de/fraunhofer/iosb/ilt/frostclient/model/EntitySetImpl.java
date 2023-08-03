@@ -163,7 +163,7 @@ public class EntitySetImpl implements EntitySet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(data);
+        return Objects.hash(type, navigationProperty);
     }
 
     @Override
@@ -178,7 +178,10 @@ public class EntitySetImpl implements EntitySet {
             return false;
         }
         final EntitySetImpl other = (EntitySetImpl) obj;
-        return Objects.equals(this.data, other.data);
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return Objects.equals(this.navigationProperty, other.navigationProperty);
     }
 
     @Override

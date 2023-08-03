@@ -322,15 +322,12 @@ public class Entity implements ComplexValue<Entity> {
         if (!Objects.equals(this.entityType, other.entityType)) {
             return false;
         }
-        if (!Objects.equals(this.entityProperties, other.entityProperties)) {
-            return false;
-        }
-        return Objects.equals(this.navProperties, other.navProperties);
+        return Arrays.equals(this.getPrimaryKeyValues(), other.getPrimaryKeyValues());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(entityType, entityProperties, navProperties);
+        return Objects.hash(entityType, getPrimaryKeyValues());
     }
 
     @Override
