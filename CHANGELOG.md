@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version
+## Release Version 2.4
 
 **Updates**
 * Fixed incorrect URL generation for sub DOAs like Datastream(x)/Observations.
