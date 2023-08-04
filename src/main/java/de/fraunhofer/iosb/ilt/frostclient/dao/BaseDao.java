@@ -85,10 +85,10 @@ public class BaseDao implements Dao {
 
     public BaseDao(SensorThingsService service, Entity parent, NavigationPropertyEntitySet navigationLink) {
         this.service = service;
-        this.entityType = parent.getEntityType();
+        this.entityType = navigationLink.getEntityType();
         this.parent = parent;
         this.navigationLink = navigationLink;
-        if (!entityType.getNavigationSets().contains(navigationLink)) {
+        if (!parent.getEntityType().getNavigationSets().contains(navigationLink)) {
             throw new IllegalArgumentException("Entities of type " + entityType + " don't have a navigationProperty " + navigationLink);
         }
     }
@@ -247,10 +247,10 @@ public class BaseDao implements Dao {
         return new Query(service, parent, navigationLink);
     }
 
-    private URI buildUri(Object[] pkValues) throws NotImplementedException, URISyntaxException {
+    private URI buildUri(Object[] pkValues) throws NotImplementedException, URISyntaxException, ServiceFailureException {
         URIBuilder uriBuilder;
         if (pkValues.length == 1) {
-            uriBuilder = new URIBuilder(service.getEndpoint().toString() + ParserUtils.entityPath(entityType, pkValues[0]));
+            uriBuilder = new URIBuilder(getSetPath() + "(" + ParserUtils.formatKeyValuesForUrl(pkValues[0]) + ")");
         } else {
             throw new NotImplementedException("Multi-valued primary keys are not supported yet.");
         }

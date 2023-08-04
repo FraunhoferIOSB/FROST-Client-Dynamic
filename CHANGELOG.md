@@ -3,6 +3,8 @@
 ## Development Version
 
 **Updates**
+* Fixed incorrect URL generation for sub DOAs like Datastream(x)/Observations.
+* Simplified equals methods on Entity and EntitySet.
 
 
 ## Release Version 2.3
