@@ -49,14 +49,14 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
  */
 public class SensorThingsPlus implements DataModel {
 
-    private static final String NAME_GROUP = "Group";
-    private static final String NAME_GROUPS = "Groups";
+    private static final String NAME_OBSERVATION_GROUP = "ObservationGroup";
+    private static final String NAME_OBSERVATION_GROUPS = "ObservationGroups";
     private static final String NAME_LICENSE = "License";
     private static final String NAME_LICENSES = "Licenses";
     private static final String NAME_PARTY = "Party";
     private static final String NAME_PARTIES = "Parties";
-    private static final String NAME_PROJECT = "Project";
-    private static final String NAME_PROJECTS = "Projects";
+    private static final String NAME_CAMPAIGN = "Campaign";
+    private static final String NAME_CAMPAIGNS = "Campaigns";
     private static final String NAME_RELATION = "Relation";
     private static final String NAME_RELATIONS = "Relations";
     private static final String NAME_SUBJECT = "Subject";
@@ -100,58 +100,58 @@ public class SensorThingsPlus implements DataModel {
     public static final EntityPropertyMain<String> EP_URL = new EntityPropertyMain<>(NAME_URL, EDM_STRING);
     public static final EntityPropertyMain<String> EP_EXTERNAL_OBJECT = new EntityPropertyMain<>(NAME_EXTERNAL_OBJECT, EDM_STRING);
 
-    public final NavigationPropertyEntity npPartyProject = new NavigationPropertyEntity(NAME_PARTY);
-    public final NavigationPropertyEntitySet npProjectsParty = new NavigationPropertyEntitySet(NAME_PROJECTS, npPartyProject);
+    public final NavigationPropertyEntity npCampaignParty = new NavigationPropertyEntity(NAME_PARTY);
+    public final NavigationPropertyEntitySet npPartyCampaigns = new NavigationPropertyEntitySet(NAME_CAMPAIGNS, npCampaignParty);
 
-    public final NavigationPropertyEntity npPartyGroup = new NavigationPropertyEntity(NAME_PARTY);
-    public final NavigationPropertyEntitySet npGroupsParty = new NavigationPropertyEntitySet(NAME_GROUPS, npPartyGroup);
+    public final NavigationPropertyEntity npGroupParty = new NavigationPropertyEntity(NAME_PARTY);
+    public final NavigationPropertyEntitySet npPartyGroups = new NavigationPropertyEntitySet(NAME_OBSERVATION_GROUPS, npGroupParty);
 
-    public final NavigationPropertyEntity npPartyDatastream = new NavigationPropertyEntity(NAME_PARTY);
-    public final NavigationPropertyEntitySet npDatastreamsParty = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npPartyDatastream);
+    public final NavigationPropertyEntity npDatastreamParty = new NavigationPropertyEntity(NAME_PARTY);
+    public final NavigationPropertyEntitySet npPartyDatastreams = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npDatastreamParty);
 
-    public final NavigationPropertyEntity npPartyMultiDatastream = new NavigationPropertyEntity(NAME_PARTY);
-    public final NavigationPropertyEntitySet npMultiDatastreamsParty = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npPartyMultiDatastream);
+    public final NavigationPropertyEntity npMultiDatastreamParty = new NavigationPropertyEntity(NAME_PARTY);
+    public final NavigationPropertyEntitySet npPartyMultiDatastreams = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npMultiDatastreamParty);
 
-    public final NavigationPropertyEntity npPartyThing = new NavigationPropertyEntity(NAME_PARTY);
-    public final NavigationPropertyEntitySet npThingsParty = new NavigationPropertyEntitySet(NAME_THINGS, npPartyThing);
+    public final NavigationPropertyEntity npThingParty = new NavigationPropertyEntity(NAME_PARTY);
+    public final NavigationPropertyEntitySet npPartyThings = new NavigationPropertyEntitySet(NAME_THINGS, npThingParty);
 
-    public final NavigationPropertyEntity npLicenseProject = new NavigationPropertyEntity(NAME_LICENSE);
-    public final NavigationPropertyEntitySet npProjectsLicense = new NavigationPropertyEntitySet(NAME_PROJECTS, npLicenseProject);
+    public final NavigationPropertyEntity npCampaignLicense = new NavigationPropertyEntity(NAME_LICENSE);
+    public final NavigationPropertyEntitySet npLicenseCampaigns = new NavigationPropertyEntitySet(NAME_CAMPAIGNS, npCampaignLicense);
 
-    public final NavigationPropertyEntity npLicenseGroup = new NavigationPropertyEntity(NAME_LICENSE);
-    public final NavigationPropertyEntitySet npGroupsLicense = new NavigationPropertyEntitySet(NAME_GROUPS, npLicenseGroup);
+    public final NavigationPropertyEntity npGroupLicense = new NavigationPropertyEntity(NAME_LICENSE);
+    public final NavigationPropertyEntitySet npLicenseGroups = new NavigationPropertyEntitySet(NAME_OBSERVATION_GROUPS, npGroupLicense);
 
-    public final NavigationPropertyEntity npLicenseDatastream = new NavigationPropertyEntity(NAME_LICENSE);
-    public final NavigationPropertyEntitySet npDatastreamsLicense = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npLicenseDatastream);
+    public final NavigationPropertyEntity npDatastreamLicense = new NavigationPropertyEntity(NAME_LICENSE);
+    public final NavigationPropertyEntitySet npLicenseDatastreams = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npDatastreamLicense);
 
-    public final NavigationPropertyEntity npLicenseMultiDatastream = new NavigationPropertyEntity(NAME_LICENSE);
-    public final NavigationPropertyEntitySet npMultiDatastreamsLicense = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npLicenseMultiDatastream);
+    public final NavigationPropertyEntity npMultiDatastreamLicense = new NavigationPropertyEntity(NAME_LICENSE);
+    public final NavigationPropertyEntitySet npLicenseMultiDatastreams = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npMultiDatastreamLicense);
 
-    public final NavigationPropertyEntity npSubjectRelation = new NavigationPropertyEntity(NAME_SUBJECT);
-    public final NavigationPropertyEntitySet npObjectsObservation = new NavigationPropertyEntitySet(NAME_OBJECTS, npSubjectRelation);
+    public final NavigationPropertyEntity npRelationSubject = new NavigationPropertyEntity(NAME_SUBJECT);
+    public final NavigationPropertyEntitySet npObservationObjects = new NavigationPropertyEntitySet(NAME_OBJECTS, npRelationSubject);
 
-    public final NavigationPropertyEntity npObjectRelation = new NavigationPropertyEntity(NAME_OBJECT);
-    public final NavigationPropertyEntitySet npSubjectsObservation = new NavigationPropertyEntitySet(NAME_SUBJECTS, npObjectRelation);
+    public final NavigationPropertyEntity npRelationObject = new NavigationPropertyEntity(NAME_OBJECT);
+    public final NavigationPropertyEntitySet npObservationSubjects = new NavigationPropertyEntitySet(NAME_SUBJECTS, npRelationObject);
 
-    public final NavigationPropertyEntity npGroupsRelation = new NavigationPropertyEntity(NAME_GROUPS);
-    public final NavigationPropertyEntitySet npRelationsGroup = new NavigationPropertyEntitySet(NAME_RELATIONS, npGroupsRelation);
+    public final NavigationPropertyEntitySet npRelationGroups = new NavigationPropertyEntitySet(NAME_OBSERVATION_GROUPS);
+    public final NavigationPropertyEntitySet npGroupRelations = new NavigationPropertyEntitySet(NAME_RELATIONS, npRelationGroups);
 
-    public final NavigationPropertyEntity npGroupsProject = new NavigationPropertyEntity(NAME_GROUPS);
-    public final NavigationPropertyEntitySet npProjectsGroup = new NavigationPropertyEntitySet(NAME_PROJECTS, npGroupsProject);
+    public final NavigationPropertyEntitySet npCampaignGroups = new NavigationPropertyEntitySet(NAME_OBSERVATION_GROUPS);
+    public final NavigationPropertyEntitySet npGroupCampaigns = new NavigationPropertyEntitySet(NAME_CAMPAIGNS, npCampaignGroups);
 
-    public final NavigationPropertyEntity npGroupsObservation = new NavigationPropertyEntity(NAME_GROUPS);
-    public final NavigationPropertyEntitySet npObservationsGroup = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npGroupsObservation);
+    public final NavigationPropertyEntity npObservationGroups = new NavigationPropertyEntity(NAME_OBSERVATION_GROUPS);
+    public final NavigationPropertyEntitySet npGroupObservations = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npObservationGroups);
 
-    public final NavigationPropertyEntity npProjectsDatastream = new NavigationPropertyEntity(NAME_PROJECT);
-    public final NavigationPropertyEntitySet npDatastreamsProject = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npProjectsDatastream);
+    public final NavigationPropertyEntitySet npDatastreamCampaigns = new NavigationPropertyEntitySet(NAME_CAMPAIGNS);
+    public final NavigationPropertyEntitySet npCampaignDatastreams = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npDatastreamCampaigns);
 
-    public final NavigationPropertyEntity npProjectsMultiDatastream = new NavigationPropertyEntity(NAME_PROJECT);
-    public final NavigationPropertyEntitySet npMultiDatastreamsProject = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npProjectsMultiDatastream);
+    public final NavigationPropertyEntitySet npMultiDatastreamCampaigns = new NavigationPropertyEntitySet(NAME_CAMPAIGNS);
+    public final NavigationPropertyEntitySet npCampaignMultiDatastreams = new NavigationPropertyEntitySet(NAME_MULTI_DATASTREAMS, npMultiDatastreamCampaigns);
 
-    public final EntityType etGroup = new EntityType(NAME_GROUP, NAME_GROUPS);
+    public final EntityType etGroup = new EntityType(NAME_OBSERVATION_GROUP, NAME_OBSERVATION_GROUPS);
     public final EntityType etLicense = new EntityType(NAME_LICENSE, NAME_LICENSES);
     public final EntityType etParty = new EntityType(NAME_PARTY, NAME_PARTIES);
-    public final EntityType etProject = new EntityType(NAME_PROJECT, NAME_PROJECTS);
+    public final EntityType etCampaign = new EntityType(NAME_CAMPAIGN, NAME_CAMPAIGNS);
     public final EntityType etRelation = new EntityType(NAME_RELATION, NAME_RELATIONS);
 
     private ModelRegistry mr;
@@ -175,7 +175,7 @@ public class SensorThingsPlus implements DataModel {
         mr.registerEntityType(etGroup);
         mr.registerEntityType(etLicense);
         mr.registerEntityType(etParty);
-        mr.registerEntityType(etProject);
+        mr.registerEntityType(etCampaign);
         mr.registerEntityType(etRelation);
 
         etGroup
@@ -190,11 +190,11 @@ public class SensorThingsPlus implements DataModel {
                 .registerProperty(EP_PRIVACY_POLICY)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(EP_DATA_QUALITY)
-                .registerProperty(npLicenseGroup)
-                .registerProperty(npObservationsGroup)
-                .registerProperty(npPartyGroup)
-                .registerProperty(npProjectsGroup)
-                .registerProperty(npRelationsGroup);
+                .registerProperty(npGroupLicense)
+                .registerProperty(npGroupObservations)
+                .registerProperty(npGroupParty)
+                .registerProperty(npGroupCampaigns)
+                .registerProperty(npGroupRelations);
 
         etLicense
                 .registerProperty(EP_ID)
@@ -204,10 +204,10 @@ public class SensorThingsPlus implements DataModel {
                 .registerProperty(EP_DEFINITION)
                 .registerProperty(EP_LOGO)
                 .registerProperty(EP_ATTRIBUTION_TEXT)
-                .registerProperty(npProjectsLicense)
-                .registerProperty(npGroupsLicense)
-                .registerProperty(npDatastreamsLicense)
-                .registerProperty(npMultiDatastreamsLicense);
+                .registerProperty(npLicenseCampaigns)
+                .registerProperty(npLicenseGroups)
+                .registerProperty(npLicenseDatastreams)
+                .registerProperty(npLicenseMultiDatastreams);
 
         etParty
                 .registerProperty(EP_ID)
@@ -216,13 +216,13 @@ public class SensorThingsPlus implements DataModel {
                 .registerProperty(EP_AUTHID)
                 .registerProperty(EP_ROLE)
                 .registerProperty(EP_DISPLAYNAME)
-                .registerProperty(npProjectsParty)
-                .registerProperty(npGroupsParty)
-                .registerProperty(npThingsParty)
-                .registerProperty(npDatastreamsParty)
-                .registerProperty(npMultiDatastreamsParty);
+                .registerProperty(npPartyCampaigns)
+                .registerProperty(npPartyGroups)
+                .registerProperty(npPartyThings)
+                .registerProperty(npPartyDatastreams)
+                .registerProperty(npPartyMultiDatastreams);
 
-        etProject
+        etCampaign
                 .registerProperty(EP_ID)
                 .registerProperty(ModelRegistry.EP_SELFLINK)
                 .registerProperty(EP_NAME)
@@ -235,11 +235,11 @@ public class SensorThingsPlus implements DataModel {
                 .registerProperty(EP_END_TIME)
                 .registerProperty(EP_URL)
                 .registerProperty(EP_PROPERTIES)
-                .registerProperty(npPartyProject)
-                .registerProperty(npLicenseProject)
-                .registerProperty(npDatastreamsProject)
-                .registerProperty(npMultiDatastreamsProject)
-                .registerProperty(npGroupsProject);
+                .registerProperty(npCampaignParty)
+                .registerProperty(npCampaignLicense)
+                .registerProperty(npCampaignDatastreams)
+                .registerProperty(npCampaignMultiDatastreams)
+                .registerProperty(npCampaignGroups);
 
         etRelation
                 .registerProperty(EP_ID)
@@ -248,29 +248,29 @@ public class SensorThingsPlus implements DataModel {
                 .registerProperty(EP_DESCRIPTION)
                 .registerProperty(EP_EXTERNAL_OBJECT)
                 .registerProperty(EP_PROPERTIES)
-                .registerProperty(npGroupsRelation)
-                .registerProperty(npSubjectRelation)
-                .registerProperty(npObjectRelation);
+                .registerProperty(npRelationGroups)
+                .registerProperty(npRelationSubject)
+                .registerProperty(npRelationObject);
 
         etObservation
-                .registerProperty(npGroupsObservation)
-                .registerProperty(npSubjectsObservation)
-                .registerProperty(npObjectsObservation);
+                .registerProperty(npObservationGroups)
+                .registerProperty(npObservationSubjects)
+                .registerProperty(npObservationObjects);
 
         etThing
-                .registerProperty(npPartyThing);
+                .registerProperty(npThingParty);
 
         etDatastream
-                .registerProperty(npLicenseDatastream)
-                .registerProperty(npPartyDatastream)
-                .registerProperty(npProjectsDatastream);
+                .registerProperty(npDatastreamLicense)
+                .registerProperty(npDatastreamParty)
+                .registerProperty(npDatastreamCampaigns);
 
         // Register entities on multiDatastream, if it exists.
         if (etMultiDatastream != null) {
             etMultiDatastream
-                    .registerProperty(npLicenseMultiDatastream)
-                    .registerProperty(npPartyMultiDatastream)
-                    .registerProperty(npProjectsMultiDatastream);
+                    .registerProperty(npMultiDatastreamLicense)
+                    .registerProperty(npMultiDatastreamParty)
+                    .registerProperty(npMultiDatastreamCampaigns);
         }
     }
 
@@ -335,7 +335,7 @@ public class SensorThingsPlus implements DataModel {
     }
 
     public Entity newProject() {
-        return new Entity(etProject);
+        return new Entity(etCampaign);
     }
 
     public Entity newProject(Object id) {
