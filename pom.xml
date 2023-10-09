@@ -4,7 +4,7 @@
 
     <groupId>de.fraunhofer.iosb.ilt</groupId>
     <artifactId>FROST-Client-Dynamic</artifactId>
-    <version>2.5-SNAPSHOT</version>
+    <version>2.5</version>
     <packaging>jar</packaging>
 
     <name>FROST-Client-Dynamic</name>
@@ -42,7 +42,7 @@
     <scm>
         <connection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</connection>
         <developerConnection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v2.5</tag>
         <url>https://github.com/hylkevds/FROST-Client-Dynamic</url>
     </scm>
 

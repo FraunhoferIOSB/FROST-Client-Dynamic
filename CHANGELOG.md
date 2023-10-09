@@ -1,9 +1,10 @@
 # Changelog
 
-## Development Version
+## Release Version 2.5
 
 **Updates**
 * Bumped dependency versions
+* Updated for the published STAplus standard.
 
 
 ## Release Version 2.4
