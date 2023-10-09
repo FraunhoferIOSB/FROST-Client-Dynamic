@@ -3,6 +3,7 @@
 ## Development Version
 
 **Updates**
+* Bumped dependency versions
 
 
 ## Release Version 2.4

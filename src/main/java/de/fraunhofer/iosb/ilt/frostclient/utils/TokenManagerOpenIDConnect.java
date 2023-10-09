@@ -24,8 +24,10 @@ package de.fraunhofer.iosb.ilt.frostclient.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +39,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
 import org.apache.http.Consts;
 import org.apache.http.HttpRequest;
@@ -244,19 +247,21 @@ public class TokenManagerOpenIDConnect implements TokenManager<TokenManagerOpenI
 
     public boolean validateToken(String token) {
         try {
-            if (Jwts.parser().isSigned(token)) {
+            final JwtParser jwtsParser = Jwts.parser().build();
+            if (jwtsParser.isSigned(token)) {
                 if (keyType != null) {
                     X509EncodedKeySpec spec = new X509EncodedKeySpec(apiKeyBytes);
                     KeyFactory fact = KeyFactory.getInstance(keyType);
                     PublicKey key = fact.generatePublic(spec);
-                    Jwts.parser().setSigningKey(key).parse(token);
+                    Jwts.parser().verifyWith(key).build().parse(token);
                 } else if (apiKeyBytes != null) {
-                    Jwts.parser().setSigningKey(apiKeyBytes).parse(token);
+                    SecretKey key = Keys.hmacShaKeyFor(apiKeyBytes);
+                    Jwts.parser().verifyWith(key).build().parse(token);
                 } else {
                     LOGGER.debug("Can not validate token, please set the signing key.");
                 }
             } else {
-                Jwts.parser().parse(token);
+                jwtsParser.parse(token);
             }
             return true;
         } catch (SignatureException | NoSuchAlgorithmException | InvalidKeySpecException e) {
