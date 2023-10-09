@@ -25,7 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeObject;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
 import java.io.IOException;
 
 /**

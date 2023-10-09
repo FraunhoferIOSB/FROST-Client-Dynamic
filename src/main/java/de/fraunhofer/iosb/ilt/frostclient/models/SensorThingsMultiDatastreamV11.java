@@ -45,13 +45,13 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
-import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeInterval;
-import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeValue;
-import de.fraunhofer.iosb.ilt.frostclient.model.ext.UnitOfMeasurement;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimpleSet;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

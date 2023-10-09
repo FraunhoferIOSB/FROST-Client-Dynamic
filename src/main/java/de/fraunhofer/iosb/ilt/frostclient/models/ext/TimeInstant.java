@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.ext;
+package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.text.ParseException;

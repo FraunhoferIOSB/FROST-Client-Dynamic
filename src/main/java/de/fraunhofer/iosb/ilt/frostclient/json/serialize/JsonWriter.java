@@ -31,7 +31,7 @@ import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractConstr
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractDataComponentMixin;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractSWEIdentifiableMixin;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
-import de.fraunhofer.iosb.ilt.frostclient.model.ext.TimeObject;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
 import de.fraunhofer.iosb.ilt.swe.common.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.swe.common.AbstractSWEIdentifiable;
 import de.fraunhofer.iosb.ilt.swe.common.constraint.AbstractConstraint;
