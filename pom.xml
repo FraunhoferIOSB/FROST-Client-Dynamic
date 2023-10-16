@@ -76,7 +76,7 @@
         <version.jacksonGeojson>1.14</version.jacksonGeojson>
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.json-patch>1.13</version.json-patch>
-        <version.jsonwebtoken>0.12.2</version.jsonwebtoken>
+        <version.jsonwebtoken>0.12.3</version.jsonwebtoken>
         <version.junit>5.10.0</version.junit>
         <version.logback>1.4.11</version.logback>
 
