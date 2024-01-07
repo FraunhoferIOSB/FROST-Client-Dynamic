@@ -20,34 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.models;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl;
 
-import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * The interface for classes that implement a data model.
- */
-public interface DataModel {
+public abstract class CsdlSchemaItemAbstract implements CsdlSchemaItem {
 
-    /**
-     * Initialise the data model in the given ModelRegistry.
-     *
-     * @param service The service to use for loading data needed for
-     * initialisation.
-     * @param mr The ModelRegistry to initialise the data model in.
-     */
-    public void init(SensorThingsService service, ModelRegistry mr);
+    protected CsdlDocument document;
+    protected CsdlSchema schema;
+    private final String kind;
 
-    /**
-     * Check if the model is initialised.
-     *
-     * @return true if initialised.
-     */
-    public boolean isInitialised();
-
-    public default Version getVersion() {
-        return null;
+    public CsdlSchemaItemAbstract(String kind) {
+        this.kind = kind;
     }
+
+    @Override
+    @JsonProperty("$Kind")
+    public String getKind() {
+        return kind;
+    }
+
+    @Override
+    public CsdlDocument getDocument() {
+        return document;
+    }
+
+    @Override
+    public void setDocument(CsdlDocument document) {
+        this.document = document;
+    }
+
+    @Override
+    public CsdlSchema getSchema() {
+        return schema;
+    }
+
+    @Override
+    public void setSchema(CsdlSchema schema) {
+        this.schema = schema;
+    }
+
 }

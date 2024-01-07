@@ -66,8 +66,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <root.basedir>${project.basedir}</root.basedir>
+
+        <version.Configurable>0.35-SNAPSHOT</version.Configurable>
 
         <version.commons-lang3>3.13.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
@@ -120,6 +121,11 @@
             <version>${version.jackson-databind}</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.java-json-tools</groupId>
             <artifactId>json-patch</artifactId>
             <version>${version.json-patch}</version>
@@ -129,6 +135,17 @@
                     <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.15.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.fraunhofer.iosb.ilt</groupId>
+            <artifactId>Configurable</artifactId>
+            <version>${version.Configurable}</version>
         </dependency>
         <dependency>
             <groupId>de.fraunhofer.iosb.ilt</groupId>

@@ -205,4 +205,14 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
 
     }
 
+    @Override
+    public Object getProperty(String name) {
+        throw new IllegalArgumentException("Can not get custom properties from TimeValue");
+    }
+
+    @Override
+    public TimeValue setProperty(String name, Object value) {
+        throw new IllegalArgumentException("Can not set custom properties on TimeValue");
+    }
+
 }

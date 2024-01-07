@@ -22,14 +22,10 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import static de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils.PARSER_LONG;
-import static de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils.PARSER_STRING;
-import static de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils.PARSER_UUID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_BIGDECIMAL;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_BOOLEAN;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_DATE;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_DURATION;
-import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_GEOJSONOBJECT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_INTEGER;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LONG;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_OBJECT;
@@ -38,8 +34,11 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -97,14 +96,14 @@ public class TypePrimitive extends PropertyType {
     public static final TypePrimitive EDM_DECIMAL = new TypePrimitive(EDM_DECIMAL_NAME, "Numeric values with decimal representation", TYPE_REFERENCE_BIGDECIMAL);
     public static final TypePrimitive EDM_DOUBLE = new TypePrimitive(EDM_DOUBLE_NAME, "IEEE 754 binary64 floating-point number (15-17 decimal digits)", TYPE_REFERENCE_BIGDECIMAL);
     public static final TypePrimitive EDM_DURATION = new TypePrimitive(EDM_DURATION_NAME, "Signed duration in days, hours, minutes, and (sub)seconds", TYPE_REFERENCE_DURATION);
-    public static final TypePrimitive EDM_GUID = new TypePrimitive(EDM_GUID_NAME, "16-byte (128-bit) unique identifier", PARSER_UUID, TYPE_REFERENCE_UUID);
-    public static final TypePrimitive EDM_INT16 = new TypePrimitive(EDM_INT16_NAME, "Signed 16-bit integer", PARSER_LONG, TYPE_REFERENCE_INTEGER);
-    public static final TypePrimitive EDM_INT32 = new TypePrimitive(EDM_INT32_NAME, "Signed 32-bit integer", PARSER_LONG, TYPE_REFERENCE_INTEGER);
-    public static final TypePrimitive EDM_INT64 = new TypePrimitive(EDM_INT64_NAME, "Signed 64-bit integer", PARSER_LONG, TYPE_REFERENCE_LONG);
-    public static final TypePrimitive EDM_SBYTE = new TypePrimitive(EDM_SBYTE_NAME, "Signed 8-bit integer", PARSER_LONG, TYPE_REFERENCE_INTEGER);
+    public static final TypePrimitive EDM_GUID = new TypePrimitive(EDM_GUID_NAME, "16-byte (128-bit) unique identifier", TYPE_REFERENCE_UUID);
+    public static final TypePrimitive EDM_INT16 = new TypePrimitive(EDM_INT16_NAME, "Signed 16-bit integer", TYPE_REFERENCE_INTEGER);
+    public static final TypePrimitive EDM_INT32 = new TypePrimitive(EDM_INT32_NAME, "Signed 32-bit integer", TYPE_REFERENCE_INTEGER);
+    public static final TypePrimitive EDM_INT64 = new TypePrimitive(EDM_INT64_NAME, "Signed 64-bit integer", TYPE_REFERENCE_LONG);
+    public static final TypePrimitive EDM_SBYTE = new TypePrimitive(EDM_SBYTE_NAME, "Signed 8-bit integer", TYPE_REFERENCE_INTEGER);
     public static final TypePrimitive EDM_SINGLE = new TypePrimitive(EDM_SINGLE_NAME, "IEEE 754 binary32 floating-point number (6-9 decimal digits)", TYPE_REFERENCE_BIGDECIMAL);
     public static final TypePrimitive EDM_STREAM = new TypePrimitive(EDM_STREAM_NAME, "Binary data stream", TYPE_REFERENCE_STRING);
-    public static final TypePrimitive EDM_STRING = new TypePrimitive(EDM_STRING_NAME, "Sequence of characters", PARSER_STRING, TYPE_REFERENCE_STRING);
+    public static final TypePrimitive EDM_STRING = new TypePrimitive(EDM_STRING_NAME, "Sequence of characters", TYPE_REFERENCE_STRING);
     public static final TypePrimitive EDM_TIMEOFDAY = new TypePrimitive(EDM_TIMEOFDAY_NAME, "Clock time 00:00-23:59:59.999999999999", TYPE_REFERENCE_DATE);
     public static final TypePrimitive EDM_GEOGRAPHY = new TypePrimitive(EDM_GEOGRAPHY_NAME, "Abstract base type for all Geography types", TYPE_REFERENCE_OBJECT);
     public static final TypePrimitive EDM_GEOGRAPHYPOINT = new TypePrimitive(EDM_GEOGRAPHYPOINT_NAME, "A point in a round-earth coordinate system", TYPE_REFERENCE_OBJECT);
@@ -114,7 +113,7 @@ public class TypePrimitive extends PropertyType {
     public static final TypePrimitive EDM_GEOGRAPHYMULTILINESTRING = new TypePrimitive(EDM_GEOGRAPHYMULTILINESTRING_NAME, "Collection of line strings in a round-earth coordinate system", TYPE_REFERENCE_OBJECT);
     public static final TypePrimitive EDM_GEOGRAPHYMULTIPOLYGON = new TypePrimitive(EDM_GEOGRAPHYMULTIPOLYGON_NAME, "Collection of polygons in a round-earth coordinate system", TYPE_REFERENCE_OBJECT);
     public static final TypePrimitive EDM_GEOGRAPHYCOLLECTION = new TypePrimitive(EDM_GEOGRAPHYCOLLECTION_NAME, "Collection of arbitrary Geography values", TYPE_REFERENCE_OBJECT);
-    public static final TypePrimitive EDM_GEOMETRY = new TypePrimitive(EDM_GEOMETRY_NAME, "Abstract base type for all Geometry types", TYPE_REFERENCE_GEOJSONOBJECT, TYPE_REFERENCE_STRING);
+    public static final TypePrimitive EDM_GEOMETRY = new TypePrimitive(EDM_GEOMETRY_NAME, "Abstract base type for all Geometry types", ParserUtils.getLocationDeserializer());
     public static final TypePrimitive EDM_GEOMETRYPOINT = new TypePrimitive(EDM_GEOMETRYPOINT_NAME, "Point in a flat-earth coordinate system", TYPE_REFERENCE_OBJECT);
     public static final TypePrimitive EDM_GEOMETRYLINESTRING = new TypePrimitive(EDM_GEOMETRYLINESTRING_NAME, "Line string in a flat-earth coordinate system", TYPE_REFERENCE_OBJECT);
     public static final TypePrimitive EDM_GEOMETRYPOLYGON = new TypePrimitive(EDM_GEOMETRYPOLYGON_NAME, "Polygon in a flat-earth coordinate system", TYPE_REFERENCE_OBJECT);
@@ -155,31 +154,20 @@ public class TypePrimitive extends PropertyType {
         }
     }
 
-    private Parser parser;
-
     public static TypePrimitive getType(String name) {
         return TYPES.get(name);
     }
 
-    protected TypePrimitive(String name, String description, TypeReference... typeReference) {
+    protected TypePrimitive(String name, String description, TypeReference typeReference) {
         super(name, description, typeReference);
     }
 
-    protected TypePrimitive(String name, String description, Parser parser, TypeReference... typeReference) {
-        super(name, description, typeReference);
-        this.parser = parser;
+    public TypePrimitive(String name, String description, JsonDeserializer jd) {
+        super(name, description, jd);
     }
 
-    @Override
-    public Object parseFromUrl(String input) {
-        if (parser != null) {
-            return parser.parse(input);
-        }
-        return super.parseFromUrl(input);
+    public TypePrimitive(String name, String description, JsonDeserializer jd, JsonSerializer js) {
+        super(name, description, jd, js);
     }
 
-    public static interface Parser {
-
-        public Object parse(String input);
-    }
 }

@@ -22,14 +22,12 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
-import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
@@ -37,6 +35,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.EntitySetImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
+import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
@@ -73,10 +72,12 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
 
         for (Property property : propertySet) {
             if (property instanceof EntityPropertyMain) {
+                final PropertyType type = property.getType();
                 final PropertyData propertyData = new PropertyData(
                         property,
                         false,
-                        property.getType().getTypeReference());
+                        type.getDeserializer(),
+                        type.getSerializer());
                 for (String alias : ((EntityPropertyMain<?>) property).getAliases()) {
                     propertyByName.put(alias, propertyData);
                 }
@@ -160,23 +161,12 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
 
     private void deserializeEntityProperty(JsonParser parser, DeserializationContext ctxt, PropertyData propertyData, Entity result) throws IOException {
         EntityPropertyMain entityPropertyMain = (EntityPropertyMain) propertyData.property;
-        if (isNullOrEmpty(propertyData.valueTypeRef)) {
+        if (propertyData.deserializer == null) {
             Object value = parser.readValueAs(Object.class);
             result.setProperty(entityPropertyMain, value);
         } else {
-            int idx = 0;
-            Exception last = null;
-            while (idx < propertyData.valueTypeRef.length) {
-                try {
-                    Object value = parser.readValueAs(propertyData.valueTypeRef[idx]);
-                    result.setProperty(entityPropertyMain, value);
-                    return;
-                } catch (IOException | RuntimeException ex) {
-                    last = ex;
-                    idx++;
-                }
-            }
-            throw new IllegalArgumentException("Failed to parse content for property " + propertyData.property.getName(), last);
+            Object value = propertyData.deserializer.deserialize(parser, ctxt);
+            result.setProperty(entityPropertyMain, value);
         }
     }
 
@@ -228,13 +218,19 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
     private static class PropertyData {
 
         final Property property;
-        final TypeReference[] valueTypeRef;
         final boolean isEntitySet;
+        final JsonDeserializer deserializer;
+        final JsonSerializer serializer;
 
-        public PropertyData(Property property, boolean isEntitySet, TypeReference... valueTypeRef) {
+        public PropertyData(Property property, boolean isEntitySet) {
+            this(property, isEntitySet, null, null);
+        }
+
+        public PropertyData(Property property, boolean isEntitySet, JsonDeserializer deserializer, JsonSerializer serializer) {
             this.property = property;
-            this.valueTypeRef = valueTypeRef;
             this.isEntitySet = isEntitySet;
+            this.deserializer = deserializer;
+            this.serializer = serializer;
         }
 
     }

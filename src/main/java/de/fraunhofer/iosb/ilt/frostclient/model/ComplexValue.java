@@ -45,8 +45,27 @@ public interface ComplexValue<S extends ComplexValue<S>> {
      * @param <P> The type of the property.
      * @param property The property to set.
      * @param value The value to set the property to.
-     * @return this
+     * @return this.
      */
     public <P> S setProperty(Property<P> property, P value);
+
+    /**
+     * Get the custom property with the given name. Only valid for ComplexTypes
+     * that are classed as openType, returns null for non-openTypes.
+     *
+     * @param name The name of the custom property to fetch.
+     * @return The value of the custom property.
+     */
+    public Object getProperty(String name);
+
+    /**
+     * Set the custom property with the given name to the given value. Only
+     * valid for ComplexTypes that are classed as openType.
+     *
+     * @param name The name of the custom property to set.
+     * @param value The value of the custom property to set.
+     * @return this.
+     */
+    public S setProperty(String name, Object value);
 
 }

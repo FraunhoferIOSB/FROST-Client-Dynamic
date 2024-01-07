@@ -64,10 +64,22 @@ public abstract class NavigationPropertyAbstract<P> extends PropertyAbstract<P> 
         return inverse;
     }
 
+    /**
+     * Set the inverse to the given NP. Does not set the inverse of the given NP
+     * to this.
+     *
+     * @param inverse The inverse to set.
+     */
     public final void setInverse(NavigationPropertyAbstract inverse) {
         this.inverse = inverse;
     }
 
+    /**
+     * Set the inverse of this NP to to given NP, and set the inverse of the
+     * given NP to this NP.
+     *
+     * @param inverse The inverse to set.
+     */
     public final void setInverses(NavigationPropertyAbstract inverse) {
         this.inverse = inverse;
         inverse.setInverse(this);

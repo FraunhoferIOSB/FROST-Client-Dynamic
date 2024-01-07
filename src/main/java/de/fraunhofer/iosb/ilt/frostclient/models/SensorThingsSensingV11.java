@@ -29,6 +29,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONTENT_TYPE_AP
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UOM;
 
+import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
@@ -118,7 +119,7 @@ public class SensorThingsSensingV11 implements DataModel {
 
     public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>(AT_IOT_ID, EDM_UNTYPED);
 
-    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", TYPE_REFERENCE_UOM, UnitOfMeasurement::new)
+    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", UnitOfMeasurement::new, TYPE_REFERENCE_UOM)
             .registerProperty(EP_NAME)
             .registerProperty(EP_SYMBOL)
             .registerProperty(EP_DEFINITION);
@@ -163,7 +164,7 @@ public class SensorThingsSensingV11 implements DataModel {
     }
 
     @Override
-    public final void init(ModelRegistry modelRegistry) {
+    public final void init(SensorThingsService service, ModelRegistry modelRegistry) {
         if (this.mr != null) {
             throw new IllegalArgumentException("Already initialised.");
         }
@@ -265,13 +266,6 @@ public class SensorThingsSensingV11 implements DataModel {
     @Override
     public boolean isInitialised() {
         return mr != null;
-    }
-
-    public ModelRegistry getModelRegistry() {
-        if (mr == null) {
-            init(new ModelRegistry());
-        }
-        return mr;
     }
 
     public Entity newThing() {

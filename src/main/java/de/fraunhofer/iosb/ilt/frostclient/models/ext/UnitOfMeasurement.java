@@ -55,20 +55,6 @@ public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
         this.definition = definition;
     }
 
-    @Override
-    public <P> P getProperty(Property<P> property) {
-        if (property == EP_NAME) {
-            return (P) getName();
-        }
-        if (property == EP_SYMBOL) {
-            return (P) getSymbol();
-        }
-        if (property == EP_DEFINITION) {
-            return (P) getDefinition();
-        }
-        throw new IllegalArgumentException("Unknown sub-property: " + property);
-    }
-
     /**
      * @return the name
      */
@@ -91,6 +77,20 @@ public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
     }
 
     @Override
+    public <P> P getProperty(Property<P> property) {
+        if (property == EP_NAME) {
+            return (P) getName();
+        }
+        if (property == EP_SYMBOL) {
+            return (P) getSymbol();
+        }
+        if (property == EP_DEFINITION) {
+            return (P) getDefinition();
+        }
+        throw new IllegalArgumentException("Unknown sub-property: " + property);
+    }
+
+    @Override
     public <P> UnitOfMeasurement setProperty(Property<P> property, P value) {
         if (property == EP_NAME) {
             return setName(Objects.toString(value));
@@ -102,6 +102,16 @@ public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
             return setDefinition(Objects.toString(value));
         }
         throw new IllegalArgumentException("Unknown sub-property: " + property);
+    }
+
+    @Override
+    public Object getProperty(String name) {
+        throw new IllegalArgumentException("Can not get custom properties from UnitOfMeasurement");
+    }
+
+    @Override
+    public UnitOfMeasurement setProperty(String name, Object value) {
+        throw new IllegalArgumentException("Can not set custom properties on UnitOfMeasurement");
     }
 
     /**

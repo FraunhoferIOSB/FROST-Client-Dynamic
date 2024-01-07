@@ -20,55 +20,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model;
-
-import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
 /**
- * @param <P> The type of the value of the property.
+ * A holder for the combination of an Annotation Source and Annotation
+ * Namespace.
+ *
+ * @author hylke
  */
-public interface Property<P> extends Comparable<Property<?>>, Annotatable {
+public class SourceNamespace {
 
     /**
-     * The name of this property as used in URLs.
-     *
-     * @return The name of this property as used in URLs.
+     * The base URL defining an annotation, without file-extension.
      */
-    public String getName();
+    private final String sourceUrlBase;
 
     /**
-     * The name of this property as used in JSON.
-     *
-     * @return The name of this property as used in JSON.
+     * The Namespace of an annotation.
      */
-    public String getJsonName();
+    private final String nameSpace;
+
+    public SourceNamespace(String sourceUrlBase, String nameSpace) {
+        this.sourceUrlBase = sourceUrlBase;
+        this.nameSpace = nameSpace;
+    }
 
     /**
-     * The class of the type of the value of this property.
+     * The base URL defining an annotation, without file-extension.
      *
-     * @return The class of the type of the value of this property.
+     * @return the base URL defining an annotation, without file-extension.
      */
-    public PropertyType getType();
+    public String getSourceUrlBase() {
+        return sourceUrlBase;
+    }
 
     /**
-     * Flag indicating the property is system generated and can not be edited by
-     * the user.
+     * The Namespace of an annotation.
      *
-     * @return the readOnly flag.
+     * @return the Namespace of an annotation.
      */
-    public boolean isReadOnly();
-
-    /**
-     * Flag indicating the property can be left out, or explicitly be set to
-     * null.
-     *
-     * @return The nullable flag.
-     */
-    public boolean isNullable();
-
-    @Override
-    public default int compareTo(Property o) {
-        return getName().compareTo(o.getName());
+    public String getNameSpace() {
+        return nameSpace;
     }
 
 }

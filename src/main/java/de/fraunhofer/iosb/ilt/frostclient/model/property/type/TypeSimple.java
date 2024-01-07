@@ -22,22 +22,24 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 
 /**
  * A simple Type.
  */
-public abstract class TypeSimple extends TypePrimitive {
+public class TypeSimple extends TypePrimitive {
 
     private final TypePrimitive underlyingType;
 
-    protected TypeSimple(String name, String description, TypePrimitive underlyingType, Parser parser, TypeReference... typeReference) {
-        super(name, description, parser, typeReference);
+    public TypeSimple(String name, String description, TypePrimitive underlyingType) {
+        super(name, description, underlyingType.getDeserializer(), underlyingType.getSerializer());
         this.underlyingType = underlyingType;
     }
 
-    protected TypeSimple(String name, String description, TypePrimitive underlyingType, TypeReference... typeReference) {
-        this(name, description, underlyingType, null, typeReference);
+    public TypeSimple(String name, String description, TypePrimitive underlyingType, JsonDeserializer jd, JsonSerializer js) {
+        super(name, description, jd, js);
+        this.underlyingType = underlyingType;
     }
 
     public TypePrimitive getUnderlyingType() {

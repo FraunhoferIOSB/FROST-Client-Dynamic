@@ -40,6 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +65,8 @@ public class SensorThingsService {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SensorThingsService.class);
 
     private final ModelRegistry modelRegistry;
-    private final JsonReader jsonReader;
+    private final List<DataModel> models = new ArrayList<>();
+    private JsonReader jsonReader;
     private URL endpoint;
     private String urlReplace;
     private HttpClientBuilder clientBuilder;
@@ -85,8 +87,12 @@ public class SensorThingsService {
      */
     public SensorThingsService(List<DataModel> models) {
         modelRegistry = new ModelRegistry();
+        this.models.addAll(models);
+    }
+
+    private void initModels() {
         for (DataModel model : models) {
-            model.init(modelRegistry);
+            model.init(this, modelRegistry);
         }
         modelRegistry.initFinalise();
         jsonReader = new JsonReader(modelRegistry);
@@ -208,16 +214,19 @@ public class SensorThingsService {
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
         Version detectedVersion = Version.findVersion(lastSegment);
-        if (detectedVersion != null) {
-            version = detectedVersion;
-        } else {
+        if (detectedVersion == null) {
             if (getVersion() == null) {
                 throw new MalformedURLException("endpoint URL does not contain version (e.g. http://example.org/v1.0/) nor version information explicitely provided");
             }
-            url += "/" + getVersion().getUrlPart();
+            if (!url.endsWith(getVersion().getUrlPart())) {
+                url += "/" + getVersion().getUrlPart();
+            }
+        } else {
+            version = detectedVersion;
         }
 
         this.endpoint = new URL(url + "/");
+        initModels();
         return this;
     }
 
@@ -284,7 +293,7 @@ public class SensorThingsService {
      */
     public URL getFullPath(EntityType entityType) throws ServiceFailureException {
         try {
-            return new URL(getEndpoint().toString() + entityType.plural);
+            return new URL(getEndpoint().toString() + entityType.mainContainer);
         } catch (MalformedURLException exc) {
             LOGGER.error("Failed to generate URL.", exc);
             throw new ServiceFailureException(exc);
@@ -455,6 +464,14 @@ public class SensorThingsService {
     }
 
     public Version getVersion() {
+        if (version == null) {
+            for (DataModel model : models) {
+                version = model.getVersion();
+                if (version != null) {
+                    return version;
+                }
+            }
+        }
         return version;
     }
 

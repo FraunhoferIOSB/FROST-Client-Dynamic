@@ -63,7 +63,10 @@ public class Utils {
      */
     public static void throwIfNotOk(HttpRequestBase request, CloseableHttpResponse response) throws StatusCodeException {
         final int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode < 200 || statusCode >= 300) {
+        if (statusCode == 204) {
+            throw new StatusCodeException(request.getURI().toString(), statusCode, response.getStatusLine().getReasonPhrase(), "");
+        }
+        if (statusCode < 200 || statusCode >= 300 || statusCode == 204) {
             String returnContent = null;
             try {
                 returnContent = EntityUtils.toString(response.getEntity(), Consts.UTF_8);

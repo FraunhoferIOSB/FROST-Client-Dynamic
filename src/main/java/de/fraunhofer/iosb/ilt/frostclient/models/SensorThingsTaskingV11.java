@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.models;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_THING;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
@@ -54,7 +55,7 @@ public class SensorThingsTaskingV11 implements DataModel {
     public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
     };
-    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", TYPE_REFERENCE_DATARECORD, null, true);
+    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", true, null, TYPE_REFERENCE_DATARECORD);
     public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, STA_TASKINGPARAMETERS);
 
     public final NavigationPropertyEntity npTaskcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);
@@ -75,7 +76,7 @@ public class SensorThingsTaskingV11 implements DataModel {
     }
 
     @Override
-    public final void init(ModelRegistry modelRegistry) {
+    public final void init(SensorThingsService service, ModelRegistry modelRegistry) {
         if (this.mr != null) {
             throw new IllegalArgumentException("Already initialised.");
         }

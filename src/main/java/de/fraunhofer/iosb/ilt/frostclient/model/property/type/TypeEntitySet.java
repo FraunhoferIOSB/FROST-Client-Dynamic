@@ -23,7 +23,6 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
-import de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper;
 
 /**
  * The PropertyType of Navigation Properties to EntitySets.
@@ -33,7 +32,7 @@ public class TypeEntitySet extends TypeComplex {
     private EntityType entityType;
 
     public TypeEntitySet(EntityType entityType) {
-        super(entityType.entityName, "Collection of " + entityType.entityName, TypeReferencesHelper.TYPE_REFERENCE_ENTITYSET, null, false);
+        super(entityType.entityName, "Collection of " + entityType.entityName, false, null, null, null);
     }
 
     public EntityType getEntityType() {

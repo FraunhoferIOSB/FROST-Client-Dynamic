@@ -20,55 +20,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
-import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
- * @param <P> The type of the value of the property.
+ *
+ * @author hylke
  */
-public interface Property<P> extends Comparable<Property<?>>, Annotatable {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public interface Annotation {
+
+    public enum DocType {
+        JSON("json"),
+        XML("xml");
+
+        private final String defaultExtension;
+
+        private DocType(String defaultExtension) {
+            this.defaultExtension = defaultExtension;
+        }
+
+        public String getDefaultExtension() {
+            return defaultExtension;
+        }
+
+    }
 
     /**
-     * The name of this property as used in URLs.
+     * The URL of the document that defines the annotation.
      *
-     * @return The name of this property as used in URLs.
+     * @param docType the
+     * @return The URL of the document that defines the annotation.
+     */
+    public String getSourceUrl(DocType docType);
+
+    /**
+     * The namespace of the annotation Term.
+     *
+     * @return The name space of the annotation Term.
+     */
+    public String getNameSpace();
+
+    /**
+     * The name of the annotation Term.
+     *
+     * @return The name of the annotation Term.
      */
     public String getName();
 
     /**
-     * The name of this property as used in JSON.
+     * The value of the annotation.
      *
-     * @return The name of this property as used in JSON.
+     * @return The value of the annotation.
      */
-    public String getJsonName();
-
-    /**
-     * The class of the type of the value of this property.
-     *
-     * @return The class of the type of the value of this property.
-     */
-    public PropertyType getType();
-
-    /**
-     * Flag indicating the property is system generated and can not be edited by
-     * the user.
-     *
-     * @return the readOnly flag.
-     */
-    public boolean isReadOnly();
-
-    /**
-     * Flag indicating the property can be left out, or explicitly be set to
-     * null.
-     *
-     * @return The nullable flag.
-     */
-    public boolean isNullable();
-
-    @Override
-    public default int compareTo(Property o) {
-        return getName().compareTo(o.getName());
-    }
+    public Object getValue();
 
 }

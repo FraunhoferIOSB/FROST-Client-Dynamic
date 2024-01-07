@@ -24,6 +24,9 @@ package de.fraunhofer.iosb.ilt.frostclient.model.property;
 
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
+import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PropertyAbstract<P> implements Property<P> {
 
@@ -35,14 +38,22 @@ public abstract class PropertyAbstract<P> implements Property<P> {
      * the user.
      */
     protected boolean readOnly;
+    protected boolean nullable;
+
+    protected List<Annotation> annotations = new ArrayList<>();
 
     public PropertyAbstract(String name, PropertyType type, boolean readOnly) {
+        this(name, type, readOnly, true);
+    }
+
+    public PropertyAbstract(String name, PropertyType type, boolean readOnly, boolean nullable) {
         if (type == null) {
             throw new IllegalArgumentException("Type must not be null");
         }
         this.name = name;
         this.type = type;
         this.readOnly = readOnly;
+        this.nullable = nullable;
     }
 
     @Override
@@ -74,8 +85,32 @@ public abstract class PropertyAbstract<P> implements Property<P> {
     }
 
     @Override
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
+
+    @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public PropertyAbstract<P> setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+        return this;
+    }
+
+    public PropertyAbstract<P> addAnnotation(Annotation annotation) {
+        annotations.add(annotation);
+        return this;
     }
 
 }

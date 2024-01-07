@@ -1,0 +1,465 @@
+{
+    "$Version": "4.01",
+    "$EntityContainer": "de.FROST.FrostService",
+    "$Reference": {},
+    "de.FROST": {
+        "Datastream": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "observationType": {},
+            "unitOfMeasurement": {
+                "$Type": "de.FROST.UnitOfMeasurement"
+            },
+            "observedArea": {
+                "$Type": "Edm.Geometry",
+                "$Nullable": true
+            },
+            "phenomenonTime": {
+                "$Type": "de.FROST.TimeInterval"
+            },
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "resultTime": {
+                "$Type": "de.FROST.TimeInterval",
+                "$Nullable": true
+            },
+            "Observations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Datastream",
+                "$Type": "de.FROST.Observation",
+                "$Nullable": true
+            },
+            "ObservedProperty": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Datastreams",
+                "$Type": "de.FROST.ObservedProperty"
+            },
+            "Sensor": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Datastreams",
+                "$Type": "de.FROST.Sensor"
+            },
+            "Thing": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Datastreams",
+                "$Type": "de.FROST.Thing"
+            }
+        },
+        "FeatureOfInterest": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "encodingType": {},
+            "feature": {
+                "$Type": "de.FROST.GeoJson"
+            },
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "Observations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "FeatureOfInterest",
+                "$Type": "de.FROST.Observation",
+                "$Nullable": true
+            }
+        },
+        "HistoricalLocation": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "time": {
+                "$Type": "Edm.DateTimeOffset"
+            },
+            "Locations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "HistoricalLocations",
+                "$Type": "de.FROST.Location",
+                "$Nullable": true
+            },
+            "Thing": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "HistoricalLocations",
+                "$Type": "de.FROST.Thing"
+            }
+        },
+        "Location": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "encodingType": {},
+            "location": {
+                "$Type": "de.FROST.GeoJson"
+            },
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "HistoricalLocations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Locations",
+                "$Type": "de.FROST.HistoricalLocation",
+                "$Nullable": true
+            },
+            "Things": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Locations",
+                "$Type": "de.FROST.Thing",
+                "$Nullable": true
+            }
+        },
+        "MultiDatastream": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "observationType": {},
+            "multiObservationDataTypes": {
+                "$Collection": true
+            },
+            "unitOfMeasurements": {
+                "$Type": "de.FROST.UnitOfMeasurement",
+                "$Collection": true
+            },
+            "observedArea": {
+                "$Type": "Edm.Geometry",
+                "$Nullable": true
+            },
+            "phenomenonTime": {
+                "$Type": "de.FROST.TimeInterval"
+            },
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "resultTime": {
+                "$Type": "de.FROST.TimeInterval",
+                "$Nullable": true
+            },
+            "Observations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "MultiDatastream",
+                "$Type": "de.FROST.Observation",
+                "$Nullable": true
+            },
+            "ObservedProperties": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "MultiDatastreams",
+                "$Type": "de.FROST.ObservedProperty",
+                "$Nullable": true
+            },
+            "Sensor": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "MultiDatastreams",
+                "$Type": "de.FROST.Sensor"
+            },
+            "Thing": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "MultiDatastreams",
+                "$Type": "de.FROST.Thing"
+            }
+        },
+        "Observation": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "phenomenonTime": {
+                "$Type": "de.FROST.TimeValue"
+            },
+            "resultTime": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": true
+            },
+            "result": {
+                "$Type": "Edm.Untyped",
+                "$Nullable": true
+            },
+            "resultQuality": {
+                "$Type": "de.FROST.ANY",
+                "$Nullable": true
+            },
+            "validTime": {
+                "$Type": "de.FROST.TimeInterval",
+                "$Nullable": true
+            },
+            "parameters": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "Datastream": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Observations",
+                "$Type": "de.FROST.Datastream"
+            },
+            "FeatureOfInterest": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Observations",
+                "$Type": "de.FROST.FeatureOfInterest",
+                "$Nullable": true
+            },
+            "MultiDatastream": {
+                "$Kind": "NavigationProperty",
+                "$Partner": "Observations",
+                "$Type": "de.FROST.MultiDatastream",
+                "$Nullable": true
+            }
+        },
+        "ObservedProperty": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "definition": {},
+            "description": {},
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "Datastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "ObservedProperty",
+                "$Type": "de.FROST.Datastream",
+                "$Nullable": true
+            },
+            "MultiDatastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "ObservedProperties",
+                "$Type": "de.FROST.MultiDatastream",
+                "$Nullable": true
+            }
+        },
+        "Sensor": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "encodingType": {},
+            "metadata": {},
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "Datastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Sensor",
+                "$Type": "de.FROST.Datastream",
+                "$Nullable": true
+            },
+            "MultiDatastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Sensor",
+                "$Type": "de.FROST.MultiDatastream",
+                "$Nullable": true
+            }
+        },
+        "Thing": {
+            "$Kind": "EntityType",
+            "$Key": ["id"],
+            "id": {
+                "$Type": "Edm.Int64"
+            },
+            "name": {},
+            "description": {},
+            "properties": {
+                "$Type": "de.FROST.Object",
+                "$Nullable": true
+            },
+            "HistoricalLocations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Thing",
+                "$Type": "de.FROST.HistoricalLocation",
+                "$Nullable": true
+            },
+            "Locations": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Things",
+                "$Type": "de.FROST.Location",
+                "$Nullable": true
+            },
+            "MultiDatastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Thing",
+                "$Type": "de.FROST.MultiDatastream",
+                "$Nullable": true
+            },
+            "Datastreams": {
+                "$Kind": "NavigationProperty",
+                "$Collection": true,
+                "$Partner": "Thing",
+                "$Type": "de.FROST.Datastream",
+                "$Nullable": true
+            }
+        },
+        "ANY": {
+            "$Kind": "ComplexType",
+            "$OpenType": true,
+            "@Core.Description": "A free type, can be anything"
+        },
+        "GeoJson": {
+            "$Kind": "TypeDefinition",
+            "$UnderlyingType": "Edm.Geometry",
+            "@Core.Description": "A GeoJSON Object"
+        },
+        "Object": {
+            "$Kind": "ComplexType",
+            "$OpenType": true,
+            "@Core.Description": "A free object that can contain anything"
+        },
+        "TimeInterval": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "An ISO time interval.",
+            "start": {
+                "$Type": "Edm.DateTimeOffset"
+            },
+            "end": {
+                "$Type": "Edm.DateTimeOffset"
+            }
+        },
+        "TimeValue": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "An ISO time instant or time interval.",
+            "start": {
+                "$Type": "Edm.DateTimeOffset"
+            },
+            "end": {
+                "$Type": "Edm.DateTimeOffset",
+                "$Nullable": true
+            }
+        },
+        "UnitOfMeasurement": {
+            "$Kind": "ComplexType",
+            "@Core.Description": "The Unit Of Measurement Type",
+            "name": {
+                "$Nullable": true
+            },
+            "symbol": {
+                "$Nullable": true
+            },
+            "definition": {
+                "$Nullable": true
+            }
+        },
+        "FrostService": {
+            "$Kind": "EntityContainer",
+            "Datastreams": {
+                "$Collection": true,
+                "$Type": "de.FROST.Datastream",
+                "$NavigationPropertyBinding": {
+                    "ObservedProperty": "ObservedProperties",
+                    "Observations": "Observations",
+                    "Thing": "Things",
+                    "Sensor": "Sensors"
+                }
+            },
+            "FeaturesOfInterest": {
+                "$Collection": true,
+                "$Type": "de.FROST.FeatureOfInterest",
+                "$NavigationPropertyBinding": {
+                    "Observations": "Observations"
+                }
+            },
+            "HistoricalLocations": {
+                "$Collection": true,
+                "$Type": "de.FROST.HistoricalLocation",
+                "$NavigationPropertyBinding": {
+                    "Locations": "Locations",
+                    "Thing": "Things"
+                }
+            },
+            "Locations": {
+                "$Collection": true,
+                "$Type": "de.FROST.Location",
+                "$NavigationPropertyBinding": {
+                    "Things": "Things",
+                    "HistoricalLocations": "HistoricalLocations"
+                }
+            },
+            "MultiDatastreams": {
+                "$Collection": true,
+                "$Type": "de.FROST.MultiDatastream",
+                "$NavigationPropertyBinding": {
+                    "Observations": "Observations",
+                    "ObservedProperties": "ObservedProperties",
+                    "Thing": "Things",
+                    "Sensor": "Sensors"
+                }
+            },
+            "Observations": {
+                "$Collection": true,
+                "$Type": "de.FROST.Observation",
+                "$NavigationPropertyBinding": {
+                    "Datastream": "Datastreams",
+                    "FeatureOfInterest": "FeaturesOfInterest",
+                    "MultiDatastream": "MultiDatastreams"
+                }
+            },
+            "ObservedProperties": {
+                "$Collection": true,
+                "$Type": "de.FROST.ObservedProperty",
+                "$NavigationPropertyBinding": {
+                    "MultiDatastreams": "MultiDatastreams",
+                    "Datastreams": "Datastreams"
+                }
+            },
+            "Sensors": {
+                "$Collection": true,
+                "$Type": "de.FROST.Sensor",
+                "$NavigationPropertyBinding": {
+                    "MultiDatastreams": "MultiDatastreams",
+                    "Datastreams": "Datastreams"
+                }
+            },
+            "Things": {
+                "$Collection": true,
+                "$Type": "de.FROST.Thing",
+                "$NavigationPropertyBinding": {
+                    "MultiDatastreams": "MultiDatastreams",
+                    "Datastreams": "Datastreams",
+                    "Locations": "Locations",
+                    "HistoricalLocations": "HistoricalLocations"
+                }
+            }
+        }
+    }
+}

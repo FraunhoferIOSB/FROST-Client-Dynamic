@@ -25,10 +25,12 @@ package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValueImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
@@ -61,14 +63,14 @@ public class TypeComplex extends PropertyType {
     public static final EntityPropertyMain<TimeInstant> EP_START_TIME = new EntityPropertyMain<>(NAME_INTERVAL_START, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInstant> EP_END_TIME = new EntityPropertyMain<>(NAME_INTERVAL_END, EDM_DATETIMEOFFSET);
 
-    public static final TypeComplex STA_MAP = new TypeComplex(STA_MAP_NAME, "A free object that can contain anything", TypeReferencesHelper.TYPE_REFERENCE_MAPVALUE, MapValue::new, true);
-    public static final TypeComplex STA_OBJECT = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", TypeReferencesHelper.TYPE_REFERENCE_OBJECT, null, true);
-    public static final TypeComplex STA_OBJECT_UNTYPED = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", null, null, true);
+    public static final TypeComplex STA_MAP = new TypeComplex(STA_MAP_NAME, "A free object that can contain anything", true, MapValue::new, TypeReferencesHelper.TYPE_REFERENCE_MAPVALUE);
+    public static final TypeComplex STA_OBJECT = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", true, null, TypeReferencesHelper.TYPE_REFERENCE_OBJECT);
+    public static final TypeComplex STA_OBJECT_UNTYPED = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", true, null, null, null);
 
-    public static final TypeComplex STA_TIMEINTERVAL = new TypeComplex(STA_TIMEINTERVAL_NAME, "An ISO time interval.", TypeReferencesHelper.TYPE_REFERENCE_TIMEINTERVAL, TimeInterval::new)
+    public static final TypeComplex STA_TIMEINTERVAL = new TypeComplex(STA_TIMEINTERVAL_NAME, "An ISO time interval.", TimeInterval::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEINTERVAL)
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
-    public static final TypeComplex STA_TIMEVALUE = new TypeComplex(STA_TIMEVALUE_NAME, "An ISO time instant or time interval.", TypeReferencesHelper.TYPE_REFERENCE_TIMEVALUE, TimeValue::new)
+    public static final TypeComplex STA_TIMEVALUE = new TypeComplex(STA_TIMEVALUE_NAME, "An ISO time instant or time interval.", TimeValue::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEVALUE)
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
 
@@ -102,7 +104,7 @@ public class TypeComplex extends PropertyType {
     /**
      * The Set of PROPERTIES that Entities of this type have.
      */
-    private final Set<EntityProperty> properties = new LinkedHashSet<>();
+    private final Set<Property> properties = new LinkedHashSet<>();
 
     /**
      * The Set of PROPERTIES that Entities of this type have, mapped by their
@@ -110,14 +112,26 @@ public class TypeComplex extends PropertyType {
      */
     private final Map<String, Property> propertiesByName = new LinkedHashMap<>();
     private final boolean openType;
-    private final Instantiator instantiator;
+    private Instantiator instantiator;
 
-    public TypeComplex(String name, String description, TypeReference typeReference, Instantiator instantiator) {
-        this(name, description, typeReference, instantiator, false);
+    public TypeComplex(String name, String description, Instantiator instantiator, TypeReference typeReference) {
+        this(name, description, false, instantiator, typeReference);
     }
 
-    public TypeComplex(String name, String description, TypeReference typeReference, Instantiator instantiator, boolean openType) {
+    public TypeComplex(String name, String description, boolean openType) {
+        super(name, description, null, null);
+        this.openType = openType;
+        this.instantiator = ComplexValueImpl.createFor(this);
+    }
+
+    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, TypeReference typeReference) {
         super(name, description, typeReference);
+        this.openType = openType;
+        this.instantiator = instantiator;
+    }
+
+    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, JsonDeserializer jd, JsonSerializer js) {
+        super(name, description, jd, js);
         this.openType = openType;
         this.instantiator = instantiator;
     }
@@ -126,7 +140,7 @@ public class TypeComplex extends PropertyType {
         return openType;
     }
 
-    public Set<EntityProperty> getProperties() {
+    public Set<Property> getProperties() {
         return properties;
     }
 
@@ -134,14 +148,22 @@ public class TypeComplex extends PropertyType {
         return propertiesByName.get(name);
     }
 
+    public Map<String, Property> getPropertiesByName() {
+        return propertiesByName;
+    }
+
     public boolean hasProperty(String name) {
         return propertiesByName.containsKey(name);
     }
 
-    public TypeComplex registerProperty(EntityProperty property) {
+    public TypeComplex registerProperty(Property property) {
         properties.add(property);
         propertiesByName.put(property.getName(), property);
         return this;
+    }
+
+    public void setInstantiator(Instantiator instantiator) {
+        this.instantiator = instantiator;
     }
 
     public ComplexValue instantiate() {
@@ -152,4 +174,10 @@ public class TypeComplex extends PropertyType {
 
         public ComplexValue instantiate();
     }
+
+    @Override
+    public String toString() {
+        return "TypeComplex: " + getName();
+    }
+
 }

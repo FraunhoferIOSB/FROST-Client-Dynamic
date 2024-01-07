@@ -42,6 +42,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.N
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LIST_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LIST_UOM;
 
+import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
@@ -90,7 +91,7 @@ public class SensorThingsMultiDatastreamV11 implements DataModel {
     }
 
     @Override
-    public final void init(ModelRegistry modelRegistry) {
+    public final void init(SensorThingsService service, ModelRegistry modelRegistry) {
         if (this.mr != null) {
             throw new IllegalArgumentException("Already initialised.");
         }

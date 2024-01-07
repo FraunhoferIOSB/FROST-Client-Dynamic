@@ -20,34 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.models;
+package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import com.fasterxml.jackson.core.type.TypeReference;
+import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * The interface for classes that implement a data model.
+ *
+ * @author hylke
+ * @param <K> The enum this Type extends.
  */
-public interface DataModel {
+public class TypeEnumeration<K extends Enum<K>> extends PropertyType {
 
-    /**
-     * Initialise the data model in the given ModelRegistry.
-     *
-     * @param service The service to use for loading data needed for
-     * initialisation.
-     * @param mr The ModelRegistry to initialise the data model in.
-     */
-    public void init(SensorThingsService service, ModelRegistry mr);
+    private final Class<K> enumClass;
 
-    /**
-     * Check if the model is initialised.
-     *
-     * @return true if initialised.
-     */
-    public boolean isInitialised();
+    public TypeEnumeration(String name, String description, Class<K> enumClass, TypeReference typeReference) {
+        super(name, description, typeReference);
+        this.enumClass = enumClass;
+    }
 
-    public default Version getVersion() {
-        return null;
+    public Class<K> getEnumClass() {
+        return enumClass;
+    }
+
+    public Map<String, Number> getValues() {
+        Map<String, Number> members = new LinkedHashMap<>();
+        for (K member : enumClass.getEnumConstants()) {
+            members.put(member.toString(), member.ordinal());
+        }
+        return members;
     }
 }

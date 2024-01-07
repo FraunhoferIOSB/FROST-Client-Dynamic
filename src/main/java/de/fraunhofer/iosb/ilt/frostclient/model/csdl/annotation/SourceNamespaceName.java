@@ -20,34 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.models;
-
-import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
 /**
- * The interface for classes that implement a data model.
+ *
+ * @author hylke
  */
-public interface DataModel {
+public class SourceNamespaceName extends SourceNamespace {
 
     /**
-     * Initialise the data model in the given ModelRegistry.
-     *
-     * @param service The service to use for loading data needed for
-     * initialisation.
-     * @param mr The ModelRegistry to initialise the data model in.
+     * The name of an annotation.
      */
-    public void init(SensorThingsService service, ModelRegistry mr);
+    private final String name;
 
-    /**
-     * Check if the model is initialised.
-     *
-     * @return true if initialised.
-     */
-    public boolean isInitialised();
-
-    public default Version getVersion() {
-        return null;
+    public SourceNamespaceName(SourceNamespace sn, String name) {
+        super(sn.getSourceUrlBase(), sn.getNameSpace());
+        this.name = name;
     }
+
+    public SourceNamespaceName(String sourceUrlBase, String nameSpace, String name) {
+        super(sourceUrlBase, nameSpace);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }

@@ -90,6 +90,17 @@ public class MapValue implements ComplexValue<MapValue> {
     }
 
     @Override
+    public Object getProperty(String name) {
+        return content.get(name);
+    }
+
+    @Override
+    public MapValue setProperty(String name, Object value) {
+        content.put(name, value);
+        return this;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

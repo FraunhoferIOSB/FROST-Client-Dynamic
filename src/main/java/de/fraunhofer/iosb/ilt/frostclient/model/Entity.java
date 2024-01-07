@@ -160,8 +160,9 @@ public class Entity implements ComplexValue<Entity> {
                 entity = service.dao(npe.getEntityType()).find(this, npe);
                 setProperty(npe, entity);
             } catch (StatusCodeException ex) {
-                if (ex.getStatusCode() == 404) {
-                    // The entity doesn't have this navLink, all is fine.
+                final int statusCode = ex.getStatusCode();
+                if (statusCode == 404 || statusCode == 204) {
+                    // The entity doesn't have this navLink (sta 404, OData 204), all is fine.
                     return null;
                 }
                 // Something else went wrong, re-throw.
@@ -201,6 +202,16 @@ public class Entity implements ComplexValue<Entity> {
             return (P) entitySet;
         }
         return null;
+    }
+
+    @Override
+    public Object getProperty(String name) {
+        throw new IllegalArgumentException("Can not get custom properties from Entity " + entityType);
+    }
+
+    @Override
+    public Entity setProperty(String name, Object value) {
+        throw new IllegalArgumentException("Can not set custom properties on Entity " + entityType);
     }
 
     @Override

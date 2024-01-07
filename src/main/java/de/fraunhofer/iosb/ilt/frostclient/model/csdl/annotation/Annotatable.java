@@ -20,34 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.models;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
-import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import java.util.List;
 
 /**
- * The interface for classes that implement a data model.
+ *
+ * @author hylke
  */
-public interface DataModel {
+public interface Annotatable {
 
-    /**
-     * Initialise the data model in the given ModelRegistry.
-     *
-     * @param service The service to use for loading data needed for
-     * initialisation.
-     * @param mr The ModelRegistry to initialise the data model in.
-     */
-    public void init(SensorThingsService service, ModelRegistry mr);
+    public List<Annotation> getAnnotations();
 
-    /**
-     * Check if the model is initialised.
-     *
-     * @return true if initialised.
-     */
-    public boolean isInitialised();
-
-    public default Version getVersion() {
-        return null;
-    }
 }

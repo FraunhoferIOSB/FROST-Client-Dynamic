@@ -20,34 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.models;
-
-import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
 /**
- * The interface for classes that implement a data model.
+ * A generic annotation that has a boolean value
+ *
+ * @author hylke
  */
-public interface DataModel {
+public class AnnotationGenericString extends AbstractAnnotation<AnnotationGenericString> {
 
-    /**
-     * Initialise the data model in the given ModelRegistry.
-     *
-     * @param service The service to use for loading data needed for
-     * initialisation.
-     * @param mr The ModelRegistry to initialise the data model in.
-     */
-    public void init(SensorThingsService service, ModelRegistry mr);
+    private String value;
 
-    /**
-     * Check if the model is initialised.
-     *
-     * @return true if initialised.
-     */
-    public boolean isInitialised();
-
-    public default Version getVersion() {
-        return null;
+    public AnnotationGenericString() {
+        // Default constructor
     }
+
+    public AnnotationGenericString(SourceNamespaceName snn, String value) {
+        super(snn);
+        this.value = value;
+    }
+
+    @Override
+    public String getValue() {
+        return value;
+    }
+
+    public AnnotationGenericString setValue(String value) {
+        this.value = value;
+        return this;
+    }
+
+    @Override
+    public AnnotationGenericString getThis() {
+        return this;
+    }
+
 }

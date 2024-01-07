@@ -29,6 +29,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
+import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -50,9 +51,14 @@ public class ModelRegistry {
     public static final EntityPropertyMain<String> EP_SELFLINK = new EntityPropertyMain<String>(AT_IOT_SELF_LINK, EDM_STRING).setAliases("selfLink");
 
     /**
-     * All entity types, by their entityName (both singular and plural).
+     * All entity types, by their entityName (both singular and mainContainer).
      */
     private final Map<String, EntityType> entityTypesByName = new TreeMap<>();
+
+    /**
+     * The EntityContainers, with their entity type.
+     */
+    private final Map<String, EntityType> containersByName = new TreeMap<>();
 
     /**
      * All entity types.
@@ -90,9 +96,13 @@ public class ModelRegistry {
             throw new IllegalArgumentException("An entity type named " + type.entityName + " is already registered");
         }
         entityTypesByName.put(type.entityName, type);
-        entityTypesByName.put(type.plural, type);
         entityTypes.add(type);
         type.setModelRegistry(this);
+        return this;
+    }
+
+    public final ModelRegistry registerEntityContainer(String name, EntityType type) {
+        containersByName.put(name, type);
         return this;
     }
 
@@ -109,6 +119,14 @@ public class ModelRegistry {
 
     public final Set<EntityType> getEntityTypes() {
         return entityTypes;
+    }
+
+    public Map<String, EntityType> getContainers() {
+        return containersByName;
+    }
+
+    public EntityType getEntityTypeForContainer(String name) {
+        return containersByName.get(name);
     }
 
     public ModelRegistry registerPropertyType(PropertyType type) {
@@ -156,6 +174,9 @@ public class ModelRegistry {
         LOGGER.info("Finalising {} EntityTypes.", entityTypes.size());
         for (EntityType type : entityTypes) {
             type.init();
+            if (!StringHelper.isNullOrEmpty(type.mainContainer)) {
+                containersByName.put(type.mainContainer, type);
+            }
         }
         initialised = true;
     }

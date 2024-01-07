@@ -22,13 +22,17 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
+import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyAbstract;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -38,7 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The types of entities.
  */
-public class EntityType implements Comparable<EntityType> {
+public class EntityType implements Comparable<EntityType>, Annotatable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityType.class.getName());
 
@@ -48,9 +52,10 @@ public class EntityType implements Comparable<EntityType> {
     public final String entityName;
 
     /**
-     * The entityName of collections of this entity type as used in URLs.
+     * The name of the main Container (collection) of this entity type as used
+     * in URLs.
      */
-    public final String plural;
+    public String mainContainer;
 
     private boolean initialised = false;
 
@@ -95,9 +100,24 @@ public class EntityType implements Comparable<EntityType> {
      */
     private ModelRegistry modelRegistry;
 
+    public EntityType(String singular) {
+        this.entityName = singular;
+    }
+
     public EntityType(String singular, String plural) {
         this.entityName = singular;
-        this.plural = plural;
+        this.mainContainer = plural;
+    }
+
+    public void setMainContainer(String entityContainer) {
+        if (this.mainContainer == null) {
+            this.mainContainer = entityContainer;
+        } else {
+            if (this.mainContainer.equals(entityContainer)) {
+                return;
+            }
+            throw new IllegalStateException("Main EntityContainer for " + entityName + " already set to " + this.mainContainer);
+        }
     }
 
     public EntityType registerProperty(Property property) {
@@ -107,9 +127,6 @@ public class EntityType implements Comparable<EntityType> {
             EntityPropertyMain<?> propertyMain = (EntityPropertyMain<?>) property;
             for (String alias : propertyMain.getAliases()) {
                 propertiesByName.put(alias, property);
-            }
-            if (primaryKey == null) {
-                primaryKey = new PkSingle(propertyMain);
             }
         }
         return this;
@@ -143,7 +160,14 @@ public class EntityType implements Comparable<EntityType> {
     }
 
     public PrimaryKey getPrimaryKey() {
+        if (primaryKey == null) {
+            primaryKey = new PkSingle(entityProperties.iterator().next());
+        }
         return primaryKey;
+    }
+
+    public void setPrimaryKey(PrimaryKey primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     public String getEntityName() {
@@ -151,7 +175,7 @@ public class EntityType implements Comparable<EntityType> {
     }
 
     public String getPluralName() {
-        return plural;
+        return mainContainer;
     }
 
     public Property getProperty(String name) {
@@ -291,6 +315,23 @@ public class EntityType implements Comparable<EntityType> {
         int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.entityName);
         return hash;
+    }
+
+    private List<Annotation> annotations = new ArrayList<>();
+
+    @Override
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public EntityType setAnnotations(List<Annotation> annotations) {
+        this.annotations = annotations;
+        return this;
+    }
+
+    public EntityType addAnnotation(Annotation annotation) {
+        annotations.add(annotation);
+        return this;
     }
 
 }

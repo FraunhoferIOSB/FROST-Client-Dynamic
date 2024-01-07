@@ -23,7 +23,6 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
-import de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper;
 
 /**
  * A Type of a Property that points to an Entity.
@@ -33,7 +32,7 @@ public class TypeEntity extends TypeComplex {
     private EntityType entityType;
 
     public TypeEntity(EntityType entityType) {
-        super(entityType.entityName, "Entity Type " + entityType.entityName, TypeReferencesHelper.TYPE_REFERENCE_ENTITY, null, false);
+        super(entityType.entityName, "Entity Type " + entityType.entityName, false, null, null, null);
     }
 
     public EntityType getEntityType() {

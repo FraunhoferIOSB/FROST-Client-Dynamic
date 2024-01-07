@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient;
 
+import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_COUNT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_COUNT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_NAVIGATION_LINK;
@@ -40,6 +41,7 @@ public class Version {
     public static final String VERSION_STA_V11_NAME = "v1.1";
     public static final Version V_1_0 = new Version(VERSION_STA_V10_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
     public static final Version V_1_1 = new Version(VERSION_STA_V11_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
+    public static final Version V_ODATA_4_01 = new Version("", AT_COUNT, "id", AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
 
     public final String urlPart;
     public final String countName;

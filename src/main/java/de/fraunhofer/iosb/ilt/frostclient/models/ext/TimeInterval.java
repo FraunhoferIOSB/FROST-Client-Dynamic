@@ -156,4 +156,14 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
     public Moment getEnd() {
         return interval.getEndAsMoment();
     }
+
+    @Override
+    public Object getProperty(String name) {
+        throw new IllegalArgumentException("Can not get custom properties from TimeInterval");
+    }
+
+    @Override
+    public TimeInterval setProperty(String name, Object value) {
+        throw new IllegalArgumentException("Can not set custom properties on TimeInterval");
+    }
 }

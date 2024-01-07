@@ -42,6 +42,12 @@ public final class SpecialNames {
     public static final String IOT_SELF_LINK = "iot.selfLink";
     public static final String AT_IOT_SELF_LINK = '@' + IOT_SELF_LINK;
 
+    public static final String AT_CONTEXT = "@context";
+    public static final String AT_COUNT = "@count";
+    public static final String AT_ID = "@id";
+    public static final String AT_NAVIGATION_LINK = "@navigationLink";
+    public static final String AT_NEXT_LINK = "@nextLink";
+
     private SpecialNames() {
         // Utility class.
     }
