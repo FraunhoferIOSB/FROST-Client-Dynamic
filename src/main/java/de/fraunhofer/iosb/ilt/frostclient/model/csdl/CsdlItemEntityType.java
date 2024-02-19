@@ -52,12 +52,15 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
     public Map<String, CsdlProperty> properties = new LinkedHashMap<>();
     @JsonIgnore
     private final List<CsdlAnnotation> annotations = new ArrayList<>();
+    @JsonIgnore
+    private String namespace;
 
     public CsdlItemEntityType() {
         super(NAME_KIND_ENTITYTYPE);
     }
 
     public CsdlItemEntityType fillFrom(CsdlDocument doc, String nameSpace, EntityType et) {
+        this.namespace = nameSpace;
         for (EntityPropertyMain keyProp : et.getPrimaryKey().getKeyProperties()) {
             String keyName = keyProp.getJsonName();
             if ("@iot.id".equals(keyName)) {
@@ -88,6 +91,7 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
 
     public void applyTo(ModelRegistry mr, String name) {
         final EntityType entityType = new EntityType(name);
+        entityType.setNamespace(namespace);
         mr.registerEntityType(entityType);
     }
 
