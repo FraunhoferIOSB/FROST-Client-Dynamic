@@ -3,6 +3,7 @@
 ## Development Version
 
 **Updates**
+* Implemented loading models from OData 4.01 CSDL ($metadata)
 
 
 ## Release Version 2.5

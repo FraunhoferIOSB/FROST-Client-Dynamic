@@ -52,6 +52,11 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
     public final String entityName;
 
     /**
+     * The namespace of the Entity Type.
+     */
+    public String namespace = "";
+
+    /**
      * The name of the main Container (collection) of this entity type as used
      * in URLs.
      */
@@ -102,11 +107,19 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
 
     public EntityType(String singular) {
         this.entityName = singular;
+        final int nameIdx = singular.lastIndexOf('.');
+        if (nameIdx > 0) {
+            namespace = singular.substring(0, nameIdx);
+        }
     }
 
-    public EntityType(String singular, String plural) {
-        this.entityName = singular;
-        this.mainContainer = plural;
+    public EntityType(String singular, String container) {
+        this(singular);
+        this.mainContainer = container;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public void setMainContainer(String entityContainer) {
@@ -177,7 +190,14 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return entityName;
     }
 
-    public String getPluralName() {
+    public String getShortName() {
+        if (namespace.isEmpty()) {
+            return entityName;
+        }
+        return entityName.substring(namespace.length() + 1);
+    }
+
+    public String getContainerName() {
         return mainContainer;
     }
 
@@ -237,6 +257,10 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
 
     public boolean hasProperty(Property property) {
         return properties.contains(property);
+    }
+
+    public boolean hasProperty(String propertyName) {
+        return propertiesByName.containsKey(propertyName);
     }
 
     /**
