@@ -67,7 +67,7 @@ public class EntitySerializer extends JsonSerializer<Entity> {
     }
 
     private void writeEntityProp(EntityPropertyMain ep, Entity entity, JsonGenerator gen) throws IOException {
-        if (ep.isReadOnly()) {
+        if (ep.isReadOnly() && !ep.isKeyPart()) {
             return;
         }
         if (ep == ModelRegistry.EP_SELFLINK) {

@@ -66,6 +66,14 @@ public interface Property<P> extends Comparable<Property<?>>, Annotatable {
      */
     public boolean isNullable();
 
+    /**
+     * Flag indicating if this Property is part of the primary key of the
+     * Entity.
+     *
+     * @return true if this Property is part of the primary key of the Entity.
+     */
+    public boolean isKeyPart();
+
     @Override
     public default int compareTo(Property o) {
         return getName().compareTo(o.getName());

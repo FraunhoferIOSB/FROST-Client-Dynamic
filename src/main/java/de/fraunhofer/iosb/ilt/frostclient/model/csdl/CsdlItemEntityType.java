@@ -97,7 +97,9 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
             entry.getValue().applyTo(mr, entityType, entry.getKey());
         }
         if (key.size() == 1) {
-            PkSingle pk = new PkSingle(entityType.getEntityProperty(key.get(0)));
+            final EntityPropertyMain keyProp = entityType.getEntityProperty(key.get(0));
+            keyProp.setReadOnly(true);
+            PkSingle pk = new PkSingle(keyProp);
             entityType.setPrimaryKey(pk);
         } else {
             throw new NotImplementedException("Multi-Keyed entity types are not supported yet.");

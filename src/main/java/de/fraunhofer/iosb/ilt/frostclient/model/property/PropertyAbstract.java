@@ -38,6 +38,7 @@ public abstract class PropertyAbstract<P> implements Property<P> {
      * the user.
      */
     protected boolean readOnly;
+    protected boolean keyPart;
     protected boolean nullable;
 
     protected List<Annotation> annotations = new ArrayList<>();
@@ -82,6 +83,15 @@ public abstract class PropertyAbstract<P> implements Property<P> {
     @Override
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    @Override
+    public boolean isKeyPart() {
+        return keyPart;
+    }
+
+    public void setKeyPart(boolean keyPart) {
+        this.keyPart = keyPart;
     }
 
     @Override

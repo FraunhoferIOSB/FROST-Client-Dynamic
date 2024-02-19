@@ -168,6 +168,9 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
 
     public void setPrimaryKey(PrimaryKey primaryKey) {
         this.primaryKey = primaryKey;
+        for (var keyProp : primaryKey.getKeyProperties()) {
+            keyProp.setKeyPart(true);
+        }
     }
 
     public String getEntityName() {
