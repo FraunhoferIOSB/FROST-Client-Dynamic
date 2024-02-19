@@ -1,5 +1,10 @@
 # Changelog
 
+## Development Version 2.7
+
+**Updates**
+
+
 ## Release Version 2.6
 
 **Updates**
