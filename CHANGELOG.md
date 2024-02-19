@@ -1,8 +1,9 @@
 # Changelog
 
-## Development Version
+## Release Version 2.6
 
 **Updates**
+* Bumped dependency versions
 * Implemented loading models from OData 4.01 CSDL ($metadata)
 
 
