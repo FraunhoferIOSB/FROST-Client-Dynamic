@@ -67,7 +67,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <root.basedir>${project.basedir}</root.basedir>
 
-        <version.Configurable>0.35-SNAPSHOT</version.Configurable>
+        <version.Configurable>0.35</version.Configurable>
 
         <version.commons-lang3>3.13.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
