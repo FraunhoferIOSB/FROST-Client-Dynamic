@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.7
+## Release Version 2.7
 
 **Updates**
 * Added automatic model sniffing when creating a SensorThingsService without model.
