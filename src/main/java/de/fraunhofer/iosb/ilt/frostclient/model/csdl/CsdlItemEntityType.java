@@ -89,6 +89,10 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
         return this;
     }
 
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
     public void applyTo(ModelRegistry mr, String name) {
         final EntityType entityType = new EntityType(name);
         entityType.setNamespace(namespace);

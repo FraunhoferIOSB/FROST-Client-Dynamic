@@ -3,6 +3,7 @@
 ## Development Version 2.8
 
 **Updates**
+* Fixed namespace not being set on EntityTypes.
 
 
 ## Release Version 2.7

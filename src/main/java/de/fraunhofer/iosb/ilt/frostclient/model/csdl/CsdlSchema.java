@@ -143,7 +143,9 @@ public class CsdlSchema {
             entry.getValue().applyTo(mr, prefix + entry.getKey());
         }
         for (var entry : entityTypes.entrySet()) {
-            entry.getValue().applyTo(mr, prefix + entry.getKey());
+            final CsdlItemEntityType ciEt = entry.getValue();
+            ciEt.setNamespace(namespace);
+            ciEt.applyTo(mr, prefix + entry.getKey());
         }
         for (var entry : entityTypes.entrySet()) {
             entry.getValue().applyPropertiesTo(mr, prefix + entry.getKey());
