@@ -155,7 +155,7 @@ public class Entity implements ComplexValue<Entity> {
 
     public <P> P getProperty(NavigationPropertyEntity npe, boolean autoLoad) throws ServiceFailureException {
         Entity entity = (Entity) navProperties.get(npe);
-        if (entity == null && autoLoad) {
+        if (entity == null && autoLoad && service != null) {
             try {
                 entity = service.dao(npe.getEntityType()).find(this, npe);
                 setProperty(npe, entity);

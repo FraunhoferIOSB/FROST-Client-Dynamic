@@ -4,6 +4,7 @@
 
 **Updates**
 * Fixed namespace not being set on EntityTypes.
+* Fixed exception trying to auto load navlinks on unconnected entities.
 
 
 ## Release Version 2.7
