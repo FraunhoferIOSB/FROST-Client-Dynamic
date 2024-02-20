@@ -44,7 +44,7 @@ compile 'de.fraunhofer.iosb.ilt:FROST-Client-Dynamic:2.5'
 ## API
 
 The `SensorThingsService` class is central to the library. An instance of it represents a SensorThings service and is identified by an URI.
-This class needs to be initialised with a data model.
+This class needs to be initialised with a data model, but if initialised without a model it will try to figure out the model automatically.
 Data models for the SensorThings API exist, but you can also create your own data models.
 
 ### CRUD operations

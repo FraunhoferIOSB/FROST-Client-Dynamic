@@ -32,6 +32,7 @@ import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.CsdlDocument;
+import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -48,16 +49,20 @@ import org.slf4j.LoggerFactory;
 public class CSDLModel implements DataModel, AnnotatedConfigurable<Object, Object> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CSDLModel.class.getName());
+    private static final String DEFAULT_CONTEXT_PATH = "$metadata?$format=json";
 
     private ModelRegistry mr;
 
     @ConfigurableField(editor = EditorString.class, optional = true,
             label = "ContextPath", description = "The path to the context document, either absolute or relative to the service base url.")
-    @EditorString.EdOptsString(dflt = "$metadata?$format=json")
+    @EditorString.EdOptsString(dflt = DEFAULT_CONTEXT_PATH)
     private String contextPath;
 
     @Override
     public void init(SensorThingsService service, ModelRegistry mr) {
+        if (StringHelper.isNullOrEmpty(contextPath)) {
+            contextPath = DEFAULT_CONTEXT_PATH;
+        }
         HttpGet httpGet;
         try {
             URL contextUrl = new URL(service.getEndpoint(), contextPath);

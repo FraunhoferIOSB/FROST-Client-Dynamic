@@ -35,6 +35,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
+import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -211,7 +212,12 @@ public class SensorThingsService {
         if (this.endpoint != null) {
             throw new IllegalStateException("endpoint URL already set.");
         }
+        // Temporarily set the given url directly as endpoint
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
+        this.endpoint = new URL(url + "/");
+        if (models.isEmpty()) {
+            models.addAll(Utils.detectModels(this, endpoint));
+        }
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
         Version detectedVersion = Version.findVersion(lastSegment);
         if (detectedVersion == null) {
@@ -220,12 +226,12 @@ public class SensorThingsService {
             }
             if (!url.endsWith(getVersion().getUrlPart())) {
                 url += "/" + getVersion().getUrlPart();
+                this.endpoint = new URL(url + "/");
             }
         } else {
             version = detectedVersion;
         }
 
-        this.endpoint = new URL(url + "/");
         initModels();
         return this;
     }
@@ -483,6 +489,15 @@ public class SensorThingsService {
      */
     public void setVersion(Version version) {
         this.version = version;
+    }
+
+    public int getRequestTimeoutMs() {
+        return requestTimeoutMs;
+    }
+
+    public SensorThingsService setRequestTimeoutMs(int requestTimeoutMs) {
+        this.requestTimeoutMs = requestTimeoutMs;
+        return this;
     }
 
 }

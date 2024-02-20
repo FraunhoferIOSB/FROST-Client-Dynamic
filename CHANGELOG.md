@@ -3,19 +3,20 @@
 ## Development Version 2.7
 
 **Updates**
+* Added automatic model sniffing when creating a SensorThingsService without model.
 
 
 ## Release Version 2.6
 
 **Updates**
-* Bumped dependency versions
-* Implemented loading models from OData 4.01 CSDL ($metadata)
+* Bumped dependency versions.
+* Implemented loading models from OData 4.01 CSDL ($metadata).
 
 
 ## Release Version 2.5
 
 **Updates**
-* Bumped dependency versions
+* Bumped dependency versions.
 * Updated for the published STAplus standard.
 
 
@@ -48,7 +49,7 @@
 * Replaced the concept of Id with the concept of PrimaryKey.
   Primary keys point to one or more properties that can have any name.
 * Fixed 403 being returned as 401.
-* Bumped dependency versions
+* Bumped dependency versions.
 
 
 ## Release Version 2.0
