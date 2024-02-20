@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.8
+## Release Version 2.8
 
 **Updates**
 * Fixed namespace not being set on EntityTypes.
