@@ -181,4 +181,8 @@ public class ModelRegistry {
         initialised = true;
     }
 
+    public boolean isInitialised() {
+        return initialised;
+    }
+
 }

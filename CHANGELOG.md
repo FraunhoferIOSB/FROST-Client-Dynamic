@@ -3,6 +3,7 @@
 ## Development Version 2.9
 
 **Updates**
+* Fixed model initialisation when using external ModelRegistry.
 
 
 ## Release Version 2.8

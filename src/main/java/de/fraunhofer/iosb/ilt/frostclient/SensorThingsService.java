@@ -43,6 +43,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.RequestConfig;
@@ -215,7 +216,7 @@ public class SensorThingsService {
         // Temporarily set the given url directly as endpoint
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
         this.endpoint = new URL(url + "/");
-        if (models.isEmpty()) {
+        if (models.isEmpty() && !modelRegistry.isInitialised()) {
             models.addAll(Utils.detectModels(this, endpoint));
         }
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
@@ -467,6 +468,10 @@ public class SensorThingsService {
      */
     public void rebuildHttpClient() {
         httpClient = null;
+    }
+
+    public List<DataModel> getModels() {
+        return Collections.unmodifiableList(models);
     }
 
     public Version getVersion() {
