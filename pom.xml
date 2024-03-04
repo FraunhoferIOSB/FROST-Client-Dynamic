@@ -78,7 +78,7 @@
         <version.json-patch>1.13</version.json-patch>
         <version.jsonwebtoken>0.12.5</version.jsonwebtoken>
         <version.junit>5.10.2</version.junit>
-        <version.logback>1.5.0</version.logback>
+        <version.logback>1.5.3</version.logback>
 
         <version.maven.plugin.compiler>3.12.1</version.maven.plugin.compiler>
         <version.maven.plugin.gpg>3.1.0</version.maven.plugin.gpg>
@@ -90,7 +90,7 @@
         <version.maven.plugin.spotless>2.43.0</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.2.5</version.maven.plugin.surefire>
 
-        <version.mockito>5.10.0</version.mockito>
+        <version.mockito>5.11.0</version.mockito>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.12</version.slf4j>
         <version.sta-SWE-Common>0.10</version.sta-SWE-Common>
