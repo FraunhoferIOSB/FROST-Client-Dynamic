@@ -149,11 +149,11 @@ public class Entity implements ComplexValue<Entity> {
         return getProperty(property, true);
     }
 
-    public <P> P getProperty(NavigationPropertyEntity property) throws ServiceFailureException {
+    public Entity getProperty(NavigationPropertyEntity property) throws ServiceFailureException {
         return getProperty(property, true);
     }
 
-    public <P> P getProperty(NavigationPropertyEntity npe, boolean autoLoad) throws ServiceFailureException {
+    public Entity getProperty(NavigationPropertyEntity npe, boolean autoLoad) throws ServiceFailureException {
         Entity entity = (Entity) navProperties.get(npe);
         if (entity == null && autoLoad && service != null) {
             try {
@@ -169,7 +169,7 @@ public class Entity implements ComplexValue<Entity> {
                 throw ex;
             }
         }
-        return (P) entity;
+        return entity;
     }
 
     public <P> P getProperty(Property<P> property, boolean autoLoad) {
@@ -187,7 +187,7 @@ public class Entity implements ComplexValue<Entity> {
         }
         if (property instanceof NavigationPropertyEntity npe) {
             try {
-                return getProperty(npe, autoLoad);
+                return (P) getProperty(npe, autoLoad);
             } catch (ServiceFailureException ex) {
                 LOGGER.error("Failed to load linked entity {}", npe, ex.getMessage());
                 throw new RuntimeException(ex);

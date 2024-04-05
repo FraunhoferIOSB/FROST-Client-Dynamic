@@ -3,6 +3,7 @@
 ## Development Version 2.10
 
 **Updates**
+* Fixed return type on Entity.getProperty for Entity navigation Properties.
 
 
 ## Release Version 2.9
