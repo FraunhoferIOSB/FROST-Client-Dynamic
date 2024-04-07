@@ -81,11 +81,11 @@
         <version.logback>1.5.3</version.logback>
 
         <version.maven.plugin.compiler>3.13.0</version.maven.plugin.compiler>
+        <version.maven.plugin.dependency-check>9.1.0</version.maven.plugin.dependency-check>
         <version.maven.plugin.gpg>3.2.2</version.maven.plugin.gpg>
         <version.maven.plugin.jacoco>0.8.12</version.maven.plugin.jacoco>
         <version.maven.plugin.javadoc>3.6.3</version.maven.plugin.javadoc>
         <version.maven.plugin.nexus-staging>1.6.13</version.maven.plugin.nexus-staging>
-        <version.maven.plugin.release>9.1.0</version.maven.plugin.release>
         <version.maven.plugin.source>3.3.1</version.maven.plugin.source>
         <version.maven.plugin.spotless>2.43.0</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.2.5</version.maven.plugin.surefire>
@@ -224,10 +224,10 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>${version.maven.plugin.release}</version>
+                <version>${version.maven.plugin.dependency-check}</version>
                 <configuration>
                     <failBuildOnCVSS>8</failBuildOnCVSS>
-                    <ossIndexServerId>OWASP_OSS_INDEX</ossIndexServerId>
+                    <nvdApiServerId>NIST_NVD_API</nvdApiServerId>
                 </configuration>
                 <executions>
                     <execution>
