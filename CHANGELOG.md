@@ -1,9 +1,10 @@
 # Changelog
 
-## Development Version 2.10
+## Release Version 2.10
 
 **Updates**
 * Fixed return type on Entity.getProperty for Entity navigation Properties.
+* Bumped dependency versions.
 
 
 ## Release Version 2.9
