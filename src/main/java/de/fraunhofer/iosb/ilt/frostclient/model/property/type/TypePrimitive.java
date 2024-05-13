@@ -158,8 +158,8 @@ public class TypePrimitive extends PropertyType {
         return TYPES.get(name);
     }
 
-    protected TypePrimitive(String name, String description, TypeReference typeReference) {
-        super(name, description, typeReference);
+    protected TypePrimitive(String name, String description, TypeReference tr) {
+        super(name, description, ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
     }
 
     public TypePrimitive(String name, String description, JsonDeserializer jd) {

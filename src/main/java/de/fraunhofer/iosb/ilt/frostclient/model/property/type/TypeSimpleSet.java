@@ -24,6 +24,7 @@ package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 
 /**
  * The type of a property that points to an EntitySet.
@@ -32,13 +33,13 @@ public class TypeSimpleSet extends PropertyType {
 
     private final PropertyType containtedType;
 
-    public TypeSimpleSet(TypePrimitive containedType, TypeReference typeReference) {
-        super(containedType.getName(), "Collection of " + containedType.getName(), typeReference);
+    public TypeSimpleSet(TypePrimitive containedType, TypeReference tr) {
+        super(containedType.getName(), "Collection of " + containedType.getName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.containtedType = containedType;
     }
 
-    public TypeSimpleSet(TypeComplex containedType, TypeReference typeReference) {
-        super(containedType.getName(), "Collection of " + containedType.getName(), typeReference);
+    public TypeSimpleSet(TypeComplex containedType, TypeReference tr) {
+        super(containedType.getName(), "Collection of " + containedType.getName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.containtedType = containedType;
     }
 

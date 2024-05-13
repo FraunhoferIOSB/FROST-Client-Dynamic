@@ -36,6 +36,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -67,10 +68,10 @@ public class TypeComplex extends PropertyType {
     public static final TypeComplex STA_OBJECT = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", true, null, TypeReferencesHelper.TYPE_REFERENCE_OBJECT);
     public static final TypeComplex STA_OBJECT_UNTYPED = new TypeComplex(STA_OBJECT_NAME, "A free type, can be anything", true, null, null, null);
 
-    public static final TypeComplex STA_TIMEINTERVAL = new TypeComplex(STA_TIMEINTERVAL_NAME, "An ISO time interval.", TimeInterval::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEINTERVAL)
+    public static final TypeComplex STA_TIMEINTERVAL = new TypeComplex(STA_TIMEINTERVAL_NAME, "An ISO time interval.", false, TimeInterval::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEINTERVAL)
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
-    public static final TypeComplex STA_TIMEVALUE = new TypeComplex(STA_TIMEVALUE_NAME, "An ISO time instant or time interval.", TimeValue::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEVALUE)
+    public static final TypeComplex STA_TIMEVALUE = new TypeComplex(STA_TIMEVALUE_NAME, "An ISO time instant or time interval.", false, TimeValue::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEVALUE)
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
 
@@ -97,12 +98,13 @@ public class TypeComplex extends PropertyType {
         }
     }
 
+    @Deprecated
     public static TypeComplex getType(String name) {
         return TYPES.get(name);
     }
 
     /**
-     * The Set of PROPERTIES that Entities of this type have.
+     * The Set of PROPERTIES that Elements of this type have.
      */
     private final Set<Property> properties = new LinkedHashSet<>();
 
@@ -114,18 +116,14 @@ public class TypeComplex extends PropertyType {
     private final boolean openType;
     private Instantiator instantiator;
 
-    public TypeComplex(String name, String description, Instantiator instantiator, TypeReference typeReference) {
-        this(name, description, false, instantiator, typeReference);
-    }
-
     public TypeComplex(String name, String description, boolean openType) {
         super(name, description, null, null);
         this.openType = openType;
         this.instantiator = ComplexValueImpl.createFor(this);
     }
 
-    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, TypeReference typeReference) {
-        super(name, description, typeReference);
+    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, TypeReference tr) {
+        super(name, description, ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.openType = openType;
         this.instantiator = instantiator;
     }

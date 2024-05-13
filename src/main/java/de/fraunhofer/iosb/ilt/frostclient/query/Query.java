@@ -170,7 +170,6 @@ public class Query implements QueryRequest, QueryParameter {
         return asList.get(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public EntitySet list() throws ServiceFailureException {
         EntitySet list;

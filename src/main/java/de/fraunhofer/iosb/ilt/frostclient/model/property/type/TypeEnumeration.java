@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,8 +35,8 @@ public class TypeEnumeration<K extends Enum<K>> extends PropertyType {
 
     private final Class<K> enumClass;
 
-    public TypeEnumeration(String name, String description, Class<K> enumClass, TypeReference typeReference) {
-        super(name, description, typeReference);
+    public TypeEnumeration(String name, String description, Class<K> enumClass) {
+        super(name, description, null, null);
         this.enumClass = enumClass;
     }
 

@@ -209,6 +209,5 @@ public class ParserUtils {
                 result.setProperty(property, value);
             }
         }
-
     }
 }

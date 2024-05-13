@@ -44,6 +44,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import org.geojson.GeoJsonObject;
@@ -119,7 +120,7 @@ public class SensorThingsSensingV11 implements DataModel {
 
     public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>(AT_IOT_ID, EDM_UNTYPED);
 
-    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", UnitOfMeasurement::new, TYPE_REFERENCE_UOM)
+    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", false, UnitOfMeasurement::new, ParserUtils.getDefaultDeserializer(TYPE_REFERENCE_UOM), ParserUtils.getDefaultSerializer())
             .registerProperty(EP_NAME)
             .registerProperty(EP_SYMBOL)
             .registerProperty(EP_DEFINITION);

@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
@@ -48,10 +47,6 @@ public class PropertyType implements Annotatable {
 
     public PropertyType(String name, String description, JsonDeserializer deserializer) {
         this(name, description, deserializer, ParserUtils.getDefaultSerializer());
-    }
-
-    public PropertyType(String name, String description, TypeReference tr) {
-        this(name, description, ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
     }
 
     public String getName() {
