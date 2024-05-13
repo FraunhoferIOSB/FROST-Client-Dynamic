@@ -3,6 +3,8 @@
 ## Development Version 2.11
 
 **Updates**
+* Fixed Entity hashCode method, allowing entities to be keys in Maps
+* Bumped dependency versions.
 
 
 ## Release Version 2.10
