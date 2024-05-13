@@ -338,7 +338,10 @@ public class Entity implements ComplexValue<Entity> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(entityType, getPrimaryKeyValues());
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.entityType);
+        hash = 97 * hash + Arrays.deepHashCode(getPrimaryKeyValues());
+        return hash;
     }
 
     @Override
