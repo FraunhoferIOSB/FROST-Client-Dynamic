@@ -90,7 +90,7 @@
         <version.maven.plugin.spotless>2.43.0</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.2.5</version.maven.plugin.surefire>
 
-        <version.mockito>5.11.0</version.mockito>
+        <version.mockito>5.12.0</version.mockito>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.13</version.slf4j>
         <version.sta-SWE-Common>0.10</version.sta-SWE-Common>
