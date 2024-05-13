@@ -1,6 +1,11 @@
 # Changelog
 
-## Development Version 2.11
+## Development Version 2.12
+
+**Updates**
+
+
+## Release Version 2.11
 
 **Updates**
 * Fixed Entity hashCode method, allowing entities to be keys in Maps
