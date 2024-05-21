@@ -74,7 +74,7 @@ public class EntitySerializer extends JsonSerializer<Entity> {
             return;
         }
         final Object value = entity.getProperty(ep, false);
-        if (value != null || (ep.serialiseNull && entity.isSetProperty(ep))) {
+        if (value != null || (entity.isSetProperty(ep))) {
             final String name = ep.getName();
             gen.writeObjectField(name, value);
         }
