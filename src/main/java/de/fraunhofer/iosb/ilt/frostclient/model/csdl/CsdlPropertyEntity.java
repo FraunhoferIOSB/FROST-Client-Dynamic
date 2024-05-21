@@ -31,9 +31,9 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeCollection;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimpleSet;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -107,9 +107,9 @@ public class CsdlPropertyEntity extends CsdlProperty {
         PropertyType propertyType = mr.getPropertyType(type);
         if (collection) {
             if (propertyType instanceof TypePrimitive ptp) {
-                propertyType = new TypeSimpleSet(ptp, null);
+                propertyType = new TypeCollection(ptp, null);
             } else if (propertyType instanceof TypeComplex ptc) {
-                propertyType = new TypeSimpleSet(ptc, null);
+                propertyType = new TypeCollection(ptc, null);
             } else {
                 throw new IllegalArgumentException("Can't create Type for Set of " + propertyType.getName());
             }

@@ -49,7 +49,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimpleSet;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeCollection;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
@@ -68,8 +68,8 @@ public class SensorThingsMultiDatastreamV11 implements DataModel {
     public static final String NAME_MULTI_DATASTREAMS = "MultiDatastreams";
     public static final String NAME_MULTIOBSERVATIONDATATYPES = "multiObservationDataTypes";
 
-    public static final EntityPropertyMain<List<String>> EP_MULTIOBSERVATIONDATATYPES = new EntityPropertyMain<>(NAME_MULTIOBSERVATIONDATATYPES, new TypeSimpleSet(EDM_STRING, TYPE_REFERENCE_LIST_STRING));
-    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeSimpleSet(SensorThingsSensingV11.ept_Uom, TYPE_REFERENCE_LIST_UOM));
+    public static final EntityPropertyMain<List<String>> EP_MULTIOBSERVATIONDATATYPES = new EntityPropertyMain<>(NAME_MULTIOBSERVATIONDATATYPES, new TypeCollection(EDM_STRING, TYPE_REFERENCE_LIST_STRING));
+    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeCollection(SensorThingsSensingV11.ept_Uom, TYPE_REFERENCE_LIST_UOM));
 
     public final NavigationPropertyEntity npObservationMultidatastream = new NavigationPropertyEntity(NAME_MULTI_DATASTREAM);
     public final NavigationPropertyEntitySet npMultidatastreamObservations = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npObservationMultidatastream);

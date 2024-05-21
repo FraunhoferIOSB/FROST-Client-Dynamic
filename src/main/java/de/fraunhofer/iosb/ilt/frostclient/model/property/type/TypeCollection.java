@@ -27,18 +27,18 @@ import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 
 /**
- * The type of a property that points to an EntitySet.
+ * The type of a property that points to a Collection.
  */
-public class TypeSimpleSet extends PropertyType {
+public class TypeCollection extends PropertyType {
 
     private final PropertyType containtedType;
 
-    public TypeSimpleSet(TypePrimitive containedType, TypeReference tr) {
+    public TypeCollection(TypePrimitive containedType, TypeReference tr) {
         super(containedType.getName(), "Collection of " + containedType.getName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.containtedType = containedType;
     }
 
-    public TypeSimpleSet(TypeComplex containedType, TypeReference tr) {
+    public TypeCollection(TypeComplex containedType, TypeReference tr) {
         super(containedType.getName(), "Collection of " + containedType.getName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.containtedType = containedType;
     }
