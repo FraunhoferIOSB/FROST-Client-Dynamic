@@ -1,8 +1,12 @@
 # Changelog
 
-## Development Version 2.12
+## Release Version 2.12
 
 **Updates**
+* Renamed TypeSimpleSet to TypeCollection
+* Always serialised null values if they are explicitly set
+* Allow times to be null
+* Bumped dependency versions.
 
 
 ## Release Version 2.11
