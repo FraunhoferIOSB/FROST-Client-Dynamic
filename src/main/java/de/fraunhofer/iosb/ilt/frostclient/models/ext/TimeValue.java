@@ -169,8 +169,10 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
             moment = m;
         } else if (value instanceof Instant i) {
             moment = Moment.from(i);
+        } else if (value instanceof TimeInstant ti) {
+            moment = ti.getDateTime();
         } else {
-            throw new IllegalArgumentException("TimeInterval only accepts Moment or Instant, not " + value.getClass().getName());
+            throw new IllegalArgumentException("TimeValue only accepts Moment, Instant or TimeInstant, not " + value.getClass().getName());
         }
         if (property == EP_START_TIME) {
             if (moment == null) {
@@ -200,6 +202,7 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
                     interval.setProperty(property, moment);
                 }
             }
+            return this;
         }
         throw new IllegalArgumentException("Unknown sub-property: " + property);
 

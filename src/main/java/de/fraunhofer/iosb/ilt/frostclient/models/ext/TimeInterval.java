@@ -45,13 +45,10 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
     private MomentInterval interval;
 
     public TimeInterval() {
-        this.interval = MomentInterval.between(Moment.nowInSystemTime(), Moment.nowInSystemTime());
+        this.interval = null;
     }
 
     public TimeInterval(MomentInterval interval) {
-        if (interval == null) {
-            throw new IllegalArgumentException("Interval must be non-null");
-        }
         this.interval = interval;
     }
 
@@ -116,11 +113,14 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
 
     @Override
     public <P> P getProperty(Property<P> property) {
+        if (interval == null) {
+            return null;
+        }
         if (property == EP_START_TIME) {
             return (P) interval.getStartAsMoment();
         }
         if (property == EP_END_TIME) {
-            return (P) interval.getStartAsMoment();
+            return (P) interval.getEndAsMoment();
         }
         throw new IllegalArgumentException("Unknown sub-property: " + property);
     }
@@ -135,25 +135,41 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
             moment = m;
         } else if (value instanceof Instant i) {
             moment = Moment.from(i);
+        } else if (value instanceof TimeInstant ti) {
+            moment = ti.getDateTime();
         } else {
-            throw new IllegalArgumentException("TimeInterval only accepts Moment or Instant, not " + value.getClass().getName());
+            throw new IllegalArgumentException("TimeInterval only accepts Moment, Instant or TimeInstant, not " + value.getClass().getName());
         }
         if (property == EP_START_TIME) {
-            interval = interval.withStart(moment);
+            if (interval == null) {
+                interval = MomentInterval.since(moment);
+            } else {
+                interval = interval.withStart(moment);
+            }
             return this;
         }
         if (property == EP_END_TIME) {
-            interval = interval.withEnd(moment).withOpenEnd();
+            if (interval == null) {
+                interval = MomentInterval.until(moment).withOpenEnd();
+            } else {
+                interval = interval.withEnd(moment).withOpenEnd();
+            }
             return this;
         }
         throw new IllegalArgumentException("Unknown sub-property: " + property);
     }
 
     public Moment getStart() {
+        if (interval == null) {
+            return null;
+        }
         return interval.getStartAsMoment();
     }
 
     public Moment getEnd() {
+        if (interval == null) {
+            return null;
+        }
         return interval.getEndAsMoment();
     }
 
