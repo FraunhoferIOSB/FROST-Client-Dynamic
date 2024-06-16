@@ -3,6 +3,7 @@
 ## Development Version 2.13
 
 **Updates**
+* Improved methods of query() to allow null parameters.
 
 
 ## Release Version 2.12

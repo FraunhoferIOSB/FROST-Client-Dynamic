@@ -28,6 +28,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -99,10 +100,9 @@ public class Query implements QueryRequest, QueryParameter {
     @Override
     public Query filter(String options) {
         removeAllParams("$filter");
-        if (options.isEmpty()) {
-            return this;
+        if (!StringHelper.isNullOrEmpty(options)) {
+            params.add(new BasicNameValuePair("$filter", options));
         }
-        params.add(new BasicNameValuePair("$filter", options));
         return this;
     }
 
@@ -116,14 +116,18 @@ public class Query implements QueryRequest, QueryParameter {
     @Override
     public Query orderBy(String clause) {
         removeAllParams("$orderby");
-        params.add(new BasicNameValuePair("$orderby", clause));
+        if (!StringHelper.isNullOrEmpty(clause)) {
+            params.add(new BasicNameValuePair("$orderby", clause));
+        }
         return this;
     }
 
     @Override
     public Query skip(int n) {
         removeAllParams("$skip");
-        params.add(new BasicNameValuePair("$skip", Integer.toString(n)));
+        if (n > 0) {
+            params.add(new BasicNameValuePair("$skip", Integer.toString(n)));
+        }
         return this;
     }
 
@@ -136,7 +140,9 @@ public class Query implements QueryRequest, QueryParameter {
 
     public Query expand(String expansion) {
         removeAllParams("$expand");
-        params.add(new BasicNameValuePair("$expand", expansion));
+        if (!StringHelper.isNullOrEmpty(expansion)) {
+            params.add(new BasicNameValuePair("$expand", expansion));
+        }
         return this;
     }
 
