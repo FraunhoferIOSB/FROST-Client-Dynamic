@@ -41,6 +41,14 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
 
     public static final String NAME_KIND_COMPLEXTYPE = "ComplexType";
 
+    @JsonProperty("$Abstract")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public boolean isAbstract;
+
+    @JsonProperty("$BaseType")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public String baseType;
+
     @JsonProperty("$OpenType")
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public boolean openType;

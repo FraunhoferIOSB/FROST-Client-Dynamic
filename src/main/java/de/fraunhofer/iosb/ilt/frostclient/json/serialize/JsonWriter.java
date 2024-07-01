@@ -32,9 +32,9 @@ import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractDataCo
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractSWEIdentifiableMixin;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
-import de.fraunhofer.iosb.ilt.swe.common.AbstractDataComponent;
-import de.fraunhofer.iosb.ilt.swe.common.AbstractSWEIdentifiable;
-import de.fraunhofer.iosb.ilt.swe.common.constraint.AbstractConstraint;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
 import java.io.IOException;
 import java.io.Writer;
 import net.time4j.Moment;

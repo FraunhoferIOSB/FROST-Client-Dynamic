@@ -39,8 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author hylke
+ * An OData CSDL Schema.
  */
 public class CsdlSchema {
 

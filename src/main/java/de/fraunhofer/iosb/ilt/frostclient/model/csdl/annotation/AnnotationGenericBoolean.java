@@ -23,9 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
 /**
- * A generic annotation that has a boolean value
- *
- * @author hylke
+ * A generic OData annotation that has a boolean value.
  */
 public class AnnotationGenericBoolean extends AbstractAnnotation<AnnotationGenericBoolean> {
 

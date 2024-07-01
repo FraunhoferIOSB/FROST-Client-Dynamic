@@ -22,14 +22,14 @@
  */
 package de.iosb.fraunhofer.ilt.frostclient;
 
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_DESCRIPTION;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_ID;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_NAME;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_PHENOMENONTIME;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_PROPERTIES;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_RESULT;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsTaskingV11.EP_TASKINGPARAMETERS;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsTaskingV11.taskingParametersBuilder;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_PHENOMENONTIME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULT;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.EP_TASKINGPARAMETERS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.taskingParametersBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,16 +39,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsTaskingV11;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple.Category;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple.Text;
 import de.fraunhofer.iosb.ilt.frostclient.utils.CollectionsHelper;
-import de.fraunhofer.iosb.ilt.swe.common.constraint.AllowedTokens;
-import de.fraunhofer.iosb.ilt.swe.common.simple.Category;
-import de.fraunhofer.iosb.ilt.swe.common.simple.Text;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -66,15 +66,15 @@ public class EntityFormatterTest {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EntityFormatterTest.class.getName());
 
-    private SensorThingsSensingV11 modelSensing;
-    private SensorThingsTaskingV11 modelTasking;
+    private SensorThingsV11Sensing modelSensing;
+    private SensorThingsV11Tasking modelTasking;
     private SensorThingsService service;
 
     @BeforeEach
     public void setUp() {
         LOGGER.info("Setting up.");
-        modelSensing = new SensorThingsSensingV11();
-        modelTasking = new SensorThingsTaskingV11();
+        modelSensing = new SensorThingsV11Sensing();
+        modelTasking = new SensorThingsV11Tasking();
         try {
             service = new SensorThingsService(new URL("http://localhost:8080/FROST-Server/v1.0"), modelSensing, modelTasking);
         } catch (MalformedURLException ex) {
@@ -472,7 +472,7 @@ public class EntityFormatterTest {
                     "description": "Turn the light on and off, as well as specifying light color.",
                     "taskingParameters": {
                         "type": "DataRecord",
-                        "field": [
+                        "fields": [
                             {
                                 "name": "status",
                                 "label": "On/Off status",

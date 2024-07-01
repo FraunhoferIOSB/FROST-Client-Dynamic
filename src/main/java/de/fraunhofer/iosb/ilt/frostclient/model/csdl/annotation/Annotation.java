@@ -25,8 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
- *
- * @author hylke
+ * Interface for OData annotations.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public interface Annotation {

@@ -40,8 +40,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
- * @author hylke
+ * OData CSDL Document.
  */
 public class CsdlDocument {
 

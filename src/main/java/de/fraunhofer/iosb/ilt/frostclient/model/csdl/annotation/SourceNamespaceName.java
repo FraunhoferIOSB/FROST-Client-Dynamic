@@ -23,8 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 
 /**
- *
- * @author hylke
+ * Name of a namespace that defines an OData annotation.
  */
 public class SourceNamespaceName extends SourceNamespace {
 

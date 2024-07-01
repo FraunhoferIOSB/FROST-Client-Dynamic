@@ -20,58 +20,67 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
+package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
+
+import java.util.Objects;
 
 /**
- * Abstract base implementation for OData annotations.
- *
- * @param <T> The exact type of the annotation.
+ * Swe-Common Boolean.
  */
-public abstract class AbstractAnnotation<T extends AbstractAnnotation> implements Annotation {
+public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
 
-    private String sourceUrlBase;
-    private String nameSpace;
-    private String name;
+    public static final String SWE_NAME = "Boolean";
 
-    protected AbstractAnnotation() {
-        // Empty constructor
-    }
+    /**
+     * The value of this Boolean Component.
+     */
+    private Boolean value;
 
-    protected AbstractAnnotation(SourceNamespaceName snn) {
-        this.sourceUrlBase = snn.getSourceUrlBase();
-        this.nameSpace = snn.getNameSpace();
-        this.name = snn.getName();
+    @Override
+    public Boolean getValue() {
+        return value;
     }
 
     @Override
-    public final String getSourceUrl(DocType docType) {
-        return sourceUrlBase + "." + docType.getDefaultExtension();
-    }
-
-    public final T setSourceUrlBase(String sourceUrlBase) {
-        this.sourceUrlBase = sourceUrlBase;
-        return getThis();
+    public SweBoolean setValue(Boolean value) {
+        this.value = value;
+        return this;
     }
 
     @Override
-    public final String getNameSpace() {
-        return nameSpace;
-    }
-
-    public final T setNameSpace(String nameSpace) {
-        this.nameSpace = nameSpace;
-        return getThis();
+    public boolean valueIsValid() {
+        return true;
     }
 
     @Override
-    public final String getName() {
-        return name;
+    public int hashCode() {
+        int hash = 5;
+        hash = 71 * hash + Objects.hashCode(this.value);
+        hash = 71 * hash + super.hashCode();
+        return hash;
     }
 
-    public final T setName(String name) {
-        this.name = name;
-        return getThis();
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SweBoolean other = (SweBoolean) obj;
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        return super.equals(obj);
     }
 
-    public abstract T getThis();
+    @Override
+    protected SweBoolean self() {
+        return this;
+    }
+
 }

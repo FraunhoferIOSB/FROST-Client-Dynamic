@@ -26,8 +26,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DatabindContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
-import de.fraunhofer.iosb.ilt.swe.common.AbstractSWEIdentifiable;
-import de.fraunhofer.iosb.ilt.swe.common.constraint.AbstractConstraint;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +46,7 @@ public class SweTypeIdResolver implements TypeIdResolver {
     private static final Map<String, Class<?>> annnotatedClasses;
 
     static {
-        final Reflections reflections = new Reflections("de.fraunhofer.iosb.ilt.swe.common");
+        final Reflections reflections = new Reflections("de.fraunhofer.iosb.ilt.frostclient.models.swecommon");
         annnotatedClasses = reflections
                 .getSubTypesOf(AbstractSWEIdentifiable.class)
                 .stream()

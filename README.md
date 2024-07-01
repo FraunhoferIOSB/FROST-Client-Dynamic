@@ -52,16 +52,16 @@ Data models for the SensorThings API exist, but you can also create your own dat
 The source code below demonstrates the CRUD operations for Thing objects. Operations for other entities work similarly.
 
 ```java
-SensorThingsSensingV11 modelSensing = new SensorThingsSensingV11();
-SensorThingsTaskingV11 modelTasking = new SensorThingsTaskingV11();
-URL serviceEndpoint = new URL("http://example.org/v1.0/");
+SensorThingsV11Sensing modelSensing = new SensorThingsV11Sensing();
+SensorThingsV11Tasking modelTasking = new SensorThingsV11Tasking();
+URL serviceEndpoint = new URL("http://example.org/v1.1/");
 SensorThingsService service = new SensorThingsService(serviceEndpoint, modelSensing, modelTasking);
 ```
 
 ```java
 Entity thing = new Entity(modelSensing.etThing)
-    .setProperty(SensorThingsSensingV11.EP_NAME, "Thingything")
-    .setProperty(SensorThingsSensingV11.EP_DESCRIPTION, "I'm a thing!")
+    .setProperty(SensorThingsV11Sensing.EP_NAME, "Thingything")
+    .setProperty(SensorThingsV11Sensing.EP_DESCRIPTION, "I'm a thing!")
 service.create(thing);
 
 // get Thing with numeric id 1234

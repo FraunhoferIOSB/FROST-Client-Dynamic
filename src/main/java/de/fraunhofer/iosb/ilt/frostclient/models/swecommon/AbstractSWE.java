@@ -20,15 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
-
-import java.util.List;
+package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
 /**
- * Interface for OData classes that can be annotated.
+ * Top-level abstract class for all SWE classes.
  */
-public interface Annotatable {
-
-    public List<Annotation> getAnnotations();
+public abstract class AbstractSWE {
 
 }

@@ -30,7 +30,7 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropertyType implements Annotatable {
+public abstract class PropertyType implements Annotatable {
 
     private final String name;
     private final String description;
@@ -38,14 +38,14 @@ public class PropertyType implements Annotatable {
     private JsonSerializer serializer;
     protected List<Annotation> annotations = new ArrayList<>();
 
-    public PropertyType(String name, String description, JsonDeserializer deserializer, JsonSerializer serializer) {
+    protected PropertyType(String name, String description, JsonDeserializer deserializer, JsonSerializer serializer) {
         this.name = name;
         this.description = description;
         this.deserializer = deserializer;
         this.serializer = serializer;
     }
 
-    public PropertyType(String name, String description, JsonDeserializer deserializer) {
+    protected PropertyType(String name, String description, JsonDeserializer deserializer) {
         this(name, description, deserializer, ParserUtils.getDefaultSerializer());
     }
 
@@ -61,16 +61,18 @@ public class PropertyType implements Annotatable {
         return deserializer;
     }
 
-    public void setDeserializer(JsonDeserializer deserializer) {
+    public PropertyType setDeserializer(JsonDeserializer deserializer) {
         this.deserializer = deserializer;
+        return this;
     }
 
     public JsonSerializer getSerializer() {
         return serializer;
     }
 
-    public void setSerializer(JsonSerializer serializer) {
+    public PropertyType setSerializer(JsonSerializer serializer) {
         this.serializer = serializer;
+        return this;
     }
 
     public boolean isCollection() {

@@ -3,6 +3,8 @@
 ## Development Version 2.13
 
 **Updates**
+* Renamed may classes and moved constants around.
+* Pulled SWE-Common classes internally.
 * Improved methods of query() to allow null parameters.
 
 

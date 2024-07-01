@@ -35,8 +35,6 @@ import java.util.Objects;
 
 /**
  * A property in an entity type.
- *
- * @author hylke
  */
 public abstract class CsdlProperty extends CsdlSchemaItemAbstract {
 

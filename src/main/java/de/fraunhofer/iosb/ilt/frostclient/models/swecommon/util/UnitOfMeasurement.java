@@ -20,15 +20,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
-
-import java.util.List;
+package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util;
 
 /**
- * Interface for OData classes that can be annotated.
+ * Unit of Measurement.
  */
-public interface Annotatable {
+public class UnitOfMeasurement {
 
-    public List<Annotation> getAnnotations();
+    private String code;
+    private String href;
+    private String label;
+    private String symbol;
+
+    public String getCode() {
+        return code;
+    }
+
+    public UnitOfMeasurement setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public UnitOfMeasurement setHref(String href) {
+        this.href = href;
+        return this;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public UnitOfMeasurement setLabel(String label) {
+        this.label = label;
+        return this;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public UnitOfMeasurement setSymbol(String symbol) {
+        this.symbol = symbol;
+        return this;
+    }
 
 }

@@ -24,9 +24,28 @@ package de.fraunhofer.iosb.ilt.frostclient.models;
 
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_UNTYPED;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DEFINITION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAM;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAMS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATUREOFINTEREST;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURESOFINTEREST;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_HISTORICALLOCATION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_HISTORICALLOCATIONS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_LOCATION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_LOCATIONS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVATION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVATIONS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTY;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_SENSOR;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_SENSORS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THINGS;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONTENT_TYPE_APPLICATION_GEOJSON;
-import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UOM;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
@@ -52,42 +71,20 @@ import org.geojson.GeoJsonObject;
 /**
  * The core SensorThings v1.1 Sensing data model.
  */
-public class SensorThingsSensingV11 implements DataModel {
-
-    public static final String NAME_DATASTREAM = "Datastream";
-    public static final String NAME_DATASTREAMS = "Datastreams";
-    public static final String NAME_FEATUREOFINTEREST = "FeatureOfInterest";
-    public static final String NAME_FEATURESOFINTEREST = "FeaturesOfInterest";
-    public static final String NAME_HISTORICALLOCATION = "HistoricalLocation";
-    public static final String NAME_HISTORICALLOCATIONS = "HistoricalLocations";
-    public static final String NAME_LOCATION = "Location";
-    public static final String NAME_LOCATIONS = "Locations";
-    public static final String NAME_OBSERVATION = "Observation";
-    public static final String NAME_OBSERVATIONS = "Observations";
-    public static final String NAME_OBSERVEDPROPERTY = "ObservedProperty";
-    public static final String NAME_OBSERVEDPROPERTIES = "ObservedProperties";
-    public static final String NAME_SENSOR = "Sensor";
-    public static final String NAME_SENSORS = "Sensors";
-    public static final String NAME_THING = "Thing";
-    public static final String NAME_THINGS = "Things";
+public class SensorThingsV11Sensing implements DataModel {
 
     public static final String NAME_DEFINITION = "definition";
     public static final String NAME_NAME = "name";
     public static final String NAME_SYMBOL = "symbol";
 
-    public static final String NAME_EP_CREATIONTIME = "creationTime";
-    public static final String NAME_EP_DESCRIPTION = "description";
-    public static final String NAME_EP_DEFINITION = NAME_DEFINITION;
     public static final String NAME_EP_FEATURE = "feature";
     public static final String NAME_EP_ENCODINGTYPE = "encodingType";
     public static final String NAME_EP_LOCATION = "location";
     public static final String NAME_EP_METADATA = "metadata";
-    public static final String NAME_EP_NAME = "name";
     public static final String NAME_EP_OBSERVATIONTYPE = "observationType";
     public static final String NAME_EP_OBSERVEDAREA = "observedArea";
     public static final String NAME_EP_PARAMETERS = "parameters";
     public static final String NAME_EP_PHENOMENONTIME = "phenomenonTime";
-    public static final String NAME_EP_PROPERTIES = "properties";
     public static final String NAME_EP_RESULT = "result";
     public static final String NAME_EP_RESULTTIME = "resultTime";
     public static final String NAME_EP_RESULTQUALITY = "resultQuality";
@@ -96,13 +93,9 @@ public class SensorThingsSensingV11 implements DataModel {
     public static final String NAME_EP_UNITOFMEASUREMENT = "unitOfMeasurement";
     public static final String NAME_EP_VALIDTIME = "validTime";
 
-    public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = new EntityPropertyMain<>(NAME_EP_CREATIONTIME, EDM_DATETIMEOFFSET);
-    public static final EntityPropertyMain<String> EP_DESCRIPTION = new EntityPropertyMain<>(NAME_EP_DESCRIPTION, EDM_STRING);
-    public static final EntityPropertyMain<String> EP_DEFINITION = new EntityPropertyMain<>(NAME_EP_DEFINITION, EDM_STRING);
     public static final EntityPropertyMain<Object> EP_FEATURE = new EntityPropertyMain<>(NAME_EP_FEATURE, TypePrimitive.EDM_GEOMETRY);
     public static final EntityPropertyMain<Object> EP_LOCATION = new EntityPropertyMain<>(NAME_EP_LOCATION, TypePrimitive.EDM_GEOMETRY);
     public static final EntityPropertyMain<String> EP_METADATA = new EntityPropertyMain<>(NAME_EP_METADATA, EDM_STRING);
-    public static final EntityPropertyMain<String> EP_NAME = new EntityPropertyMain<>(NAME_EP_NAME, EDM_STRING);
     public static final EntityPropertyMain<String> EP_OBSERVATIONTYPE = new EntityPropertyMain<>(NAME_EP_OBSERVATIONTYPE, EDM_STRING);
     public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypePrimitive.EDM_GEOMETRY).setReadOnly(true);
     public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = new EntityPropertyMain<>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEVALUE);
@@ -115,10 +108,7 @@ public class SensorThingsSensingV11 implements DataModel {
     public static final EntityPropertyMain<String> EP_SYMBOL = new EntityPropertyMain<>(NAME_EP_SYMBOL, EDM_STRING);
     public static final EntityPropertyMain<TimeInstant> EP_TIME = new EntityPropertyMain<>(NAME_EP_TIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = new EntityPropertyMain<>(NAME_EP_VALIDTIME, TypeComplex.STA_TIMEINTERVAL);
-    public static final EntityPropertyMain<MapValue> EP_PROPERTIES = new EntityPropertyMain<>(NAME_EP_PROPERTIES, TypeComplex.STA_MAP);
     public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
-
-    public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>(AT_IOT_ID, EDM_UNTYPED);
 
     public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", false, UnitOfMeasurement::new, ParserUtils.getDefaultDeserializer(TYPE_REFERENCE_UOM), ParserUtils.getDefaultSerializer())
             .registerProperty(EP_NAME)
@@ -161,7 +151,7 @@ public class SensorThingsSensingV11 implements DataModel {
 
     private ModelRegistry mr;
 
-    public SensorThingsSensingV11() {
+    public SensorThingsV11Sensing() {
     }
 
     @Override

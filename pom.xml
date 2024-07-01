@@ -93,7 +93,6 @@
         <version.mockito>5.12.0</version.mockito>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.13</version.slf4j>
-        <version.sta-SWE-Common>0.10</version.sta-SWE-Common>
         <version.time4j>5.9.4</version.time4j>
     </properties>
 
@@ -145,11 +144,6 @@
             <groupId>de.fraunhofer.iosb.ilt</groupId>
             <artifactId>Configurable</artifactId>
             <version>${version.Configurable}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.fraunhofer.iosb.ilt</groupId>
-            <artifactId>SensorThings-SWE-Common</artifactId>
-            <version>${version.sta-SWE-Common}</version>
         </dependency>
         <dependency>
             <groupId>de.grundid.opendatalab</groupId>

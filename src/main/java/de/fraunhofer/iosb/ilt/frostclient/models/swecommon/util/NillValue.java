@@ -20,15 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
-
-import java.util.List;
+package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util;
 
 /**
- * Interface for OData classes that can be annotated.
+ * Definition of the placeholder for a "no value" value.
  */
-public interface Annotatable {
+public class NillValue {
 
-    public List<Annotation> getAnnotations();
+    private String reason;
+
+    private String value;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public NillValue setReason(String reason) {
+        this.reason = reason;
+        return this;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public NillValue setValue(String value) {
+        this.value = value;
+        return this;
+    }
 
 }

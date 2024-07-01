@@ -26,8 +26,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import java.util.List;
 
 /**
- *
- * @author hylke
+ * Primary Key interface.
  */
 public interface PrimaryKey {
 

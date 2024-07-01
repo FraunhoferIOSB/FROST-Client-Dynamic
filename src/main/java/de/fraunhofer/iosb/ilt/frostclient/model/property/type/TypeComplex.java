@@ -36,6 +36,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper;
 import java.lang.reflect.Field;
@@ -74,6 +75,11 @@ public class TypeComplex extends PropertyType {
     public static final TypeComplex STA_TIMEVALUE = new TypeComplex(STA_TIMEVALUE_NAME, "An ISO time instant or time interval.", false, TimeValue::new, TypeReferencesHelper.TYPE_REFERENCE_TIMEVALUE)
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
+
+    public static final JsonDeserializer<AbstractDataComponent> temp = ParserUtils.getDefaultDeserializer(TypeReferencesHelper.TYPE_REFERENCE_ABSTRACTDATACOMPONENT);
+    public static final TypeComplex STA_ABSTRACT_DATA_COMPONENT = new TypeComplex("AbstractDataComponent", "An SWE-Common AbstractDataComponent", true)
+            .setSerializer(ParserUtils.getDefaultSerializer())
+            .setDeserializer(ParserUtils.getDefaultDeserializer(TypeReferencesHelper.TYPE_REFERENCE_ABSTRACTDATACOMPONENT));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TypeComplex.class.getName());
     private static final Map<String, TypeComplex> TYPES = new HashMap<>();
@@ -160,8 +166,21 @@ public class TypeComplex extends PropertyType {
         return this;
     }
 
-    public void setInstantiator(Instantiator instantiator) {
+    public TypeComplex setInstantiator(Instantiator instantiator) {
         this.instantiator = instantiator;
+        return this;
+    }
+
+    @Override
+    public TypeComplex setSerializer(JsonSerializer serializer) {
+        super.setSerializer(serializer);
+        return this;
+    }
+
+    @Override
+    public TypeComplex setDeserializer(JsonDeserializer deserializer) {
+        super.setDeserializer(deserializer);
+        return this;
     }
 
     public ComplexValue instantiate() {

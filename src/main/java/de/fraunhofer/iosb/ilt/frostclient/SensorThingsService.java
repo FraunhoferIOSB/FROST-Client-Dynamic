@@ -56,8 +56,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A SensorThingsService represents the service endpoint of a server.
- *
- * @author Nils Sommer, Hylke van der Schaaf, Michael Jacoby
  */
 public class SensorThingsService {
 
@@ -92,14 +90,6 @@ public class SensorThingsService {
         this.models.addAll(models);
     }
 
-    private void initModels() {
-        for (DataModel model : models) {
-            model.init(this, modelRegistry);
-        }
-        modelRegistry.initFinalise();
-        jsonReader = new JsonReader(modelRegistry);
-    }
-
     /**
      * Creates a new SensorThingsService without an endpoint url set. The
      * endpoint url MUST be set before the service can be used.
@@ -115,7 +105,7 @@ public class SensorThingsService {
     /**
      * Creates a new SensorThingsService without an endpoint url set. The
      * endpoint url MUST be set before the service can be used. The models will
-     * be initialised in the order they have.
+     * be initialised in the order they are passed.
      *
      * @param models The data models to use.
      */
@@ -138,7 +128,7 @@ public class SensorThingsService {
 
     /**
      * Creates a new SensorThingsService with the given endpoint URI. The models
-     * will be initialised in the order they have.
+     * will be initialised in the order they are passed.
      *
      * @param endpoint the base URI of the SensorThings service
      * @param models The data models to use.
@@ -150,7 +140,7 @@ public class SensorThingsService {
 
     /**
      * Creates a new SensorThingsService with the given endpoint URL. The models
-     * will be initialised in the order they have.
+     * will be initialised in the order they are passed.
      *
      * @param endpoint the base URL of the SensorThings service
      * @param models The data models to use.
@@ -163,7 +153,7 @@ public class SensorThingsService {
 
     /**
      * Creates a new SensorThingsService with the given endpoint URL. The models
-     * will be initialised in the order they have.
+     * will be initialised in the order they are passed.
      *
      * @param endpoint the base URL of the SensorThings service
      * @param models The data models to use.
@@ -175,6 +165,14 @@ public class SensorThingsService {
 
     public ModelRegistry getModelRegistry() {
         return modelRegistry;
+    }
+
+    private void initModels() {
+        for (DataModel model : models) {
+            model.init(this, modelRegistry);
+        }
+        modelRegistry.initFinalise();
+        jsonReader = new JsonReader(modelRegistry);
     }
 
     public <T extends DataModel> T getModel(Class<T> clazz) {

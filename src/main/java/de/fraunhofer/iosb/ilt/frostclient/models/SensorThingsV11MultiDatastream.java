@@ -23,22 +23,22 @@
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_DESCRIPTION;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_ID;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_NAME;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_OBSERVATIONTYPE;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_OBSERVEDAREA;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_PHENOMENONTIME;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_PHENOMENONTIMEDS;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_PROPERTIES;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_RESULT;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.EP_RESULTTIMEDS;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVATION;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVATIONS;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVEDPROPERTIES;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_OBSERVEDPROPERTY;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_SENSOR;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_THING;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVATION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVATIONS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTY;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_SENSOR;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_OBSERVATIONTYPE;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_OBSERVEDAREA;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_PHENOMENONTIME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_PHENOMENONTIMEDS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULT;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULTTIMEDS;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LIST_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LIST_UOM;
 
@@ -62,14 +62,14 @@ import java.util.List;
 /**
  * The Data Model implements the SensorThings MultiDatastream extension.
  */
-public class SensorThingsMultiDatastreamV11 implements DataModel {
+public class SensorThingsV11MultiDatastream implements DataModel {
 
     public static final String NAME_MULTI_DATASTREAM = "MultiDatastream";
     public static final String NAME_MULTI_DATASTREAMS = "MultiDatastreams";
     public static final String NAME_MULTIOBSERVATIONDATATYPES = "multiObservationDataTypes";
 
     public static final EntityPropertyMain<List<String>> EP_MULTIOBSERVATIONDATATYPES = new EntityPropertyMain<>(NAME_MULTIOBSERVATIONDATATYPES, new TypeCollection(EDM_STRING, TYPE_REFERENCE_LIST_STRING));
-    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeCollection(SensorThingsSensingV11.ept_Uom, TYPE_REFERENCE_LIST_UOM));
+    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeCollection(SensorThingsV11Sensing.ept_Uom, TYPE_REFERENCE_LIST_UOM));
 
     public final NavigationPropertyEntity npObservationMultidatastream = new NavigationPropertyEntity(NAME_MULTI_DATASTREAM);
     public final NavigationPropertyEntitySet npMultidatastreamObservations = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npObservationMultidatastream);
@@ -87,7 +87,7 @@ public class SensorThingsMultiDatastreamV11 implements DataModel {
 
     private ModelRegistry mr;
 
-    public SensorThingsMultiDatastreamV11() {
+    public SensorThingsV11MultiDatastream() {
     }
 
     @Override
@@ -163,7 +163,7 @@ public class SensorThingsMultiDatastreamV11 implements DataModel {
     }
 
     public Entity newObservation() {
-        return new Entity(mr.getEntityTypeForName(SensorThingsSensingV11.NAME_OBSERVATION));
+        return new Entity(mr.getEntityTypeForName(NAME_OBSERVATION));
     }
 
     public Entity newObservation(Object result) {

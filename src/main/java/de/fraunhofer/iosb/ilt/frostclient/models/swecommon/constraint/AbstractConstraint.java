@@ -20,15 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
-
-import java.util.List;
+package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
 /**
- * Interface for OData classes that can be annotated.
+ * The abstract class for constraints.
+ *
+ * @param <T> The type of the extending class.
  */
-public interface Annotatable {
+public abstract class AbstractConstraint<T extends AbstractConstraint<T>> {
 
-    public List<Annotation> getAnnotations();
+    /**
+     * the type of the constraint.
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public T setType(String type) {
+        this.type = type;
+        return self();
+    }
+
+    protected abstract T self();
 
 }

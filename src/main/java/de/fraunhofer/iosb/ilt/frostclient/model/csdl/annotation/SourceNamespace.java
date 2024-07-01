@@ -25,8 +25,6 @@ package de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation;
 /**
  * A holder for the combination of an Annotation Source and Annotation
  * Namespace.
- *
- * @author hylke
  */
 public class SourceNamespace {
 

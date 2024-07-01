@@ -30,10 +30,10 @@ import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.models.CSDLModel;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsMultiDatastreamV11;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsPlus;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsTaskingV11;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11MultiDatastream;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -186,15 +186,15 @@ public class Utils {
             }
             if (foundModels.contains(KnownModels.STA_SENSING)) {
                 LOGGER.info("Detected STA Sensing.");
-                result.add(new SensorThingsSensingV11());
+                result.add(new SensorThingsV11Sensing());
             }
             if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
                 LOGGER.info("Detected STA MultiDatastream.");
-                result.add(new SensorThingsMultiDatastreamV11());
+                result.add(new SensorThingsV11MultiDatastream());
             }
             if (foundModels.contains(KnownModels.STA_TASKING)) {
                 LOGGER.info("Detected STA Tasking.");
-                result.add(new SensorThingsTaskingV11());
+                result.add(new SensorThingsV11Tasking());
             }
             if (foundModels.contains(KnownModels.STA_PLUS)) {
                 LOGGER.info("Detected STAplus.");

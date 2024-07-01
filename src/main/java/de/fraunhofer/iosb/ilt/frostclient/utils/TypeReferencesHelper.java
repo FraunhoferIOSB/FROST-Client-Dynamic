@@ -30,6 +30,8 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -49,10 +51,16 @@ public class TypeReferencesHelper {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TypeReferencesHelper.class.getName());
 
+    public static final TypeReference<AbstractDataComponent> TYPE_REFERENCE_ABSTRACTDATACOMPONENT = new TypeReference<AbstractDataComponent>() {
+        // Empty on purpose.
+    };
     public static final TypeReference<BigDecimal> TYPE_REFERENCE_BIGDECIMAL = new TypeReference<BigDecimal>() {
         // Empty on purpose.
     };
     public static final TypeReference<Boolean> TYPE_REFERENCE_BOOLEAN = new TypeReference<Boolean>() {
+        // Empty on purpose.
+    };
+    public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
     };
     public static final TypeReference<Date> TYPE_REFERENCE_DATE = new TypeReference<Date>() {

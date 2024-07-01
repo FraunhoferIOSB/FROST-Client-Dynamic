@@ -35,8 +35,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
- *
- * @author hylke
+ * Tests for the CSDL Schema generation and parsing.
  */
 public class CsdlSchemaTest {
 

@@ -22,7 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11.NAME_THING;
+import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
@@ -34,23 +35,27 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntit
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
-import de.fraunhofer.iosb.ilt.swe.common.AbstractDataComponent;
-import de.fraunhofer.iosb.ilt.swe.common.complex.DataRecord;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import java.util.Map;
 
 /**
  * The Data Model implements the SensorThings Tasking extension.
  */
-public class SensorThingsTaskingV11 implements DataModel {
+public class SensorThingsV11Tasking implements DataModel {
 
-    private static final String NAME_ACTUATOR = "Actuator";
-    private static final String NAME_ACTUATORS = "Actuators";
-    private static final String NAME_TASK = "Task";
-    private static final String NAME_TASKS = "Tasks";
-    private static final String NAME_TASKING_CAPABILITY = "TaskingCapability";
-    private static final String NAME_TASKING_CAPABILITIES = "TaskingCapabilities";
+    public static final String NAME_ACTUATOR = "Actuator";
+    public static final String NAME_ACTUATORS = "Actuators";
+    public static final String NAME_TASK = "Task";
+    public static final String NAME_TASKS = "Tasks";
+    public static final String NAME_TASKING_CAPABILITY = "TaskingCapability";
+    public static final String NAME_TASKING_CAPABILITIES = "TaskingCapabilities";
 
-    private static final String NAME_EP_TASKINGPARAMETERS = "taskingParameters";
+    public static final String NAME_EP_TASKINGPARAMETERS = "taskingParameters";
+    public static final String NAME_EP_CREATIONTIME = "creationTime";
+
+    public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = new EntityPropertyMain<>(NAME_EP_CREATIONTIME, EDM_DATETIMEOFFSET);
 
     public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
@@ -72,7 +77,7 @@ public class SensorThingsTaskingV11 implements DataModel {
 
     private ModelRegistry mr;
 
-    public SensorThingsTaskingV11() {
+    public SensorThingsV11Tasking() {
     }
 
     @Override
@@ -88,31 +93,31 @@ public class SensorThingsTaskingV11 implements DataModel {
         mr.registerEntityType(etTaskingCapability);
 
         etActuator
-                .registerProperty(SensorThingsSensingV11.EP_ID)
-                .registerProperty(SensorThingsSensingV11.EP_NAME)
-                .registerProperty(SensorThingsSensingV11.EP_DESCRIPTION)
-                .registerProperty(SensorThingsSensingV11.EP_ENCODINGTYPE)
-                .registerProperty(SensorThingsSensingV11.EP_METADATA)
-                .registerProperty(SensorThingsSensingV11.EP_PROPERTIES)
+                .registerProperty(CommonProperties.EP_ID)
+                .registerProperty(CommonProperties.EP_NAME)
+                .registerProperty(CommonProperties.EP_DESCRIPTION)
+                .registerProperty(SensorThingsV11Sensing.EP_ENCODINGTYPE)
+                .registerProperty(SensorThingsV11Sensing.EP_METADATA)
+                .registerProperty(CommonProperties.EP_PROPERTIES)
                 .registerProperty(npActuatorTaskingcapabilities);
 
         etTask
-                .registerProperty(SensorThingsSensingV11.EP_ID)
-                .registerProperty(SensorThingsSensingV11.EP_CREATIONTIME)
+                .registerProperty(CommonProperties.EP_ID)
+                .registerProperty(EP_CREATIONTIME)
                 .registerProperty(EP_TASKINGPARAMETERS)
                 .registerProperty(npTaskTaskingcapability);
 
         etTaskingCapability
-                .registerProperty(SensorThingsSensingV11.EP_ID)
-                .registerProperty(SensorThingsSensingV11.EP_NAME)
-                .registerProperty(SensorThingsSensingV11.EP_DESCRIPTION)
-                .registerProperty(SensorThingsSensingV11.EP_PROPERTIES)
+                .registerProperty(CommonProperties.EP_ID)
+                .registerProperty(CommonProperties.EP_NAME)
+                .registerProperty(CommonProperties.EP_DESCRIPTION)
+                .registerProperty(CommonProperties.EP_PROPERTIES)
                 .registerProperty(EP_TASKINGPARAMETERS)
                 .registerProperty(npTaskcapActuator)
                 .registerProperty(npTaskcapTasks)
                 .registerProperty(npTaskcapThing);
 
-        mr.getEntityTypeForName(SensorThingsSensingV11.NAME_THING).registerProperty(npThingTaskingcapabilities);
+        mr.getEntityTypeForName(NAME_THING).registerProperty(npThingTaskingcapabilities);
     }
 
     @Override
@@ -135,8 +140,8 @@ public class SensorThingsTaskingV11 implements DataModel {
 
     public Entity newTaskingCapability(String name, String description) {
         return newTaskingCapability()
-                .setProperty(SensorThingsSensingV11.EP_NAME, name)
-                .setProperty(SensorThingsSensingV11.EP_DESCRIPTION, description);
+                .setProperty(CommonProperties.EP_NAME, name)
+                .setProperty(CommonProperties.EP_DESCRIPTION, description);
     }
 
     public Entity newTaskingCapability(String name, String description, Map<String, Object> properties) {
@@ -145,7 +150,7 @@ public class SensorThingsTaskingV11 implements DataModel {
 
     public Entity newTaskingCapability(String name, String description, MapValue properties) {
         return newTaskingCapability(name, description)
-                .setProperty(SensorThingsSensingV11.EP_PROPERTIES, properties);
+                .setProperty(CommonProperties.EP_PROPERTIES, properties);
     }
 
     public static TaskingParametersBuilder taskingParametersBuilder() {
@@ -157,7 +162,7 @@ public class SensorThingsTaskingV11 implements DataModel {
         private final DataRecord taskingParameters = new DataRecord();
 
         public TaskingParametersBuilder taskingParameter(AbstractDataComponent field) {
-            taskingParameters.getField().add(field);
+            taskingParameters.getFields().add(field);
             return this;
         }
 

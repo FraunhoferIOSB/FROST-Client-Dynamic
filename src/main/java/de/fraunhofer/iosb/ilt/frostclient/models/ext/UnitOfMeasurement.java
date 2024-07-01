@@ -27,7 +27,8 @@ import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
-import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsSensingV11;
+import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import java.util.Objects;
 
 /**
@@ -35,9 +36,9 @@ import java.util.Objects;
  */
 public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
 
-    public static final EntityPropertyMain<String> EP_NAME = SensorThingsSensingV11.EP_NAME;
-    public static final EntityPropertyMain<String> EP_DEFINITION = SensorThingsSensingV11.EP_DEFINITION;
-    public static final EntityPropertyMain<String> EP_SYMBOL = SensorThingsSensingV11.EP_SYMBOL;
+    public static final EntityPropertyMain<String> EP_NAME = CommonProperties.EP_NAME;
+    public static final EntityPropertyMain<String> EP_DEFINITION = CommonProperties.EP_DEFINITION;
+    public static final EntityPropertyMain<String> EP_SYMBOL = SensorThingsV11Sensing.EP_SYMBOL;
 
     private String name;
     private String symbol;
