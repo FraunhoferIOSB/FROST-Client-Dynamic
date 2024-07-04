@@ -91,6 +91,7 @@
         <version.maven.plugin.surefire>3.3.0</version.maven.plugin.surefire>
 
         <version.mockito>5.12.0</version.mockito>
+        <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.13</version.slf4j>
         <version.time4j>5.9.4</version.time4j>
@@ -174,6 +175,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${version.httpclient}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>${version.paho}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

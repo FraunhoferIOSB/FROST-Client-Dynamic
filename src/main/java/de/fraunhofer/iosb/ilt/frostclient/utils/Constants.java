@@ -33,6 +33,9 @@ public class Constants {
     public static final String OM_MEASUREMENT = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
     public static final String OM_COMPLEXOBSERVATION = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
 
+    public static final String CONFORMANCE_STA_11_MQTT_CREATE = "http://www.opengis.net/spec/iot_sensing/1.1/req/create-observations-via-mqtt/observations-creation";
+    public static final String CONFORMANCE_STA_11_MQTT_READ = "http://www.opengis.net/spec/iot_sensing/1.1/req/receive-updates-via-mqtt/receive-updates";
+
     public static final String CONTENT_TYPE = "content-type";
     public static final String CONTENT_TYPE_APPLICATION_GEOJSON = "application/geo+json";
     public static final String CONTENT_TYPE_APPLICATION_HTTP = "application/http";

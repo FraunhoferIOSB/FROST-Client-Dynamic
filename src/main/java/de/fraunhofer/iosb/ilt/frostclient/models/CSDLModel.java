@@ -43,12 +43,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ConfigurableClass
 public class CSDLModel implements DataModel, AnnotatedConfigurable<Object, Object> {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CSDLModel.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CSDLModel.class.getName());
     private static final String DEFAULT_CONTEXT_PATH = "$metadata?$format=json";
 
     private ModelRegistry mr;
@@ -65,7 +66,7 @@ public class CSDLModel implements DataModel, AnnotatedConfigurable<Object, Objec
         }
         HttpGet httpGet;
         try {
-            URL contextUrl = new URL(service.getEndpoint(), contextPath);
+            URL contextUrl = new URL(service.getBaseUrl(), contextPath);
             httpGet = new HttpGet(contextUrl.toURI());
             LOGGER.debug("Fetching: {}", httpGet.getURI());
             httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());

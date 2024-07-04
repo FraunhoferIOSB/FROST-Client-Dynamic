@@ -23,11 +23,14 @@
 package de.fraunhofer.iosb.ilt.frostclient.query;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.exception.MqttException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
@@ -50,7 +53,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A query for reading operations.
  */
-public class Query implements QueryRequest, QueryParameter {
+public class Query implements QueryRequest<Query>, QueryParameter {
 
     /**
      * The logger for this class.
@@ -207,6 +210,57 @@ public class Query implements QueryRequest, QueryParameter {
 
         list.setService(service);
         return list;
+    }
+
+    @Override
+    public Query subscribe(MqttSubscription sub) throws MqttException {
+        String mqttBasePath = service.getServerInfo().getMqttBasePath();
+        StringBuilder topic = new StringBuilder(mqttBasePath);
+        EntityType tt;
+        if (parent == null) {
+            topic.append(entityType.mainContainer);
+            tt = entityType;
+        } else {
+            topic.append(ParserUtils.relationPath(parent, navigationLink));
+            tt = navigationLink.getEntityType();
+        }
+        StringBuilder collectedParams = new StringBuilder();
+        for (NameValuePair param : params) {
+            final String paramName = param.getName();
+            switch (paramName) {
+                case "$expand":
+                    if (service.getServerInfo().isMqttExpandAllowed()) {
+                        addParamToTopic(collectedParams, param);
+                    }
+                    break;
+
+                case "$filter":
+                    if (service.getServerInfo().isMqttFilterAllowed()) {
+                        addParamToTopic(collectedParams, param);
+                    }
+                    break;
+
+                case "$select":
+                    addParamToTopic(collectedParams, param);
+                    break;
+
+                default:
+                    LOGGER.debug("Ignoring parameter {} for MQTT", paramName);
+            }
+        }
+        topic.append(collectedParams);
+        sub.setTopic(topic.toString())
+                .setReturnType(tt);
+        service.subscribe(sub);
+        return this;
+    }
+
+    public void addParamToTopic(StringBuilder collectedParam, NameValuePair param) {
+        if (collectedParam.isEmpty()) {
+            collectedParam.append('?').append(param.getName()).append('=').append(param.getValue());
+        } else {
+            collectedParam.append('&').append(param.getName()).append('=').append(param.getValue());
+        }
     }
 
     public void delete() throws ServiceFailureException {

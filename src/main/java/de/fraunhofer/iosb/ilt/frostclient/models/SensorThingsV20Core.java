@@ -74,6 +74,8 @@ import org.geojson.GeoJsonObject;
  */
 public class SensorThingsV20Core implements DataModel {
 
+    public static final String MQTT_BASE_PATH = "v2.0/";
+
     public static final String NAME_EP_CREATIONTIME = "creationTime";
     public static final String NAME_EP_FEATURE = "feature";
     public static final String NAME_EP_ENCODINGTYPE = "encodingType";
@@ -266,6 +268,11 @@ public class SensorThingsV20Core implements DataModel {
     @Override
     public boolean isInitialised() {
         return mr != null;
+    }
+
+    @Override
+    public String getMqttBasePath() {
+        return MQTT_BASE_PATH;
     }
 
     public Entity newThing() {

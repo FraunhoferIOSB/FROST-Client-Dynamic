@@ -50,4 +50,15 @@ public interface DataModel {
     public default Version getVersion() {
         return null;
     }
+
+    /**
+     * Get the base MQTT path that the model defines. For instance "v1.1/" for
+     * SensorThings API version 1.1. If this base path is not empty, it MUST end
+     * in a slash.
+     *
+     * @return the mqtt base path, if the model defined any, or an empty string.
+     */
+    public default String getMqttBasePath() {
+        return "";
+    }
 }

@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
+import de.fraunhofer.iosb.ilt.frostclient.exception.MqttException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
@@ -32,6 +33,8 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
+import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -288,6 +292,12 @@ public class Entity implements ComplexValue<Entity> {
         this.service = service;
     }
 
+    public void ensureService() throws IllegalArgumentException {
+        if (service == null) {
+            throw new IllegalArgumentException("Can not subscribe, entity not sent to service yet.");
+        }
+    }
+
     /**
      * Creates a copy of the entity, with only the Primary Key field(s) set.
      * Useful when creating a new entity that links to this entity.
@@ -316,6 +326,18 @@ public class Entity implements ComplexValue<Entity> {
             throw new IllegalArgumentException("Can not query from an entity not associated with a service.");
         }
         return new BaseDao(service, this, navigationPropery);
+    }
+
+    public MqttSubscription subscribe(Consumer<Entity> handler) throws MqttException {
+        ensureService();
+        String topic = service.getServerInfo().getMqttBasePath() + ParserUtils.entityPath(entityType, getPrimaryKeyValues());
+        return service.subscribe(topic, handler, entityType);
+    }
+
+    public MqttSubscription subscribe(NavigationProperty np, Consumer<Entity> handler) throws MqttException {
+        ensureService();
+        String topic = service.getServerInfo().getMqttBasePath() + ParserUtils.relationPath(this, np);
+        return service.subscribe(topic, handler, np.getEntityType());
     }
 
     @Override

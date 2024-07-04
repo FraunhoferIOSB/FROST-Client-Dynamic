@@ -22,31 +22,62 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import java.util.function.Consumer;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import java.util.function.Predicate;
 
 /**
- * An MQTT topic with a handler. The topic can not be changed, but the handler
- * can be.
+ * An MQTT topic with a handler.
  */
 public class MqttSubscription {
 
-    private final String topic;
-    private Consumer<MqttMessage> handler;
+    private EntityType returnType;
+    private String topic;
+    private Predicate<Entity> filter;
+    private Consumer<Entity> handler;
 
-    public MqttSubscription(String topic) {
+    public MqttSubscription(EntityType returnType) {
+        this.returnType = returnType;
+    }
+
+    public MqttSubscription(String topic, EntityType returnType) {
         this.topic = topic;
+        this.returnType = returnType;
     }
 
     public String getTopic() {
         return topic;
     }
 
-    public Consumer<MqttMessage> getHandler() {
+    public MqttSubscription setTopic(String topic) {
+        this.topic = topic;
+        return this;
+    }
+
+    public EntityType getReturnType() {
+        return returnType;
+    }
+
+    public MqttSubscription setReturnType(EntityType returnType) {
+        this.returnType = returnType;
+        return this;
+    }
+
+    public Predicate<Entity> getFilter() {
+        return filter;
+    }
+
+    public MqttSubscription setFilter(Predicate<Entity> filter) {
+        this.filter = filter;
+        return this;
+    }
+
+    public Consumer<Entity> getHandler() {
         return handler;
     }
 
-    public MqttSubscription setHandler(Consumer<MqttMessage> handler) {
+    public MqttSubscription setHandler(Consumer<Entity> handler) {
         this.handler = handler;
         return this;
     }

@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_CREATE;
+import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_READ;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.NotAuthorizedException;
@@ -29,20 +32,16 @@ import de.fraunhofer.iosb.ilt.frostclient.exception.NotFoundException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.models.CSDLModel;
-import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsPlus;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11MultiDatastream;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -73,6 +72,7 @@ public class Utils {
     private static final String NAME_HEADER_ODATA_VERSION = "OData-Version";
     private static final String NAME_CONFORMANCE = "conformance";
     private static final String NAME_SERVER_SETTINGS = "serverSettings";
+    private static final String NAME_ENDPOINTS = "endpoints";
 
     private enum KnownModels {
         STA_SENSING,
@@ -123,11 +123,11 @@ public class Utils {
         service.rebuildHttpClient();
     }
 
-    public static List<DataModel> detectModels(SensorThingsService service, URL endpoint) {
-        var result = new ArrayList<DataModel>();
+    public static ServerInfo detectServerInfo(SensorThingsService service) {
+        ServerInfo serverInfo = service.getServerInfo();
         HttpGet httpGet;
         try {
-            httpGet = new HttpGet(endpoint.toURI());
+            httpGet = new HttpGet(serverInfo.getBaseUrl().toURI());
             LOGGER.debug("Fetching: {}", httpGet.getURI());
             httpGet.addHeader(NAME_HEADER_ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
         } catch (URISyntaxException ex) {
@@ -141,8 +141,9 @@ public class Utils {
             if (tree.has("@context") && odataVersion.length > 0) {
                 // Assume OData 4.01
                 LOGGER.info("Detected OData 4.01.");
-                result.add(new CSDLModel());
-                return result;
+                serverInfo.addModel(new CSDLModel());
+                findMqttEndpoint(tree.get(NAME_SERVER_SETTINGS), serverInfo);
+                return serverInfo;
             }
             Set<KnownModels> foundModels = new HashSet<>();
             if (tree.has(NAME_SERVER_SETTINGS)) {
@@ -159,8 +160,19 @@ public class Utils {
                         foundModels.add(KnownModels.STA_TASKING);
                     } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings-staplus/1.0/conf/core")) {
                         foundModels.add(KnownModels.STA_PLUS);
+                    } else {
+                        switch (confClass) {
+                            case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttExpand.html":
+                                serverInfo.setMqttExpandAllowed(true);
+                                break;
+
+                            case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttFilter.html":
+                                serverInfo.setMqttFilterAllowed(true);
+                                break;
+                        }
                     }
                 }
+                findMqttEndpoint(serverSettings, serverInfo);
             } else if (tree.has(NAME_VALUE)) {
                 JsonNode entities = tree.get(NAME_VALUE);
                 for (var it = entities.elements(); it.hasNext();) {
@@ -186,19 +198,19 @@ public class Utils {
             }
             if (foundModels.contains(KnownModels.STA_SENSING)) {
                 LOGGER.info("Detected STA Sensing.");
-                result.add(new SensorThingsV11Sensing());
+                serverInfo.addModel(new SensorThingsV11Sensing());
             }
             if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
                 LOGGER.info("Detected STA MultiDatastream.");
-                result.add(new SensorThingsV11MultiDatastream());
+                serverInfo.addModel(new SensorThingsV11MultiDatastream());
             }
             if (foundModels.contains(KnownModels.STA_TASKING)) {
                 LOGGER.info("Detected STA Tasking.");
-                result.add(new SensorThingsV11Tasking());
+                serverInfo.addModel(new SensorThingsV11Tasking());
             }
             if (foundModels.contains(KnownModels.STA_PLUS)) {
                 LOGGER.info("Detected STAplus.");
-                result.add(new SensorThingsPlus());
+                serverInfo.addModel(new SensorThingsPlus());
             }
         } catch (IOException ex) {
             LOGGER.error("Failed to parse metadata", ex);
@@ -206,6 +218,39 @@ public class Utils {
             LOGGER.error("Failed to request metadata", ex);
         }
 
-        return result;
+        return serverInfo;
+    }
+
+    public static void findMqttEndpoint(JsonNode serverSettings, ServerInfo result) {
+        if (serverSettings == null) {
+            return;
+        }
+        JsonNode mqttCreate = serverSettings.get(CONFORMANCE_STA_11_MQTT_CREATE);
+        JsonNode mqttRead = serverSettings.get(CONFORMANCE_STA_11_MQTT_READ);
+        String bestEndpoint;
+        bestEndpoint = findBestEndpoint(mqttCreate);
+        if (StringHelper.isNullOrEmpty(bestEndpoint)) {
+            bestEndpoint = findBestEndpoint(mqttRead);
+        }
+        result.setMqttUrl(bestEndpoint);
+    }
+
+    private static String findBestEndpoint(JsonNode mqtt) {
+        if (mqtt == null) {
+            return null;
+        }
+        JsonNode endpoints = mqtt.get(NAME_ENDPOINTS);
+        if (endpoints == null || !endpoints.isArray()) {
+            return null;
+        }
+        String best = null;
+        for (var endpoint : endpoints) {
+            String url = endpoint.asText();
+            if (best == null || url.startsWith("ws")) {
+                // We prefer WebSocket URLs.
+                best = url;
+            }
+        }
+        return best;
     }
 }

@@ -22,14 +22,18 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.query;
 
+import de.fraunhofer.iosb.ilt.frostclient.exception.MqttException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 
 /**
  * Request methods a query should support.
+ *
+ * @param <T> The exact type of QueryRequest.
  */
-public interface QueryRequest {
+public interface QueryRequest<T extends QueryRequest> {
 
     /**
      * Get the first instance of an entity collection.
@@ -46,4 +50,16 @@ public interface QueryRequest {
      * @throws ServiceFailureException the request failed
      */
     EntitySet list() throws ServiceFailureException;
+
+    /**
+     * Subscribe to the topic defined by this request and initialise the given
+     * MqttSubscription. The topic and returnType will be set on the given
+     * MqttSubscription.
+     *
+     * @param sub The subscription without topic, but with a handler.
+     * @return this.
+     * @throws MqttException is subscription fails.
+     */
+    T subscribe(MqttSubscription sub) throws MqttException;
+
 }

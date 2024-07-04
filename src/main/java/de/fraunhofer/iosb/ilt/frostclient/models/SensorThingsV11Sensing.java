@@ -73,6 +73,8 @@ import org.geojson.GeoJsonObject;
  */
 public class SensorThingsV11Sensing implements DataModel {
 
+    public static final String MQTT_BASE_PATH = "v1.1/";
+
     public static final String NAME_DEFINITION = "definition";
     public static final String NAME_NAME = "name";
     public static final String NAME_SYMBOL = "symbol";
@@ -257,6 +259,11 @@ public class SensorThingsV11Sensing implements DataModel {
     @Override
     public boolean isInitialised() {
         return mr != null;
+    }
+
+    @Override
+    public String getMqttBasePath() {
+        return MQTT_BASE_PATH;
     }
 
     public Entity newThing() {
