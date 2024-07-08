@@ -648,6 +648,9 @@ public class SensorThingsService {
      */
     public void unSubscribeAll(String topic) throws MqttException {
         mqttSubscriptions.remove(topic);
+        if (mqttClient == null) {
+            return;
+        }
         try {
             mqttClient.unsubscribe(topic);
         } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
@@ -694,6 +697,27 @@ public class SensorThingsService {
                 throw new MqttException("could not create MQTT client", exc);
             }
         }
+    }
+
+    /**
+     * Unsubscribes all topics and closes the connection.
+     */
+    public void cleanupMqtt() {
+        mqttSubscriptions.keySet().forEach((topic) -> {
+            try {
+                unSubscribeAll(topic);
+            } catch (MqttException exc) {
+                LOGGER.warn("error unsubscribing from MQTT", exc);
+            }
+        });
+        if (mqttClient != null) {
+            try {
+                mqttClient.close(true);
+            } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+                LOGGER.warn("error closing MQTT conection");
+            }
+        }
+        mqttClient = null;
     }
 
 }
