@@ -55,7 +55,7 @@ public class ParserUtils {
     }
 
     public static String entityPath(EntityType entityType, Object... primaryKeyValues) {
-        return String.format("%s(%s)", entityType.mainContainer, formatKeyValuesForUrl(primaryKeyValues));
+        return String.format("%s(%s)", entityType.mainSet, formatKeyValuesForUrl(primaryKeyValues));
     }
 
     /**
@@ -77,7 +77,7 @@ public class ParserUtils {
             throw new IllegalArgumentException("Entity of type " + parent.getEntityType() + " has no relation of type " + relation + ".");
         }
 
-        return String.format("%s(%s)/%s", parent.getEntityType().mainContainer, formatKeyValuesForUrl(parent.getPrimaryKeyValues()), relation.getName());
+        return String.format("%s(%s)/%s", parent.getEntityType().mainSet, formatKeyValuesForUrl(parent.getPrimaryKeyValues()), relation.getName());
     }
 
     public static String formatKeyValuesForUrl(Entity entity) {

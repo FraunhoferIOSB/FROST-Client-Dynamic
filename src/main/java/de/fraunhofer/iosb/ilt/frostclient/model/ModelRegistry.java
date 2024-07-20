@@ -51,7 +51,7 @@ public class ModelRegistry {
     public static final EntityPropertyMain<String> EP_SELFLINK = new EntityPropertyMain<String>(AT_IOT_SELF_LINK, EDM_STRING).setAliases("selfLink");
 
     /**
-     * All entity types, by their entityName (both singular and mainContainer).
+     * All entity types, by their entityName (both singular and mainSet).
      */
     private final Map<String, EntityType> entityTypesByName = new TreeMap<>();
 
@@ -174,8 +174,8 @@ public class ModelRegistry {
         LOGGER.info("Finalising {} EntityTypes.", entityTypes.size());
         for (EntityType type : entityTypes) {
             type.init();
-            if (!StringHelper.isNullOrEmpty(type.mainContainer)) {
-                containersByName.put(type.mainContainer, type);
+            if (!StringHelper.isNullOrEmpty(type.mainSet)) {
+                containersByName.put(type.mainSet, type);
             }
         }
         initialised = true;

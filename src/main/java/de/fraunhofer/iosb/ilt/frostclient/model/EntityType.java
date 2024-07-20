@@ -57,10 +57,9 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
     public String namespace = "";
 
     /**
-     * The name of the main Container (collection) of this entity type as used
-     * in URLs.
+     * The name of the main Set of this entity type as used in URLs.
      */
-    public String mainContainer;
+    public String mainSet;
 
     private boolean initialised = false;
 
@@ -115,7 +114,7 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
 
     public EntityType(String singular, String container) {
         this(singular);
-        this.mainContainer = container;
+        this.mainSet = container;
     }
 
     public void setNamespace(String namespace) {
@@ -123,13 +122,13 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
     }
 
     public void setMainContainer(String entityContainer) {
-        if (this.mainContainer == null) {
-            this.mainContainer = entityContainer;
+        if (this.mainSet == null) {
+            this.mainSet = entityContainer;
         } else {
-            if (this.mainContainer.equals(entityContainer)) {
+            if (this.mainSet.equals(entityContainer)) {
                 return;
             }
-            throw new IllegalStateException("Main EntityContainer for " + entityName + " already set to " + this.mainContainer);
+            throw new IllegalStateException("Main EntityContainer for " + entityName + " already set to " + this.mainSet);
         }
     }
 
@@ -197,8 +196,8 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return entityName.substring(namespace.length() + 1);
     }
 
-    public String getContainerName() {
-        return mainContainer;
+    public String getMainSetName() {
+        return mainSet;
     }
 
     public Property getProperty(String name) {

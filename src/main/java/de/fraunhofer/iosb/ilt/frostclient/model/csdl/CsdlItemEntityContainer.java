@@ -88,7 +88,7 @@ public class CsdlItemEntityContainer extends CsdlSchemaItemAbstract {
             collection = true;
             type = et.entityName;
             for (NavigationProperty np : et.getNavigationProperties()) {
-                navPropBinding.put(np.getName(), np.getEntityType().mainContainer);
+                navPropBinding.put(np.getName(), np.getEntityType().mainSet);
             }
             return this;
         }

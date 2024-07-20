@@ -362,7 +362,7 @@ public class SensorThingsService {
      */
     public URL getFullPath(EntityType entityType) throws ServiceFailureException {
         try {
-            return new URL(getBaseUrl().toString() + entityType.mainContainer);
+            return new URL(getBaseUrl().toString() + entityType.mainSet);
         } catch (MalformedURLException exc) {
             LOGGER.error("Failed to generate URL.", exc);
             throw new ServiceFailureException(exc);

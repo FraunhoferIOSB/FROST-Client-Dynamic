@@ -218,7 +218,7 @@ public class Query implements QueryRequest<Query>, QueryParameter {
         StringBuilder topic = new StringBuilder(mqttBasePath);
         EntityType tt;
         if (parent == null) {
-            topic.append(entityType.mainContainer);
+            topic.append(entityType.mainSet);
             tt = entityType;
         } else {
             topic.append(ParserUtils.relationPath(parent, navigationLink));
