@@ -36,6 +36,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
+import de.fraunhofer.iosb.ilt.frostclient.settings.Settings;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttConfig;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
@@ -143,15 +144,15 @@ public class SensorThingsService {
      *
      * @param settings The settings provider.
      */
-    public SensorThingsService(ServiceSettings settings) {
-        this.settings = settings;
+    public SensorThingsService(Settings settings) {
+        this.settings = ServiceSettings.of(settings);
         this.modelRegistry = new ModelRegistry();
     }
 
     /**
-     * Creates a new SensorThingsService without an endpoint url set. The
-     * endpoint url MUST be set before the service can be used. The models will
-     * be initialised in the order they are passed.
+     * Creates a new SensorThingsService without a base url set. The base url
+     * MUST be set before the service can be used. The models will be
+     * initialised in the order they are passed.
      *
      * @param models The data models to use.
      */
@@ -160,9 +161,9 @@ public class SensorThingsService {
     }
 
     /**
-     * Creates a new SensorThingsService without an endpoint url set. The
-     * endpoint url MUST be set before the service can be used. The models will
-     * be initialised in the order they are returned by the list.
+     * Creates a new SensorThingsService without a base url set. The base url
+     * MUST be set before the service can be used. The models will be
+     * initialised in the order they are returned by the list.
      *
      * @param models The data models to use.
      */
@@ -183,6 +184,16 @@ public class SensorThingsService {
         jsonReader = new JsonReader(modelRegistry);
     }
 
+    public SensorThingsService setModels(List<DataModel> models) {
+        serverInfo.addModels(models);
+        return this;
+    }
+
+    public SensorThingsService setModels(DataModel... models) {
+        serverInfo.addModels(Arrays.asList(models));
+        return this;
+    }
+
     public SensorThingsService init() throws MalformedURLException {
         if (initialised) {
             return this;
@@ -194,11 +205,15 @@ public class SensorThingsService {
         if (serverInfo.getModels().isEmpty()) {
             serverInfo.addModels(settings.getModels());
         }
+
+        settings.getAuthSettings().load(this);
+
         if (!serverInfo.isBaseUrlSet()) {
             String baseUrl = settings.getBaseUrl();
-            if (!isNullOrEmpty(baseUrl)) {
-                setBaseUrl(new URL(baseUrl));
+            if (isNullOrEmpty(baseUrl)) {
+                throw new IllegalArgumentException("Base URL must be set before init is called.");
             }
+            setBaseUrl(new URL(baseUrl));
         }
         if (!serverInfo.isMqttUrlSet()) {
             String mqttUrl = settings.getMqttUrl();
@@ -213,6 +228,10 @@ public class SensorThingsService {
         initModels();
         initialised = true;
         return this;
+    }
+
+    public ServiceSettings getSettings() {
+        return settings;
     }
 
     public ModelRegistry getModelRegistry() {

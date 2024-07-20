@@ -24,6 +24,7 @@ package de.fraunhofer.iosb.ilt.frostclient.settings;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,8 @@ public class Settings {
         Map<String, String> environment = System.getenv();
         Properties wrapper = new Properties(wrapped);
 
-        for (Map.Entry<String, String> entry : environment.entrySet()) {
+        Map<String, String> sortedEnv = new TreeMap<>(environment);
+        for (Map.Entry<String, String> entry : sortedEnv.entrySet()) {
             String key = entry.getKey().replace('_', '.');
             LOGGER.debug("Added environment variable: {}", key);
             wrapper.setProperty(key, entry.getValue());
@@ -115,6 +117,10 @@ public class Settings {
      */
     public Properties getProperties() {
         return properties;
+    }
+
+    public Settings getSubSettings(String prefix) {
+        return new CachedSettings(this, prefix);
     }
 
     public boolean getLogSensitiveData() {

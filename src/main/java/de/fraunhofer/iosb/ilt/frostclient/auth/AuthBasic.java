@@ -28,6 +28,9 @@ import de.fraunhofer.iosb.ilt.configurable.editor.EditorBoolean;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorPassword;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorString;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigDefaults;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValueBoolean;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ServerInfo;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -46,12 +49,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Authentication using HTTP Basic Auth.
  */
-public class AuthBasic implements AnnotatedConfigurable<Void, Void>, AuthMethod {
+public class AuthBasic implements AnnotatedConfigurable<Void, Void>, AuthMethod, ConfigDefaults {
 
     /**
      * The logger for this class.
      */
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthBasic.class);
+
+    @DefaultValue("")
+    public static final String NAME_VAR_USERNAME = "username";
+    @DefaultValue("")
+    public static final String NAME_VAR_PASSWORD = "password";
+    @DefaultValueBoolean(false)
+    public static final String NAME_VAR_IGNORE_SSL_ERRORS = "ignoreSslErrors";
 
     @ConfigurableField(editor = EditorString.class,
             label = "Username",
@@ -73,10 +83,17 @@ public class AuthBasic implements AnnotatedConfigurable<Void, Void>, AuthMethod 
 
     @Override
     public void setAuth(SensorThingsService service) {
+        AuthSettings authSettings = service.getSettings().getAuthSettings();
+        if (username == null) {
+            username = authSettings.getSettings().get(NAME_VAR_USERNAME, getClass());
+            password = authSettings.getSettings().get(NAME_VAR_PASSWORD, getClass());
+            ignoreSslErrors = authSettings.getSettings().getBoolean(NAME_VAR_IGNORE_SSL_ERRORS, getClass());
+        }
+
         try {
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             ServerInfo serverInfo = service.getServerInfo();
-            service.getMqttConfig().setAuth(username, password);
+            service.getOrCreateMqttConfig().setAuth(username, password);
             URL url = serverInfo.getBaseUrl();
             credsProvider.setCredentials(
                     new AuthScope(url.getHost(), url.getPort()),

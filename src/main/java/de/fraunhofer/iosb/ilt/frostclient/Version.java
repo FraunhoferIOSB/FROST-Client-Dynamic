@@ -33,14 +33,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The versions that FROST supports.
+ * The versions that FROST-Client supports.
  */
 public class Version {
 
     public static final String VERSION_STA_V10_NAME = "v1.0";
     public static final String VERSION_STA_V11_NAME = "v1.1";
+    public static final String VERSION_STA_V20_NAME = "v2.0";
     public static final Version V_1_0 = new Version(VERSION_STA_V10_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
     public static final Version V_1_1 = new Version(VERSION_STA_V11_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
+    public static final Version V_2_0 = new Version(VERSION_STA_V20_NAME, AT_COUNT, "id", AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
     public static final Version V_ODATA_4_01 = new Version("", AT_COUNT, "id", AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
 
     public final String urlPart;

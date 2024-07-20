@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient;
 
+import de.fraunhofer.iosb.ilt.frostclient.auth.AuthSettings;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.settings.CachedSettings;
 import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigProvider;
@@ -38,7 +39,7 @@ import java.util.List;
  */
 public class ServiceSettings extends ConfigProvider {
 
-    public static final String PREFIX_AUTH = "auth";
+    public static final String PREFIX_AUTH = "auth.";
 
     @DefaultValue("")
     public static final String TAG_SERVICE_BASE_URL = "baseUrl";
@@ -105,11 +106,8 @@ public class ServiceSettings extends ConfigProvider {
         return authSettings;
     }
 
-    public static class AuthSettings extends ConfigProvider {
-
-        public AuthSettings(Settings settings) {
-            super(settings);
-        }
+    public static ServiceSettings of(Settings settings) {
+        return new ServiceSettings(settings);
     }
 
 }

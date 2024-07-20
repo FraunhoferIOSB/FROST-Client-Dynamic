@@ -71,6 +71,7 @@ public class AuthPostCookie implements AnnotatedConfigurable<Void, Void>, AuthMe
         String finalUrl = postUrl.replace("{username}", username);
         finalUrl = finalUrl.replace("{password}", password);
         CloseableHttpClient client = service.getHttpClient();
+        service.getOrCreateMqttConfig().setAuth(username, password);
         final HttpPost loginPost = new HttpPost(finalUrl);
         loginPost.setHeader(HTTPREQUEST_HEADER_ACCEPT, HTTPREQUEST_TYPE_JSON);
         try {

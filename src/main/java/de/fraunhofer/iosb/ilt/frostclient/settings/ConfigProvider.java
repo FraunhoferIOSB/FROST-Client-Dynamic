@@ -38,8 +38,16 @@ public abstract class ConfigProvider implements ConfigDefaults {
         return settings;
     }
 
+    public Settings getSubSettings(String prefix) {
+        return settings.getSubSettings(prefix);
+    }
+
     public String get(String name) {
         return settings.get(name, getClass());
+    }
+
+    public boolean getBoolean(String name) {
+        return settings.getBoolean(name, getClass());
     }
 
     public int getInt(String name) {
@@ -53,4 +61,5 @@ public abstract class ConfigProvider implements ConfigDefaults {
     public double getDouble(String name) {
         return settings.getDouble(name, getClass());
     }
+
 }

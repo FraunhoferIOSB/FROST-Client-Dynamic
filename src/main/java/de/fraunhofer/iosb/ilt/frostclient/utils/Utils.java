@@ -256,6 +256,7 @@ public class Utils {
         if (StringHelper.isNullOrEmpty(bestEndpoint)) {
             bestEndpoint = findBestEndpoint(mqttRead);
         }
+        LOGGER.info("MQTT Url used: {}", bestEndpoint);
         result.setMqttUrl(bestEndpoint);
     }
 
@@ -270,6 +271,7 @@ public class Utils {
         String best = null;
         for (var endpoint : endpoints) {
             String url = endpoint.asText();
+            LOGGER.info("MQTT Url detected: {}", url);
             if (best == null || url.startsWith("ws")) {
                 // We prefer WebSocket URLs.
                 best = url;
