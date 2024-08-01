@@ -114,7 +114,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
 
         JsonToken currentToken = parser.nextToken();
         while (currentToken == JsonToken.FIELD_NAME) {
-            String fieldName = parser.getCurrentName();
+            String fieldName = parser.currentName();
             parser.nextValue();
             if (fieldName.endsWith("@iot.count")) {
                 deserialiseEntitySetCount(parser, fieldName, result);

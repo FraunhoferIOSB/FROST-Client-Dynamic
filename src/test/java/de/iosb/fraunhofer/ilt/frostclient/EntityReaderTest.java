@@ -27,7 +27,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULT;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULTTIME;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.EP_TASKINGPARAMETERS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.EP_TASKINGPARAMETERS_TC;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.taskingParametersBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -243,7 +243,7 @@ public class EntityReaderTest {
         Entity expected = modelTasking.newTaskingCapability()
                 .setProperty(EP_NAME, "createNewVA")
                 .setProperty(EP_DESCRIPTION, "Virtual Actuator Server, starts new Virtual Actuators")
-                .setProperty(EP_TASKINGPARAMETERS, taskingParametersBuilder()
+                .setProperty(EP_TASKINGPARAMETERS_TC, taskingParametersBuilder()
                         .taskingParameter("vaName", vaName)
                         .taskingParameter("vaDescription", vaDescription)
                         .build())
@@ -261,7 +261,7 @@ public class EntityReaderTest {
                     "description": "Copies Observations from one Datastream to another",
                     "taskingParameters": {
                         "type": "DataRecord",
-                        "field": [
+                        "fields": [
                             {
                                 "type": "Count",
                                 "name": "sourceDatastream",
@@ -314,7 +314,7 @@ public class EntityReaderTest {
         Entity expected = modelTasking.newTaskingCapability()
                 .setProperty(EP_NAME, "DatastreamCopierCapability")
                 .setProperty(EP_DESCRIPTION, "Copies Observations from one Datastream to another")
-                .setProperty(EP_TASKINGPARAMETERS, taskingParametersBuilder()
+                .setProperty(EP_TASKINGPARAMETERS_TC, taskingParametersBuilder()
                         .taskingParameter("sourceDatastream", sourceDS)
                         .taskingParameter("destinationDatastream", destDS)
                         .build())

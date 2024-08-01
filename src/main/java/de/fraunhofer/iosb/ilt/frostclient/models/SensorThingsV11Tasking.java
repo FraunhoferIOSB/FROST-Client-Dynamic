@@ -38,6 +38,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.Map;
 
 /**
@@ -60,8 +61,12 @@ public class SensorThingsV11Tasking implements DataModel {
     public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
     };
-    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", true, null, TYPE_REFERENCE_DATARECORD);
-    public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, STA_TASKINGPARAMETERS);
+    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", true,
+            null,
+            ParserUtils.getDataRecordDeserializer(),
+            ParserUtils.getDefaultSerializer());
+    public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS_TC = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, STA_TASKINGPARAMETERS);
+    public static final EntityPropertyMain<MapValue> EP_TASKINGPARAMETERS_T = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, TypeComplex.STA_MAP);
 
     public final NavigationPropertyEntity npTaskcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);
     public final NavigationPropertyEntity npTaskcapThing = new NavigationPropertyEntity(NAME_THING);
@@ -104,7 +109,7 @@ public class SensorThingsV11Tasking implements DataModel {
         etTask
                 .registerProperty(CommonProperties.EP_ID)
                 .registerProperty(EP_CREATIONTIME)
-                .registerProperty(EP_TASKINGPARAMETERS)
+                .registerProperty(EP_TASKINGPARAMETERS_T)
                 .registerProperty(npTaskTaskingcapability);
 
         etTaskingCapability
@@ -112,7 +117,7 @@ public class SensorThingsV11Tasking implements DataModel {
                 .registerProperty(CommonProperties.EP_NAME)
                 .registerProperty(CommonProperties.EP_DESCRIPTION)
                 .registerProperty(CommonProperties.EP_PROPERTIES)
-                .registerProperty(EP_TASKINGPARAMETERS)
+                .registerProperty(EP_TASKINGPARAMETERS_TC)
                 .registerProperty(npTaskcapActuator)
                 .registerProperty(npTaskcapTasks)
                 .registerProperty(npTaskcapThing);

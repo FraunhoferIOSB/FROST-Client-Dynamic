@@ -28,7 +28,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_PHENOMENONTIME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing.EP_RESULT;
-import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.EP_TASKINGPARAMETERS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.EP_TASKINGPARAMETERS_TC;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.taskingParametersBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -500,7 +500,7 @@ public class EntityFormatterTest {
                 }""";
         Entity entity = modelTasking.newTaskingCapability("Control Light", "Turn the light on and off, as well as specifying light color.")
                 .setProperty(EP_ID, 1L)
-                .setProperty(EP_TASKINGPARAMETERS, taskingParametersBuilder()
+                .setProperty(EP_TASKINGPARAMETERS_TC, taskingParametersBuilder()
                         .taskingParameter(
                                 "status",
                                 new Category()

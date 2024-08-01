@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.TYPE_REFERENCE_DATARECORD;
+
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -43,6 +45,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import java.io.IOException;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -122,6 +125,19 @@ public class ParserUtils {
             @Override
             public T deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
                 return jp.readValueAs(tr);
+            }
+        };
+    }
+
+    public static JsonDeserializer<DataRecord> getDataRecordDeserializer() {
+        return new JsonDeserializer<DataRecord>() {
+            @Override
+            public DataRecord deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
+                TreeNode tree = jp.readValueAsTree();
+                if (tree.size() == 0) {
+                    return null;
+                }
+                return SimpleJsonMapper.getSimpleObjectMapper().treeToValue(tree, TYPE_REFERENCE_DATARECORD);
             }
         };
     }

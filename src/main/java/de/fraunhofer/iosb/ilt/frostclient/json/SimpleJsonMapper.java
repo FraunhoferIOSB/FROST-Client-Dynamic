@@ -26,7 +26,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractConstraintMixin;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractDataComponentMixin;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractSWEIdentifiableMixin;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.MomentSerializer;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
+import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
 import net.time4j.Moment;
 
 /**
@@ -52,6 +58,9 @@ public class SimpleJsonMapper {
             simpleObjectMapper = new ObjectMapper()
                     .setSerializationInclusion(JsonInclude.Include.ALWAYS)
                     .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+                    .addMixIn(AbstractDataComponent.class, AbstractDataComponentMixin.class)
+                    .addMixIn(AbstractSWEIdentifiable.class, AbstractSWEIdentifiableMixin.class)
+                    .addMixIn(AbstractConstraint.class, AbstractConstraintMixin.class)
                     .registerModule(module);
         }
         return simpleObjectMapper;

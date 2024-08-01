@@ -69,8 +69,18 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
         return fields;
     }
 
-    public DataRecord setFields(List<AbstractDataComponent> field) {
-        this.fields = field;
+    /**
+     * Alias for setFields, since some JSON has the fields in the field field.
+     *
+     * @param fields The fields to set on the DataRecord.
+     * @return this.
+     */
+    public DataRecord setField(List<AbstractDataComponent> fields) {
+        return setFields(fields);
+    }
+
+    public DataRecord setFields(List<AbstractDataComponent> fields) {
+        this.fields = fields;
         return this;
     }
 
