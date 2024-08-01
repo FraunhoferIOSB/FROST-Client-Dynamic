@@ -255,7 +255,7 @@ public class SensorThingsService {
         // Temporarily set the given url directly as endpoint
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
         serverInfo.setBaseUrl(new URL(url + "/"));
-        if (serverInfo.getModels().isEmpty() && !modelRegistry.isInitialised()) {
+        if (!modelRegistry.isInitialised()) {
             Utils.detectServerInfo(this);
         }
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
@@ -658,7 +658,7 @@ public class SensorThingsService {
         }
     }
 
-    private void handleMessage(String topic, MqttMessage message) throws Exception {
+    private void handleMessage(String topic, MqttMessage message) {
         for (MqttSubscription sub : mqttSubscriptions.getOrDefault(topic, Collections.emptySet())) {
             try {
                 Entity entity = jsonReader.parseEntity(sub.getReturnType(), message.toString());
@@ -666,7 +666,7 @@ public class SensorThingsService {
                 if (filter == null || filter.test(entity)) {
                     sub.getHandler().accept(entity);
                 }
-            } catch (RuntimeException ex) {
+            } catch (RuntimeException | IOException ex) {
                 LOGGER.error("Exception while handling message.", ex);
             }
         }

@@ -125,6 +125,7 @@ public class Utils {
 
     public static ServerInfo detectServerInfo(SensorThingsService service) {
         ServerInfo serverInfo = service.getServerInfo();
+        boolean modelsPreSet = !serverInfo.getModels().isEmpty();
         HttpGet httpGet;
         try {
             httpGet = new HttpGet(serverInfo.getBaseUrl().toURI());
@@ -141,7 +142,9 @@ public class Utils {
             if (tree.has("@context") && odataVersion.length > 0) {
                 // Assume OData 4.01
                 LOGGER.info("Detected OData 4.01.");
-                serverInfo.addModel(new CSDLModel());
+                if (!modelsPreSet) {
+                    serverInfo.addModel(new CSDLModel());
+                }
                 findMqttEndpoint(tree.get(NAME_SERVER_SETTINGS), serverInfo);
                 return serverInfo;
             }
@@ -196,21 +199,23 @@ public class Utils {
                     }
                 }
             }
-            if (foundModels.contains(KnownModels.STA_SENSING)) {
-                LOGGER.info("Detected STA Sensing.");
-                serverInfo.addModel(new SensorThingsV11Sensing());
-            }
-            if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
-                LOGGER.info("Detected STA MultiDatastream.");
-                serverInfo.addModel(new SensorThingsV11MultiDatastream());
-            }
-            if (foundModels.contains(KnownModels.STA_TASKING)) {
-                LOGGER.info("Detected STA Tasking.");
-                serverInfo.addModel(new SensorThingsV11Tasking());
-            }
-            if (foundModels.contains(KnownModels.STA_PLUS)) {
-                LOGGER.info("Detected STAplus.");
-                serverInfo.addModel(new SensorThingsPlus());
+            if (!modelsPreSet) {
+                if (foundModels.contains(KnownModels.STA_SENSING)) {
+                    LOGGER.info("Detected STA Sensing.");
+                    serverInfo.addModel(new SensorThingsV11Sensing());
+                }
+                if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
+                    LOGGER.info("Detected STA MultiDatastream.");
+                    serverInfo.addModel(new SensorThingsV11MultiDatastream());
+                }
+                if (foundModels.contains(KnownModels.STA_TASKING)) {
+                    LOGGER.info("Detected STA Tasking.");
+                    serverInfo.addModel(new SensorThingsV11Tasking());
+                }
+                if (foundModels.contains(KnownModels.STA_PLUS)) {
+                    LOGGER.info("Detected STAplus.");
+                    serverInfo.addModel(new SensorThingsPlus());
+                }
             }
         } catch (IOException ex) {
             LOGGER.error("Failed to parse metadata", ex);
