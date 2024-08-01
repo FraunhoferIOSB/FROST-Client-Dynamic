@@ -43,7 +43,6 @@ import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple.Text;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class EntityReaderTest {
     public void setUp() throws MalformedURLException {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
-        service = new SensorThingsService(new URL("http://localhost:8080/FROST-Server/v1.0"), modelSensing, modelTasking);
+        service = new SensorThingsService(SensorThingsService.NULL_URL_V11, modelSensing, modelTasking);
     }
 
     @Test

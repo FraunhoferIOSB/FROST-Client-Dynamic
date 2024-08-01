@@ -52,7 +52,6 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.CollectionsHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -76,7 +75,7 @@ public class EntityFormatterTest {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         try {
-            service = new SensorThingsService(new URL("http://localhost:8080/FROST-Server/v1.0"), modelSensing, modelTasking);
+            service = new SensorThingsService(SensorThingsService.NULL_URL_V11, modelSensing, modelTasking);
         } catch (MalformedURLException ex) {
             LOGGER.error("Failed to set up.", ex);
         }

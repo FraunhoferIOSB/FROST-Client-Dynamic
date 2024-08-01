@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import static de.fraunhofer.iosb.ilt.frostclient.SensorThingsService.NULL_URL_V11;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_CREATE;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_READ;
 
@@ -133,6 +134,9 @@ public class Utils {
             httpGet.addHeader(NAME_HEADER_ACCEPT, ContentType.APPLICATION_JSON.getMimeType());
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException("Could not generate context url.", ex);
+        }
+        if (service.getBaseUrl().equals(NULL_URL_V11)) {
+            return serverInfo;
         }
         try (CloseableHttpResponse response = service.execute(httpGet)) {
             Utils.throwIfNotOk(httpGet, response);

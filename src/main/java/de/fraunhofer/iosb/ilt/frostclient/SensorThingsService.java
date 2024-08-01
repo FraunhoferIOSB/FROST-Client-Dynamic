@@ -78,6 +78,18 @@ public class SensorThingsService {
      */
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SensorThingsService.class);
 
+    public static final URL NULL_URL_V11;
+
+    // Static initialiser because all URL Constructors can throw.
+    static {
+        URL tempUrl = null;
+        try {
+            tempUrl = new URL("http://example.org/v1.1/");
+        } catch (MalformedURLException ex) {
+        }
+        NULL_URL_V11 = tempUrl;
+    }
+
     private final ModelRegistry modelRegistry;
     private final ServerInfo serverInfo = new ServerInfo();
     private JsonReader jsonReader;
