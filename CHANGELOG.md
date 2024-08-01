@@ -6,6 +6,9 @@
 * Renamed may classes and moved constants around.
 * Pulled SWE-Common classes internally.
 * Improved methods of query() to allow null parameters.
+* Added MQTT support.
+* Improved DataRecord / TaskingParameter deserialisation.
+* Bumped dependency versions.
 
 
 ## Release Version 2.12
