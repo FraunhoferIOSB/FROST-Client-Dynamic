@@ -115,6 +115,13 @@ public interface EntitySet extends Iterable<Entity> {
     public NavigationPropertyEntitySet getNavigationProperty();
 
     /**
+     * Returns the service for the set.
+     *
+     * @return the service for the set.
+     */
+    public SensorThingsService getService();
+
+    /**
      * Sets the service for the set and all Entities in the set.
      *
      * @param service the service to set.

@@ -172,6 +172,8 @@ public class Entity implements ComplexValue<Entity> {
                 // Something else went wrong, re-throw.
                 throw ex;
             }
+        } else if (entity != null && service != null && entity.getService() == null) {
+            entity.setService(service);
         }
         return entity;
     }
@@ -202,6 +204,9 @@ public class Entity implements ComplexValue<Entity> {
             if (entitySet == null && autoLoad) {
                 entitySet = new EntitySetImpl(npes);
                 setProperty(npes, entitySet);
+            }
+            if (entitySet != null && service != null && entitySet.getService() == null) {
+                entitySet.setService(service);
             }
             return (P) entitySet;
         }

@@ -225,6 +225,11 @@ public class EntitySetImpl implements EntitySet {
     }
 
     @Override
+    public SensorThingsService getService() {
+        return service;
+    }
+
+    @Override
     public void setService(SensorThingsService service) {
         this.service = service;
         for (Entity entity : data) {
