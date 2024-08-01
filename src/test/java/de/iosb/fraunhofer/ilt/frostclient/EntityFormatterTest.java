@@ -75,7 +75,8 @@ public class EntityFormatterTest {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         try {
-            service = new SensorThingsService(SensorThingsService.NULL_URL_V11, modelSensing, modelTasking);
+            service = new SensorThingsService(modelSensing, modelTasking)
+                    .setEndpoint(SensorThingsService.NULL_URL_V11);
         } catch (MalformedURLException ex) {
             LOGGER.error("Failed to set up.", ex);
         }
