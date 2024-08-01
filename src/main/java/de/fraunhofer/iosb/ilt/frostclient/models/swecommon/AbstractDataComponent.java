@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Objects;
 
 /**
@@ -100,10 +101,12 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
         return self();
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public Boolean isOptional() {
         return optional;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public Boolean isUpdatable() {
         return updatable;
     }

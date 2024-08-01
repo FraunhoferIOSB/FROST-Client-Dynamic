@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.SweTypeIdResolver;
 import java.util.Objects;
 
 /**
@@ -29,6 +32,8 @@ import java.util.Objects;
  *
  * @param <T> The type of the extending class.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeIdResolver(SweTypeIdResolver.class)
 public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<T>> extends AbstractSWE {
 
     /**

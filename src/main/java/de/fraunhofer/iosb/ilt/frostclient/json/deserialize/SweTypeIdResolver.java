@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Fraunhofer Institut IOSB, Fraunhoferstr. 1, D 76131
+ * Copyright (C) 2024 Fraunhofer Institut IOSB, Fraunhoferstr. 1, D 76131
  * Karlsruhe, Germany.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins;
+package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DatabindContext;

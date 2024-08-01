@@ -27,14 +27,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractConstraintMixin;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractDataComponentMixin;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractSWEIdentifiableMixin;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
 import java.io.IOException;
 import java.io.Writer;
 import net.time4j.Moment;
@@ -63,10 +57,7 @@ public class JsonWriter {
         ObjectMapper mapper = new ObjectMapper()
                 .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
-                .addMixIn(AbstractDataComponent.class, AbstractDataComponentMixin.class)
-                .addMixIn(AbstractSWEIdentifiable.class, AbstractSWEIdentifiableMixin.class)
-                .addMixIn(AbstractConstraint.class, AbstractConstraintMixin.class);
+                .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(Entity.class, new EntitySerializer());

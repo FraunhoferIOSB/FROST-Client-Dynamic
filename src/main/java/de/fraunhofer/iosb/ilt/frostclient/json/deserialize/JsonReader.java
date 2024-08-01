@@ -28,9 +28,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractConstraintMixin;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractDataComponentMixin;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.mixins.AbstractSWEIdentifiableMixin;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySetImpl;
@@ -39,9 +36,6 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -80,10 +74,7 @@ public class JsonReader {
         ObjectMapper mapper = new ObjectMapper()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                .enable(DeserializationFeature.USE_LONG_FOR_INTS)
-                .addMixIn(AbstractDataComponent.class, AbstractDataComponentMixin.class)
-                .addMixIn(AbstractSWEIdentifiable.class, AbstractSWEIdentifiableMixin.class)
-                .addMixIn(AbstractConstraint.class, AbstractConstraintMixin.class);
+                .enable(DeserializationFeature.USE_LONG_FOR_INTS);
 
         SimpleModule module = new SimpleModule();
         module.addAbstractTypeMapping(EntitySet.class, EntitySetImpl.class);
