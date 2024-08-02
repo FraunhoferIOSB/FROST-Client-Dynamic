@@ -8,6 +8,8 @@
     </appender>
 
     <logger name="de.fraunhofer.iosb.ilt.frostclient" level="INFO"/>
+    <logger name="de.fraunhofer.iosb.ilt.frostclient.model" level="WARN"/>
+    <logger name="de.fraunhofer.iosb.ilt.frostclient.settings.Settings" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

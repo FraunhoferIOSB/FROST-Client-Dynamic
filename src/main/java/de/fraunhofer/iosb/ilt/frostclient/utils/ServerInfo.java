@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ServerInfo {
     private URL baseUrl;
     private String mqttUrl;
     private String mqttBasePath = "";
+    private Version version;
 
     private boolean mqttExpandAllowed = false;
     private boolean mqttFilterAllowed = false;
@@ -46,6 +48,10 @@ public class ServerInfo {
         return baseUrl;
     }
 
+    public boolean isBaseUrlSet() {
+        return baseUrl != null;
+    }
+
     public ServerInfo setBaseUrl(URL baseUrl) {
         this.baseUrl = baseUrl;
         return this;
@@ -53,6 +59,10 @@ public class ServerInfo {
 
     public String getMqttUrl() {
         return mqttUrl;
+    }
+
+    public boolean isMqttUrlSet() {
+        return mqttUrl != null;
     }
 
     public ServerInfo setMqttUrl(String mqttUrl) {
@@ -67,6 +77,14 @@ public class ServerInfo {
     public ServerInfo setMqttBasePath(String mqttBasePath) {
         this.mqttBasePath = mqttBasePath;
         return this;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
     }
 
     public List<DataModel> getModels() {

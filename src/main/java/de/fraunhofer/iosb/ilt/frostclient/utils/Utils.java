@@ -28,6 +28,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.exception.NotAuthorizedException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.NotFoundException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -126,6 +128,7 @@ public class Utils {
 
     public static ServerInfo detectServerInfo(SensorThingsService service) {
         ServerInfo serverInfo = service.getServerInfo();
+        detectVersion(serverInfo);
         boolean modelsPreSet = !serverInfo.getModels().isEmpty();
         HttpGet httpGet;
         try {
@@ -230,8 +233,20 @@ public class Utils {
         return serverInfo;
     }
 
+    private static void detectVersion(ServerInfo serverInfo) throws IllegalArgumentException {
+        String url = StringUtils.removeEnd(serverInfo.getBaseUrl().toString(), "/");
+        String lastSegment = url.substring(url.lastIndexOf('/') + 1);
+        Version detectedVersion = Version.findVersion(lastSegment);
+        if (detectedVersion == null) {
+            if (serverInfo.getVersion() == null) {
+                throw new IllegalArgumentException("endpoint URL does not contain version (e.g. http://example.org/v1.0/) nor version information explicitely provided");
+            }
+        }
+        serverInfo.setVersion(detectedVersion);
+    }
+
     public static void findMqttEndpoint(JsonNode serverSettings, ServerInfo result) {
-        if (serverSettings == null) {
+        if (serverSettings == null || result.isMqttUrlSet()) {
             return;
         }
         JsonNode mqttCreate = serverSettings.get(CONFORMANCE_STA_11_MQTT_CREATE);

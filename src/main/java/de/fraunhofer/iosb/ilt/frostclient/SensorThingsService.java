@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient;
 
+import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
+
 import com.github.fge.jsonpatch.JsonPatchOperation;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
@@ -124,12 +126,26 @@ public class SensorThingsService {
 
     private final Map<String, Set<MqttSubscription>> mqttSubscriptions = new HashMap<>();
 
+    private ServiceSettings settings;
     private TokenManager tokenManager;
-    private Version version;
+
     /**
      * The request timeout in MS.
      */
     private int requestTimeoutMs = 120000;
+
+    private boolean initialised = false;
+
+    /**
+     * Create a new SensorThingsService using the setting from the given
+     * ServiceSettings object.
+     *
+     * @param settings The settings provider.
+     */
+    public SensorThingsService(ServiceSettings settings) {
+        this.settings = settings;
+        this.modelRegistry = new ModelRegistry();
+    }
 
     /**
      * Creates a new SensorThingsService without an endpoint url set. The
@@ -166,6 +182,38 @@ public class SensorThingsService {
         jsonReader = new JsonReader(modelRegistry);
     }
 
+    public SensorThingsService init() throws MalformedURLException {
+        if (initialised) {
+            return this;
+        }
+        if (settings == null) {
+            settings = new ServiceSettings();
+        }
+        requestTimeoutMs = settings.getRequestTimeoutMs();
+        if (serverInfo.getModels().isEmpty()) {
+            serverInfo.addModels(settings.getModels());
+        }
+        if (!serverInfo.isBaseUrlSet()) {
+            String baseUrl = settings.getBaseUrl();
+            if (!isNullOrEmpty(baseUrl)) {
+                setBaseUrl(new URL(baseUrl));
+            }
+        }
+        if (!serverInfo.isMqttUrlSet()) {
+            String mqttUrl = settings.getMqttUrl();
+            if (!isNullOrEmpty(mqttUrl)) {
+                serverInfo.setMqttUrl(mqttUrl);
+            }
+        }
+        if (!modelRegistry.isInitialised()) {
+            Utils.detectServerInfo(this);
+        }
+
+        initModels();
+        initialised = true;
+        return this;
+    }
+
     public ModelRegistry getModelRegistry() {
         return modelRegistry;
     }
@@ -198,8 +246,8 @@ public class SensorThingsService {
      * @return this.
      * @throws java.net.MalformedURLException when building the final url fails.
      */
-    public final SensorThingsService setEndpoint(URI endpoint) throws MalformedURLException {
-        return setEndpoint(endpoint.toURL());
+    public final SensorThingsService setBaseUrl(URI endpoint) throws MalformedURLException {
+        return setBaseUrl(endpoint.toURL());
     }
 
     /**
@@ -210,31 +258,12 @@ public class SensorThingsService {
      * @return this.
      * @throws MalformedURLException when building the final URL fails.
      */
-    public final SensorThingsService setEndpoint(URL endpoint) throws MalformedURLException {
+    public final SensorThingsService setBaseUrl(URL endpoint) throws MalformedURLException {
         if (serverInfo.getBaseUrl() != null) {
             throw new IllegalStateException("endpoint URL already set.");
         }
-        // Temporarily set the given url directly as endpoint
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
         serverInfo.setBaseUrl(new URL(url + "/"));
-        if (!modelRegistry.isInitialised()) {
-            Utils.detectServerInfo(this);
-        }
-        String lastSegment = url.substring(url.lastIndexOf('/') + 1);
-        Version detectedVersion = Version.findVersion(lastSegment);
-        if (detectedVersion == null) {
-            if (getVersion() == null) {
-                throw new MalformedURLException("endpoint URL does not contain version (e.g. http://example.org/v1.0/) nor version information explicitely provided");
-            }
-            if (!url.endsWith(getVersion().getUrlPart())) {
-                url += "/" + getVersion().getUrlPart();
-                serverInfo.setBaseUrl(new URL(url + "/"));
-            }
-        } else {
-            version = detectedVersion;
-        }
-
-        initModels();
         return this;
     }
 
@@ -264,29 +293,6 @@ public class SensorThingsService {
             throw new IllegalStateException("endpoint URL not set.");
         }
         return serverInfo.getBaseUrl();
-    }
-
-    /**
-     * Gets the endpoint URL for the service. Throws an IllegalStateException if
-     * the endpoint is not set.
-     *
-     * @deprecated Use getBaseUrl instead.
-     * @return the endpoint URL for the service.
-     */
-    @Deprecated(forRemoval = true)
-    public URL getEndpoint() {
-        return getBaseUrl();
-    }
-
-    /**
-     * Check if the endpoint is set.
-     *
-     * @deprecated Use isBaseUrlSet instead.
-     * @return true if the endpoint is set, false otherwise.
-     */
-    @Deprecated(forRemoval = true)
-    public boolean isEndpointSet() {
-        return isBaseUrlSet();
     }
 
     /**
@@ -340,7 +346,7 @@ public class SensorThingsService {
      */
     public CloseableHttpResponse execute(HttpRequestBase request) throws IOException {
         final String urlString = request.getURI().toString();
-        if (urlReplace != null && urlString.startsWith(urlReplace)) {
+        if (!isNullOrEmpty(urlReplace) && urlString.startsWith(urlReplace)) {
             final String newUrlString = serverInfo.getBaseUrl().toString() + urlString.substring(urlReplace.length());
             LOGGER.debug("   Fixed: {}", newUrlString);
             try {
@@ -499,15 +505,7 @@ public class SensorThingsService {
     }
 
     public Version getVersion() {
-        if (version == null) {
-            for (DataModel model : serverInfo.getModels()) {
-                version = model.getVersion();
-                if (version != null) {
-                    return version;
-                }
-            }
-        }
-        return version;
+        return serverInfo.getVersion();
     }
 
     /**
@@ -517,7 +515,7 @@ public class SensorThingsService {
      * @param version the version to use.
      */
     public void setVersion(Version version) {
-        this.version = version;
+        this.serverInfo.setVersion(version);
     }
 
     public ServerInfo getServerInfo() {

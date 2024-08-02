@@ -71,12 +71,12 @@ public class EntityFormatterTest {
 
     @BeforeEach
     public void setUp() {
-        LOGGER.info("Setting up.");
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         try {
             service = new SensorThingsService(modelSensing, modelTasking)
-                    .setEndpoint(SensorThingsService.NULL_URL_V11);
+                    .setBaseUrl(SensorThingsService.NULL_URL_V11)
+                    .init();
         } catch (MalformedURLException ex) {
             LOGGER.error("Failed to set up.", ex);
         }

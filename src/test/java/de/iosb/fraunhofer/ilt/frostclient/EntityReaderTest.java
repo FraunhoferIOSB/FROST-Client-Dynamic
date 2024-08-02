@@ -60,7 +60,8 @@ public class EntityReaderTest {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         service = new SensorThingsService(modelSensing, modelTasking)
-                .setEndpoint(SensorThingsService.NULL_URL_V11);
+                .setBaseUrl(SensorThingsService.NULL_URL_V11)
+                .init();
     }
 
     @Test
