@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.13
+## Release Version 2.13
 
 **Updates**
 * Renamed may classes and moved constants around.
@@ -8,10 +8,10 @@
 * Improved methods of query() to allow null parameters.
 * Added MQTT support.
 * Improved DataRecord / TaskingParameter deserialisation.
-* Bumped dependency versions.
 * Some settings can now be set using environment variables.
 * The service BaseUrl must now be set using `setBaseUrl`.
 * The service must now be initialised by calling `init()`.
+* Bumped dependency versions.
 
 
 ## Release Version 2.12
