@@ -67,6 +67,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.LoggerFactory;
 
@@ -535,6 +536,14 @@ public class SensorThingsService {
         return mqttConfig;
     }
 
+    public MqttConfig getOrCreateMqttConfig() {
+        if (mqttConfig == null) {
+            LOGGER.info("Using default MQTT configuration");
+            mqttConfig = new MqttConfig();
+        }
+        return mqttConfig;
+    }
+
     public void setMqttConfig(MqttConfig mqttConfig) {
         this.mqttConfig = mqttConfig;
     }
@@ -638,7 +647,12 @@ public class SensorThingsService {
             return;
         }
         try {
-            mqttClient.connect(mqttConfig.getOptions());
+            final MqttConnectOptions options = mqttConfig.getOptions();
+            if (mqttConfig.isAuthSet()) {
+                options.setUserName(mqttConfig.getUsername());
+                options.setPassword(mqttConfig.getPassword().toCharArray());
+            }
+            mqttClient.connect(options);
         } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
             throw new MqttException("MQTT connection failed", exc);
         }

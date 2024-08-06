@@ -78,4 +78,13 @@ public class MqttConfig {
         this.password = password;
         return this;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
 }

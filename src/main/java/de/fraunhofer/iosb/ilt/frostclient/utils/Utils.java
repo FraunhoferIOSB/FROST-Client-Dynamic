@@ -227,7 +227,7 @@ public class Utils {
         } catch (IOException ex) {
             LOGGER.error("Failed to parse metadata", ex);
         } catch (StatusCodeException ex) {
-            LOGGER.error("Failed to request metadata", ex);
+            LOGGER.warn("Failed to request metadata: HTTP status {} on URL {}", ex.getStatusCode(), httpGet.getURI());
         }
 
         return serverInfo;
