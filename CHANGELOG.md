@@ -9,6 +9,9 @@
 * Added MQTT support.
 * Improved DataRecord / TaskingParameter deserialisation.
 * Bumped dependency versions.
+* Some settings can now be set using environment variables.
+* The service BaseUrl must now be set using `setBaseUrl`.
+* The service must now be initialised by calling `init()`.
 
 
 ## Release Version 2.12

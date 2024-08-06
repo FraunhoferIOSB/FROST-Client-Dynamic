@@ -55,7 +55,9 @@ The source code below demonstrates the CRUD operations for Thing objects. Operat
 SensorThingsV11Sensing modelSensing = new SensorThingsV11Sensing();
 SensorThingsV11Tasking modelTasking = new SensorThingsV11Tasking();
 URL serviceEndpoint = new URL("http://example.org/v1.1/");
-SensorThingsService service = new SensorThingsService(serviceEndpoint, modelSensing, modelTasking);
+SensorThingsService service = new SensorThingsService(modelSensing, modelTasking)
+    .setBaseUrl(serviceEndpoint)
+    .init();
 ```
 
 ```java
