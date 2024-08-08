@@ -1,8 +1,9 @@
 # Changelog
 
-## Development Version 2.14
+## Release Version 2.14
 
 **Updates**
+* Allow setting auth using environment variables (basic auth only for now).
 
 
 ## Release Version 2.13
