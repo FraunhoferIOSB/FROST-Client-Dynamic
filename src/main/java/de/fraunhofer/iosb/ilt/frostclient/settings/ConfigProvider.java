@@ -25,13 +25,23 @@ package de.fraunhofer.iosb.ilt.frostclient.settings;
 /**
  * An abstract class that provides default configuration values, and access to
  * them.
+ *
+ * @param <T> The implementing class.
  */
-public abstract class ConfigProvider implements ConfigDefaults {
+public abstract class ConfigProvider<T> implements ConfigDefaults {
 
-    private final Settings settings;
+    private Settings settings;
+
+    public ConfigProvider() {
+    }
 
     public ConfigProvider(Settings settings) {
         this.settings = settings;
+    }
+
+    public T setSettings(Settings settings) {
+        this.settings = settings;
+        return getThis();
     }
 
     public Settings getSettings() {
@@ -62,4 +72,5 @@ public abstract class ConfigProvider implements ConfigDefaults {
         return settings.getDouble(name, getClass());
     }
 
+    public abstract T getThis();
 }

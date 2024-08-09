@@ -37,7 +37,7 @@ import java.util.List;
  * The holder for all settings the SensorThingsService uses, and their default
  * values.
  */
-public class ServiceSettings extends ConfigProvider {
+public class ServiceSettings extends ConfigProvider<ServiceSettings> {
 
     public static final String PREFIX_AUTH = "auth.";
 
@@ -104,6 +104,11 @@ public class ServiceSettings extends ConfigProvider {
 
     public AuthSettings getAuthSettings() {
         return authSettings;
+    }
+
+    @Override
+    public ServiceSettings getThis() {
+        return this;
     }
 
     public static ServiceSettings of(Settings settings) {

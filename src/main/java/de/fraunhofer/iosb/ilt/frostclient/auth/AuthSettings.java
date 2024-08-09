@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Settings holder for Auth* settings.
  */
-public class AuthSettings extends ConfigProvider {
+public class AuthSettings extends ConfigProvider<AuthSettings> {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthSettings.class.getName());
     @DefaultValue("")
@@ -64,7 +64,11 @@ public class AuthSettings extends ConfigProvider {
         } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
             LOGGER.error("Class '{}' could not be instantiated", authProviderClassName, ex);
         }
+    }
 
+    @Override
+    public AuthSettings getThis() {
+        return this;
     }
 
 }
