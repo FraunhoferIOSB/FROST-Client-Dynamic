@@ -28,6 +28,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OB
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_DATARECORD;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
@@ -49,7 +50,7 @@ import java.util.Map;
  */
 public class SensorThingsV20Tasking implements DataModel {
 
-    public static enum STATUS {
+    public static enum Status {
         CREATED("Created"),
         RUNNING("Running"),
         COMPLETED("Completed"),
@@ -58,8 +59,18 @@ public class SensorThingsV20Tasking implements DataModel {
 
         public final String name;
 
-        private STATUS(String name) {
+        private Status(String name) {
             this.name = name;
+        }
+
+        @JsonValue
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return getName();
         }
 
     }
@@ -77,12 +88,12 @@ public class SensorThingsV20Tasking implements DataModel {
     public static final String NAME_EP_CREATIONTIME = SensorThingsV11Tasking.NAME_EP_CREATIONTIME;
     public static final String NAME_NP_ACTUATABLEPROPERTIES = "actuatableProperties";
 
-    public static final TypeEnumeration PT_STATUS = new TypeEnumeration("TaskStatus", "Task Status Enumeration", STATUS.class);
+    public static final TypeEnumeration PT_STATUS = new TypeEnumeration("TaskStatus", "Task Status Enumeration", Status.class);
     public static final TypeComplex PT_DATA_RECORD = new TypeComplex("DataRecord", "A DataRecord", true, null, TYPE_REFERENCE_DATARECORD);
 
     public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = new EntityPropertyMain<>(NAME_EP_CREATIONTIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeValue> EP_RUNTIME = new EntityPropertyMain<>(NAME_EP_RUNTIME, TypeComplex.STA_TIMEVALUE);
-    public static final EntityPropertyMain<STATUS> EP_STATUS = new EntityPropertyMain<>(NAME_EP_STATUS, PT_STATUS);
+    public static final EntityPropertyMain<Status> EP_STATUS = new EntityPropertyMain<>(NAME_EP_STATUS, PT_STATUS);
     public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, PT_DATA_RECORD);
 
     public final NavigationPropertyEntity npTaskingcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);

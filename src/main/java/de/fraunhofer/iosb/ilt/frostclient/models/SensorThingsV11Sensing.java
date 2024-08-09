@@ -75,8 +75,8 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public static final String MQTT_BASE_PATH = "v1.1/";
 
-    public static final String NAME_DEFINITION = "definition";
-    public static final String NAME_NAME = "name";
+    public static final String NAME_DEFINITION = CommonProperties.NAME_EP_DEFINITION;
+    public static final String NAME_NAME = CommonProperties.NAME_EP_NAME;
     public static final String NAME_SYMBOL = "symbol";
 
     public static final String NAME_EP_FEATURE = "feature";

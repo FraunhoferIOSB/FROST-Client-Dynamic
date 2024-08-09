@@ -25,8 +25,10 @@ package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
@@ -71,10 +73,12 @@ public class JsonReader {
      * @return The created object mapper.
      */
     private static ObjectMapper createObjectMapper(ModelRegistry modelRegistry) {
-        ObjectMapper mapper = new ObjectMapper()
+        ObjectMapper mapper = JsonMapper.builder()
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                .enable(DeserializationFeature.USE_LONG_FOR_INTS);
+                .enable(DeserializationFeature.USE_LONG_FOR_INTS)
+                .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+                .build();
 
         SimpleModule module = new SimpleModule();
         module.addAbstractTypeMapping(EntitySet.class, EntitySetImpl.class);

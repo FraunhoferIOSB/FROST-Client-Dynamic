@@ -24,8 +24,10 @@ package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
@@ -54,10 +56,12 @@ public class JsonWriter {
     }
 
     private static ObjectMapper createObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper()
-                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+        ObjectMapper mapper = JsonMapper.builder()
+                .serializationInclusion(JsonInclude.Include.NON_EMPTY)
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+                .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
+                .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+                .build();
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(Entity.class, new EntitySerializer());
