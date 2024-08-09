@@ -27,14 +27,13 @@ import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigProvider;
 import de.fraunhofer.iosb.ilt.frostclient.settings.Settings;
 import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
-import org.slf4j.LoggerFactory;
+import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 
 /**
  * Settings holder for Auth* settings.
  */
 public class AuthSettings extends ConfigProvider<AuthSettings> {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthSettings.class.getName());
     @DefaultValue("")
     public static final String TAG_AUTH_PROVIDER_CLASS = "providerClass";
 
@@ -47,22 +46,9 @@ public class AuthSettings extends ConfigProvider<AuthSettings> {
         if (StringHelper.isNullOrEmpty(authProviderClassName)) {
             return;
         }
-        Class<AuthMethod> authClass;
-        try {
-            Class<?> clazz = Class.forName(authProviderClassName, false, getClass().getClassLoader());
-            if (AuthMethod.class.isAssignableFrom(clazz)) {
-                authClass = (Class<AuthMethod>) clazz;
-            } else {
-                throw new IllegalArgumentException("Class " + authProviderClassName + " does not implement the interface AuthMethod");
-            }
-        } catch (ClassNotFoundException ex) {
-            throw new IllegalArgumentException("Class '" + authProviderClassName + "' could not be found", ex);
-        }
-        try {
-            AuthMethod authProvider = authClass.getDeclaredConstructor().newInstance();
+        AuthMethod authProvider = Utils.instantiateClass(authProviderClassName, AuthMethod.class);
+        if (authProvider != null) {
             authProvider.setAuth(service);
-        } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
-            LOGGER.error("Class '{}' could not be instantiated", authProviderClassName, ex);
         }
     }
 

@@ -279,4 +279,25 @@ public class Utils {
         }
         return best;
     }
+
+    public static <T> T instantiateClass(String className, Class<T> superClass) {
+        Class<T> classToLoad;
+        try {
+            Class<?> clazz = Class.forName(className, false, superClass.getClassLoader());
+            if (superClass.isAssignableFrom(clazz)) {
+                classToLoad = (Class<T>) clazz;
+            } else {
+                throw new IllegalArgumentException("Class " + className + " does not implement the interface AuthMethod");
+            }
+        } catch (ClassNotFoundException ex) {
+            throw new IllegalArgumentException("Class '" + className + "' could not be found", ex);
+        }
+        try {
+            return classToLoad.getDeclaredConstructor().newInstance();
+
+        } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
+            LOGGER.error("Class '{}' could not be instantiated", className, ex);
+        }
+        return null;
+    }
 }
