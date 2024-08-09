@@ -85,6 +85,10 @@ public class CollectionsHelper {
         return getFrom((Object) map, path);
     }
 
+    public static Object getFrom(final Object mapOrList, final String... path) {
+        return getFrom(mapOrList, Arrays.asList(path));
+    }
+
     private static Object getFrom(final Object mapOrList, final List<String> path) {
         Object currentEntry = mapOrList;
         int last = path.size();
@@ -110,7 +114,15 @@ public class CollectionsHelper {
 
     public static class PropertyBuilder {
 
-        Map<String, Object> properties = new HashMap<>();
+        Map<String, Object> properties;
+
+        public PropertyBuilder() {
+            this.properties = new HashMap<>();
+        }
+
+        public PropertyBuilder(Map<String, Object> properties) {
+            this.properties = properties;
+        }
 
         public PropertyBuilder addItem(final String key, final Object value) {
             properties.put(key, value);

@@ -79,183 +79,6 @@ public class StringHelper {
         // Utility class, not to be instantiated.
     }
 
-    public static String capitalize(String string) {
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
-    }
-
-    public static String deCapitalize(String string) {
-        return string.substring(0, 1).toLowerCase() + string.substring(1);
-    }
-
-    /**
-     * Returns true if the given string is null, or empty.
-     *
-     * @param string the string to check.
-     * @return true if string == null || string.isEmpty()
-     */
-    public static boolean isNullOrEmpty(String string) {
-        return string == null || string.isEmpty();
-    }
-
-    public static boolean isNullOrEmpty(Object[] arr) {
-        return arr == null || arr.length == 0;
-    }
-
-    public static boolean isNullOrEmpty(Collection arr) {
-        return arr == null || arr.isEmpty();
-    }
-
-    /**
-     * Replaces characters that might break logging output. Currently: \n, \r
-     * and \t
-     *
-     * @param string The string to clean.
-     * @return The cleaned string.
-     */
-    public static String cleanForLogging(String string) {
-        if (string == null) {
-            return "null";
-        }
-        return StringUtils.replaceChars(string, "\n\r\t", "");
-    }
-
-    /**
-     * Null-Save replaces characters that might break logging output. Currently:
-     * \n, \r and \t
-     *
-     * @param object The Object to clean.
-     * @return The cleaned string.
-     */
-    public static String cleanForLogging(Object object) {
-        return cleanForLogging(Objects.toString(object));
-    }
-
-    /**
-     * Replaces all ' in the string with ''.
-     *
-     * @param in The string to escape.
-     * @return The escaped string.
-     */
-    public static String escapeForStringConstant(String in) {
-        return in.replace("'", "''");
-    }
-
-    /**
-     * Removes characters that might break logging output and truncates to a
-     * maximum length.Currently: \n, \r and \t
-     *
-     * @param string The string to clean.
-     * @param maxLength The maximum length of the returned String.
-     * @return The cleaned string.
-     */
-    public static String cleanForLogging(String string, int maxLength) {
-        return StringUtils.replaceChars(StringUtils.abbreviate(string, maxLength), "\n\r\t", "");
-    }
-
-    /**
-     * Quote the given value for use in URLs.
-     *
-     * @param in The object to quote.
-     * @return The quoted String.
-     */
-    public static String quoteForUrl(Object in) {
-        if (in instanceof Number) {
-            return in.toString();
-        }
-        return "'" + escapeForStringConstant(in.toString()) + "'";
-    }
-
-    /**
-     * Urlencodes the given string, optionally not encoding forward slashes.
-     *
-     * In urls, forward slashes before the "?" must never be urlEncoded.
-     * Urlencoding of slashes could otherwise be used to obfuscate phising URLs.
-     *
-     * @param string The string to urlEncode.
-     * @param notSlashes If true, forward slashes are not encoded.
-     * @return The urlEncoded string.
-     */
-    public static String urlEncode(String string, boolean notSlashes) {
-        if (notSlashes) {
-            return urlEncodeNotSlashes(string);
-        }
-        return urlEncode(string);
-    }
-
-    /**
-     * Urlencodes the given string, except for the forward slashes.
-     *
-     * @param string The string to urlEncode.
-     * @return The urlEncoded string.
-     */
-    public static String urlEncodeNotSlashes(String string) {
-        String[] split = string.split("/");
-        for (int i = 0; i < split.length; i++) {
-            split[i] = urlEncode(split[i]);
-        }
-        return String.join("/", split);
-    }
-
-    public static String urlEncode(String input) {
-        try {
-            return URLEncoder.encode(input, UTF8.name());
-        } catch (UnsupportedEncodingException exc) {
-            // Should never happen, UTF-8 is build in.
-            LOGGER.error(UTF8_NOT_SUPPORTED);
-            throw new IllegalStateException(UTF8_NOT_SUPPORTED, exc);
-        }
-    }
-
-    /**
-     * Decode the given input using UTF-8 as character set.
-     *
-     * @param input The input to urlDecode.
-     * @return The decoded input.
-     */
-    public static String urlDecode(String input) {
-        try {
-            return URLDecoder.decode(input, UTF8.name());
-        } catch (UnsupportedEncodingException exc) {
-            // Should never happen, UTF-8 is build in.
-            LOGGER.error(UTF8_NOT_SUPPORTED);
-            throw new IllegalStateException(UTF8_NOT_SUPPORTED, exc);
-        }
-    }
-
-    private static ChronoPrinter<MomentInterval> buildIntervalFormatter() {
-        return (formattable, buffer, attributes) -> {
-            MomentInterval interval = formattable.toCanonical();
-            if (interval.getStart().isInfinite()) {
-                buffer.append("-");
-            } else {
-                FORMAT_MOMENT.print(interval.getStartAsMoment(), buffer);
-            }
-            buffer.append('/');
-            if (interval.getEnd().isInfinite()) {
-                buffer.append("-");
-            } else {
-                FORMAT_MOMENT.print(interval.getEndAsMoment(), buffer);
-            }
-            return Collections.emptySet();
-        };
-    }
-
-    private static ChronoPrinter<Moment> buildMomentFormatter() {
-        IsoDateStyle dateStyle = EXTENDED_CALENDAR_DATE;
-        IsoDecimalStyle decimalStyle = DOT;
-        ZonalOffset offset = UTC;
-        ChronoFormatter.Builder<Moment> builder = ChronoFormatter.setUp(Moment.axis(), Locale.ROOT);
-        builder.addCustomized(
-                PlainDate.COMPONENT,
-                Iso8601Format.ofDate(dateStyle),
-                (text, status, attributes) -> null);
-        builder.addLiteral('T');
-        addWallTime(builder, dateStyle.isExtended(), decimalStyle);
-        builder.addTimezoneOffset(FormatStyle.MEDIUM, dateStyle.isExtended(), Collections.singletonList("Z"));
-        return builder.build().with(Leniency.STRICT).withTimezone(offset);
-
-    }
-
     private static <T extends ChronoEntity<T>> void addWallTime(ChronoFormatter.Builder<T> builder, boolean extended, IsoDecimalStyle decimalStyle) {
 
         builder.startSection(Attributes.NUMBER_SYSTEM, NumberSystem.ARABIC);
@@ -292,6 +115,207 @@ public class StringHelper {
             builder.endSection();
         }
 
+    }
+
+    public static String afterLastSlash(final String input) {
+        return input.substring(input.lastIndexOf('/') + 1);
+    }
+
+    private static ChronoPrinter<MomentInterval> buildIntervalFormatter() {
+        return (formattable, buffer, attributes) -> {
+            MomentInterval interval = formattable.toCanonical();
+            if (interval.getStart().isInfinite()) {
+                buffer.append("-");
+            } else {
+                FORMAT_MOMENT.print(interval.getStartAsMoment(), buffer);
+            }
+            buffer.append('/');
+            if (interval.getEnd().isInfinite()) {
+                buffer.append("-");
+            } else {
+                FORMAT_MOMENT.print(interval.getEndAsMoment(), buffer);
+            }
+            return Collections.emptySet();
+        };
+    }
+
+    private static ChronoPrinter<Moment> buildMomentFormatter() {
+        IsoDateStyle dateStyle = EXTENDED_CALENDAR_DATE;
+        IsoDecimalStyle decimalStyle = DOT;
+        ZonalOffset offset = UTC;
+        ChronoFormatter.Builder<Moment> builder = ChronoFormatter.setUp(Moment.axis(), Locale.ROOT);
+        builder.addCustomized(
+                PlainDate.COMPONENT,
+                Iso8601Format.ofDate(dateStyle),
+                (text, status, attributes) -> null);
+        builder.addLiteral('T');
+        addWallTime(builder, dateStyle.isExtended(), decimalStyle);
+        builder.addTimezoneOffset(FormatStyle.MEDIUM, dateStyle.isExtended(), Collections.singletonList("Z"));
+        return builder.build().with(Leniency.STRICT).withTimezone(offset);
+
+    }
+
+    public static String camelCase(final String name) {
+        final String[] parts = StringUtils.split(name, '_');
+        final StringBuilder result = new StringBuilder(parts[0].toLowerCase());
+        for (int idx = 1; idx < parts.length; idx++) {
+            final String part = parts[idx];
+            result.append(part.substring(0, 1).toUpperCase());
+            result.append(part.substring(1).toLowerCase());
+        }
+        return result.toString();
+    }
+
+    public static String capitalize(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    /**
+     * Replaces characters that might break logging output. Currently: \n, \r
+     * and \t
+     *
+     * @param string The string to clean.
+     * @return The cleaned string.
+     */
+    public static String cleanForLogging(String string) {
+        if (string == null) {
+            return "null";
+        }
+        return StringUtils.replaceChars(string, "\n\r\t", "");
+    }
+
+    /**
+     * Null-Save replaces characters that might break logging output. Currently:
+     * \n, \r and \t
+     *
+     * @param object The Object to clean.
+     * @return The cleaned string.
+     */
+    public static String cleanForLogging(Object object) {
+        return cleanForLogging(Objects.toString(object));
+    }
+
+    /**
+     * Removes characters that might break logging output and truncates to a
+     * maximum length.Currently: \n, \r and \t
+     *
+     * @param string The string to clean.
+     * @param maxLength The maximum length of the returned String.
+     * @return The cleaned string.
+     */
+    public static String cleanForLogging(String string, int maxLength) {
+        return StringUtils.replaceChars(StringUtils.abbreviate(string, maxLength), "\n\r\t", "");
+    }
+
+    /**
+     * Changes the first letter of the string into lower case.
+     *
+     * @param string The string to de-capitalise.
+     * @return The de-capitalised string.
+     */
+    public static String deCapitalize(String string) {
+        return string.substring(0, 1).toLowerCase() + string.substring(1);
+    }
+
+    /**
+     * Replaces all ' in the string with ''.
+     *
+     * @param in The string to escape.
+     * @return The escaped string.
+     */
+    public static String escapeForStringConstant(String in) {
+        return in.replace("'", "''");
+    }
+
+    /**
+     * Returns true if the given string is null, or empty.
+     *
+     * @param string the string to check.
+     * @return true if string == null || string.isEmpty()
+     */
+    public static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
+
+    public static boolean isNullOrEmpty(Object[] arr) {
+        return arr == null || arr.length == 0;
+    }
+
+    public static boolean isNullOrEmpty(Collection arr) {
+        return arr == null || arr.isEmpty();
+    }
+
+    /**
+     * Quote the given value for use in URLs.
+     *
+     * @param in The object to quote.
+     * @return The quoted String.
+     */
+    public static String quoteForUrl(Object in) {
+        if (in instanceof Number) {
+            return in.toString();
+        }
+        if (in == null) {
+            return "null";
+        }
+        return "'" + escapeForStringConstant(in.toString()) + "'";
+    }
+
+    /**
+     * Decode the given input using UTF-8 as character set.
+     *
+     * @param input The input to urlDecode.
+     * @return The decoded input.
+     */
+    public static String urlDecode(String input) {
+        try {
+            return URLDecoder.decode(input, UTF8.name());
+        } catch (UnsupportedEncodingException exc) {
+            // Should never happen, UTF-8 is build in.
+            LOGGER.error(UTF8_NOT_SUPPORTED);
+            throw new IllegalStateException(UTF8_NOT_SUPPORTED, exc);
+        }
+    }
+
+    /**
+     * Urlencodes the given string, optionally not encoding forward slashes.
+     *
+     * In urls, forward slashes before the "?" must never be urlEncoded.
+     * Urlencoding of slashes could otherwise be used to obfuscate phising URLs.
+     *
+     * @param string The string to urlEncode.
+     * @param notSlashes If true, forward slashes are not encoded.
+     * @return The urlEncoded string.
+     */
+    public static String urlEncode(String string, boolean notSlashes) {
+        if (notSlashes) {
+            return urlEncodeNotSlashes(string);
+        }
+        return urlEncode(string);
+    }
+
+    public static String urlEncode(String input) {
+        try {
+            return URLEncoder.encode(input, UTF8.name());
+        } catch (UnsupportedEncodingException exc) {
+            // Should never happen, UTF-8 is build in.
+            LOGGER.error(UTF8_NOT_SUPPORTED);
+            throw new IllegalStateException(UTF8_NOT_SUPPORTED, exc);
+        }
+    }
+
+    /**
+     * Urlencodes the given string, except for the forward slashes.
+     *
+     * @param string The string to urlEncode.
+     * @return The urlEncoded string.
+     */
+    public static String urlEncodeNotSlashes(String string) {
+        String[] split = string.split("/");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = urlEncode(split[i]);
+        }
+        return String.join("/", split);
     }
 
     private static class NonZeroCondition implements ChronoCondition<ChronoDisplay> {
