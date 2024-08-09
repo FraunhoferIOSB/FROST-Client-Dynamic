@@ -34,7 +34,7 @@ public class StatusCodeException extends ServiceFailureException {
     private final String returnedContent;
 
     public StatusCodeException(String url, int statusCode, String statusMessage, String returnedContent) {
-        super("StatusCode: " + statusCode + ": " + statusMessage);
+        super("StatusCode: " + statusCode + ", URL: " + url);
         this.url = url;
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
@@ -79,7 +79,7 @@ public class StatusCodeException extends ServiceFailureException {
 
     @Override
     public String toString() {
-        return getClass().getName() + " Code: " + statusCode + " " + statusMessage;
+        return getClass().getName() + " StatusCode: " + statusCode + " URL: " + url;
     }
 
 }

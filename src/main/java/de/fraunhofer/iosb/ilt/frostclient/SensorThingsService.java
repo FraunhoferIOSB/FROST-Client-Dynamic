@@ -48,6 +48,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -696,18 +697,21 @@ public class SensorThingsService {
      * Unsubscribes all topics and closes the connection.
      */
     public void cleanupMqtt() {
-        mqttSubscriptions.keySet().forEach((topic) -> {
+        // Copy the topics, since unsubscribing changes the mqttSubscriptions.
+        List<String> topics = new ArrayList<>(mqttSubscriptions.keySet());
+        topics.forEach((topic) -> {
             try {
                 unSubscribeAll(topic);
-            } catch (MqttException exc) {
-                LOGGER.warn("error unsubscribing from MQTT", exc);
+            } catch (MqttException ex) {
+                LOGGER.warn("error unsubscribing from MQTT", ex);
             }
         });
         if (mqttClient != null) {
             try {
+                mqttClient.disconnect();
                 mqttClient.close(true);
             } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
-                LOGGER.warn("error closing MQTT conection");
+                LOGGER.warn("error closing MQTT conection", ex);
             }
         }
         mqttClient = null;
