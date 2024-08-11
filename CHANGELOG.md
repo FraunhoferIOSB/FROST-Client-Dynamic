@@ -1,8 +1,14 @@
 # Changelog
 
-## Development Version 2.15
+## Release Version 2.15
 
 **Updates**
+* Introduced PkValue object to wrap Object[] for primary key values.
+* Fixed enum deserialisation.
+* Added FrostUtils and Cache classes.
+* Made ConfigProvider more dynamic.
+* Added utility for instantiating classes.
+* Bumped dependency versions.
 
 
 ## Release Version 2.14
