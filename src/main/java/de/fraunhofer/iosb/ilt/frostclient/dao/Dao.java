@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.dao;
 import com.github.fge.jsonpatch.JsonPatchOperation;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import java.net.URI;
@@ -50,7 +51,7 @@ public interface Dao {
      * @return the entity
      * @throws ServiceFailureException the operation failed
      */
-    Entity find(Object... primaryKeyValues) throws ServiceFailureException;
+    Entity find(PkValue primaryKeyValues) throws ServiceFailureException;
 
     /**
      * Find the entity related to the given parent, like the Thing for a

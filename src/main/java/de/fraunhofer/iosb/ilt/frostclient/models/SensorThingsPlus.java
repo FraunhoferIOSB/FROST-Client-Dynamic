@@ -43,6 +43,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
@@ -289,7 +290,7 @@ public class SensorThingsPlus implements DataModel {
 
     public Entity newGroup(Object id) {
         return newGroup()
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newGroup(String name, String description) {
@@ -304,7 +305,7 @@ public class SensorThingsPlus implements DataModel {
 
     public Entity newLicense(Object id) {
         return newLicense()
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newLicense(String name, String description, String definition) {
@@ -320,7 +321,7 @@ public class SensorThingsPlus implements DataModel {
 
     public Entity newParty(String authId) {
         return newParty()
-                .setPrimaryKeyValues(authId);
+                .setPrimaryKeyValues(PkValue.of(authId));
     }
 
     public Entity newParty(String authId, String displayName, String description) {
@@ -340,7 +341,7 @@ public class SensorThingsPlus implements DataModel {
 
     public Entity newProject(Object id) {
         return newProject()
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newProject(String name, String description) {
@@ -355,7 +356,7 @@ public class SensorThingsPlus implements DataModel {
 
     public Entity newRelation(Object id) {
         return newRelation()
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newRelation(String role, String description) {

@@ -41,13 +41,13 @@ import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import java.io.IOException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.geojson.GeoJsonObject;
 
@@ -57,8 +57,10 @@ public class ParserUtils {
         // Utility class.
     }
 
-    public static String entityPath(EntityType entityType, Object... primaryKeyValues) {
-        return String.format("%s(%s)", entityType.mainSet, formatKeyValuesForUrl(primaryKeyValues));
+    public static String entityPath(EntityType entityType, PkValue primaryKeyValues) {
+        return String.format("%s(%s)",
+                entityType.mainSet,
+                StringHelper.formatKeyValuesForUrl(entityType.getPrimaryKey(), primaryKeyValues));
     }
 
     /**
@@ -80,34 +82,23 @@ public class ParserUtils {
             throw new IllegalArgumentException("Entity of type " + parent.getEntityType() + " has no relation of type " + relation + ".");
         }
 
-        return String.format("%s(%s)/%s", parent.getEntityType().mainSet, formatKeyValuesForUrl(parent.getPrimaryKeyValues()), relation.getName());
+        return String.format("%s(%s)/%s",
+                parent.getEntityType().mainSet,
+                StringHelper.formatKeyValuesForUrl(parent),
+                relation.getName());
     }
 
-    public static String formatKeyValuesForUrl(Entity entity) {
-        return formatKeyValuesForUrl(entity.getPrimaryKeyValues());
-    }
-
-    public static String formatKeyValuesForUrl(Object... pkeyValues) {
-        if (pkeyValues.length == 1) {
-            if (pkeyValues[0] == null) {
-                throw new IllegalArgumentException("Primary key value must be non-null");
-            }
-            return StringHelper.quoteForUrl(pkeyValues[0]);
-        } else {
-            throw new NotImplementedException("Multi-valued primary keys are not supported yet.");
-        }
-    }
-
-    public static Object[] tryToParse(String input) {
+    public static PkValue tryToParse(String input) {
         if (input.startsWith("'")) {
-            return new Object[]{StringUtils.replace(input.substring(1, input.length() - 1), "''", "'")};
+            final String value = StringUtils.replace(input.substring(1, input.length() - 1), "''", "'");
+            return PkValue.of(value);
         }
         try {
-            return new Object[]{Long.valueOf(input)};
+            return PkValue.of(Long.valueOf(input));
         } catch (NumberFormatException exc) {
             // not a long.
         }
-        return new Object[]{input};
+        return PkValue.of(input);
     }
 
     public static boolean objectToBoolean(Object data, boolean dflt) {
@@ -125,6 +116,15 @@ public class ParserUtils {
             @Override
             public T deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
                 return jp.readValueAs(tr);
+            }
+        };
+    }
+
+    public static <T> JsonDeserializer<T> getDefaultDeserializer(Class<T> clazz) {
+        return new JsonDeserializer<T>() {
+            @Override
+            public T deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
+                return jp.readValueAs(clazz);
             }
         };
     }

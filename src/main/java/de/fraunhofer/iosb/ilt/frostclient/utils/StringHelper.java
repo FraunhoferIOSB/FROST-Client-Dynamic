@@ -30,6 +30,10 @@ import static net.time4j.format.expert.IsoDateStyle.EXTENDED_CALENDAR_DATE;
 import static net.time4j.format.expert.IsoDecimalStyle.DOT;
 import static net.time4j.tz.ZonalOffset.UTC;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkSingle;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.PrimaryKey;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -57,6 +61,7 @@ import net.time4j.format.expert.IsoDateStyle;
 import net.time4j.format.expert.IsoDecimalStyle;
 import net.time4j.range.MomentInterval;
 import net.time4j.tz.ZonalOffset;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -259,6 +264,17 @@ public class StringHelper {
             return "null";
         }
         return "'" + escapeForStringConstant(in.toString()) + "'";
+    }
+
+    public static String formatKeyValuesForUrl(Entity entity) {
+        return formatKeyValuesForUrl(entity.getPrimaryKey(), entity.getPrimaryKeyValues());
+    }
+
+    public static String formatKeyValuesForUrl(PrimaryKey pk, PkValue pkValue) {
+        if (pk instanceof PkSingle) {
+            return quoteForUrl(pkValue.get(0));
+        }
+        throw new NotImplementedException(PrimaryKey.NOT_IMPLEMENTED_MULTI_VALUE_PK);
     }
 
     /**

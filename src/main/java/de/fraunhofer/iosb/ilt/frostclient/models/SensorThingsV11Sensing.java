@@ -52,6 +52,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
@@ -272,7 +273,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newThing(Object id) {
         return new Entity(etThing)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newThing(String name, String description) {
@@ -296,7 +297,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newLocation(Object id) {
         return new Entity(etLocation)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newLocation(String name, String description, GeoJsonObject location) {
@@ -317,7 +318,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newDatastream(Object id) {
         return new Entity(etDatastream)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newDatastream(String name, String description, UnitOfMeasurement uom) {
@@ -338,7 +339,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newSensor(Object id) {
         return new Entity(etSensor)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newSensor(String name, String description, String encodingType, String metaData) {
@@ -355,7 +356,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newObservedProperty(Object id) {
         return new Entity(etObservedProperty)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newObservedProperty(String name, String definition, String desription) {
@@ -415,7 +416,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newHistoricalLocation(Object id) {
         return new Entity(etHistoricalLocation)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newHistoricalLocation(ZonedDateTime time) {
@@ -436,7 +437,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public Entity newFeatureOfInterest(Object id) {
         return new Entity(etFeatureOfInterest)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newFeatureOfInterest(String name, String description, GeoJsonObject location) {

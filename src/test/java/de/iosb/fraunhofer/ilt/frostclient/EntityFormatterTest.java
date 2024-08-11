@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
@@ -158,7 +159,7 @@ public class EntityFormatterTest {
         entity.setProperty(EP_ID, 1L);
 
         Entity location = new Entity(modelSensing.etLocation)
-                .setPrimaryKeyValues(1L);
+                .setPrimaryKeyValues(PkValue.of(1L));
         entity.getProperty(modelSensing.npThingLocations).add(location);
 
         String json = JsonWriter.writeEntity(entity);

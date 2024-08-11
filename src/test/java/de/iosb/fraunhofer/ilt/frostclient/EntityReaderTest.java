@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
@@ -165,7 +166,7 @@ public class EntityReaderTest {
 
         List<Entity> dsList = datastreams.toList();
         Entity datastream = dsList.get(0);
-        assertEquals(66L, datastream.getPrimaryKeyValues()[0]);
+        assertEquals(PkValue.of(66L), datastream.getPrimaryKeyValues());
         assertEquals("Air Temperature Recoaro 1000", datastream.getProperty(EP_NAME));
         assertEquals("The Air Temperature at Recoaro 1000", datastream.getProperty(EP_DESCRIPTION));
 

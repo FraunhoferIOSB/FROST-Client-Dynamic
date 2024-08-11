@@ -35,7 +35,6 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntit
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -86,15 +85,15 @@ public class Entity implements ComplexValue<Entity> {
      *
      * @return the primary key values.
      */
-    public final Object[] getPrimaryKeyValues() {
+    public final PkValue getPrimaryKeyValues() {
         List<EntityPropertyMain> keyProperties = entityType.getPrimaryKey().getKeyProperties();
-        Object[] result = new Object[keyProperties.size()];
+        PkValue pkValue = new PkValue(keyProperties.size());
         int idx = 0;
         for (EntityPropertyMain keyProperty : keyProperties) {
-            result[idx] = getProperty(keyProperty);
+            pkValue.set(idx, getProperty(keyProperty));
             idx++;
         }
-        return result;
+        return pkValue;
     }
 
     public boolean primaryKeyFullySet() {
@@ -108,13 +107,13 @@ public class Entity implements ComplexValue<Entity> {
         return true;
     }
 
-    public final Entity setPrimaryKeyValues(Object... values) {
+    public final Entity setPrimaryKeyValues(PkValue values) {
         int idx = 0;
         for (EntityPropertyMain keyProperty : entityType.getPrimaryKey().getKeyProperties()) {
-            if (idx >= values.length) {
+            if (idx >= values.size()) {
                 throw new IllegalArgumentException("No value given for keyProperty " + idx);
             }
-            setProperty(keyProperty, values[idx]);
+            setProperty(keyProperty, values.get(idx));
             idx++;
         }
         return this;
@@ -203,6 +202,10 @@ public class Entity implements ComplexValue<Entity> {
             EntitySet entitySet = (EntitySet) navProperties.get(npes);
             if (entitySet == null && autoLoad) {
                 entitySet = new EntitySetImpl(npes);
+                if (autoLoad && service != null) {
+                    String startLink = service.getFullPathString(this, npes);
+                    entitySet.setNextLink(startLink);
+                }
                 setProperty(npes, entitySet);
             }
             if (entitySet != null && service != null && entitySet.getService() == null) {
@@ -360,19 +363,19 @@ public class Entity implements ComplexValue<Entity> {
         if (!Objects.equals(this.entityType, other.entityType)) {
             return false;
         }
-        return Arrays.equals(this.getPrimaryKeyValues(), other.getPrimaryKeyValues());
+        return Objects.equals(this.getPrimaryKeyValues(), other.getPrimaryKeyValues());
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.entityType);
-        hash = 97 * hash + Arrays.deepHashCode(getPrimaryKeyValues());
+        hash = 97 * hash + getPrimaryKeyValues().hashCode();
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Entity: " + entityType + " " + Arrays.toString(getPrimaryKeyValues());
+        return "Entity: " + entityType + " " + getPrimaryKeyValues();
     }
 }

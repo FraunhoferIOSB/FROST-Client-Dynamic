@@ -30,6 +30,8 @@ import java.util.List;
  */
 public interface PrimaryKey {
 
+    public static final String NOT_IMPLEMENTED_MULTI_VALUE_PK = "Multi-valued primary keys are not implemented yet.";
+
     /**
      * Get the list of properties composing the primary key.
      *

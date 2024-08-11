@@ -46,6 +46,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
@@ -142,7 +143,7 @@ public class SensorThingsV11MultiDatastream implements DataModel {
 
     public Entity newMultiDatastream(Object id) {
         return new Entity(etMultiDatastream)
-                .setPrimaryKeyValues(id);
+                .setPrimaryKeyValues(PkValue.of(id));
     }
 
     public Entity newMultiDatastream(String name, String description, UnitOfMeasurement... uoms) {

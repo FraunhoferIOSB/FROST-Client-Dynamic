@@ -29,10 +29,12 @@ import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
+import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
 import java.net.URI;
@@ -136,7 +138,7 @@ public class BaseDao implements Dao {
     }
 
     @Override
-    public Entity find(Object... pkValues) throws ServiceFailureException {
+    public Entity find(PkValue pkValues) throws ServiceFailureException {
         try {
             URI uri = buildUri(pkValues);
             return find(uri);
@@ -247,13 +249,9 @@ public class BaseDao implements Dao {
         return new Query(service, parent, navigationLink);
     }
 
-    private URI buildUri(Object[] pkValues) throws NotImplementedException, URISyntaxException, ServiceFailureException {
+    private URI buildUri(PkValue pkValues) throws NotImplementedException, URISyntaxException, ServiceFailureException {
         URIBuilder uriBuilder;
-        if (pkValues.length == 1) {
-            uriBuilder = new URIBuilder(getSetPath() + "(" + ParserUtils.formatKeyValuesForUrl(pkValues[0]) + ")");
-        } else {
-            throw new NotImplementedException("Multi-valued primary keys are not supported yet.");
-        }
+        uriBuilder = new URIBuilder(getSetPath() + "(" + StringHelper.formatKeyValuesForUrl(entityType.getPrimaryKey(), pkValues) + ")");
         final URI uri = uriBuilder.build();
         return uri;
     }
