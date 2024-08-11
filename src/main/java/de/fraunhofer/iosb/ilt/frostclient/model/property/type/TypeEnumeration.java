@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
+import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class TypeEnumeration<K extends Enum<K>> extends PropertyType {
     private final Class<K> enumClass;
 
     public TypeEnumeration(String name, String description, Class<K> enumClass) {
-        super(name, description, null, null);
+        super(name, description, ParserUtils.getDefaultDeserializer(enumClass), null);
         this.enumClass = enumClass;
     }
 

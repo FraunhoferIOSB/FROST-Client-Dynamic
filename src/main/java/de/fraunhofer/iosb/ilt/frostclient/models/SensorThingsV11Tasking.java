@@ -62,11 +62,11 @@ public class SensorThingsV11Tasking implements DataModel {
     public static final TypeReference<DataRecord> TYPE_REFERENCE_DATARECORD = new TypeReference<DataRecord>() {
         // Empty on purpose.
     };
-    public static final TypeComplex STA_TASKINGPARAMETERS = new TypeComplex(NAME_EP_TASKINGPARAMETERS, "A DataRecord", true,
+    public static final TypeComplex PT_DATA_RECORD = new TypeComplex("DataRecord", "A DataRecord", true,
             null,
             ParserUtils.getDataRecordDeserializer(),
             ParserUtils.getDefaultSerializer());
-    public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS_TC = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, STA_TASKINGPARAMETERS);
+    public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS_TC = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, PT_DATA_RECORD);
     public static final EntityPropertyMain<MapValue> EP_TASKINGPARAMETERS_T = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, TypeComplex.STA_MAP);
 
     public final NavigationPropertyEntity npTaskcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);
