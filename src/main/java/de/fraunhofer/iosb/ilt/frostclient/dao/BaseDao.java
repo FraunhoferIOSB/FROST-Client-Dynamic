@@ -95,6 +95,11 @@ public class BaseDao implements Dao {
         }
     }
 
+    @Override
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
     private URL getSetPath() throws ServiceFailureException {
         if (parent == null) {
             return service.getFullPath(entityType);

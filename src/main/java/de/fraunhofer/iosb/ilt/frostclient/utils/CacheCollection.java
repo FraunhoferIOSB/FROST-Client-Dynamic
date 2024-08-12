@@ -45,8 +45,8 @@ public class CacheCollection {
     }
 
     public CacheCollection createCache(EntityType et, PropertyExtractor<String, Entity> localIdExtractor, PropertyExtractor<String, String> filterFromlocalId) {
-        var ec = new EntityCacheDynamic<>(et, localIdExtractor)
-                .setDao(service.dao(et))
+        var ec = new EntityCacheDynamic<String>(service.dao(et))
+                .setLocalIdExtractor(localIdExtractor)
                 .setFilterFromlocalId(filterFromlocalId);
         caches.put(et.getEntityName(), ec);
         return this;
@@ -55,8 +55,8 @@ public class CacheCollection {
     public CacheCollection createCache(final EntityType et) {
         final PropertyExtractor<String, Entity> localIdExtractor = createLocalIdExtractor(et, defaultLocalIdKey);
         final PropertyExtractor<String, String> filterFromlocalId = createFilterFromlocalId();
-        var ec = new EntityCacheDynamic<>(et, localIdExtractor)
-                .setDao(service.dao(et))
+        var ec = new EntityCacheDynamic<String>(service.dao(et))
+                .setLocalIdExtractor(localIdExtractor)
                 .setFilterFromlocalId(filterFromlocalId);
         caches.put(et.getEntityName(), ec);
         return this;

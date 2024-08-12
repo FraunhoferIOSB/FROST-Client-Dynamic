@@ -120,6 +120,7 @@ public final class FrostUtils {
         Entity cachedEntity = cache.getOrLoad(newEntity);
         if (cachedEntity == null) {
             create(newEntity);
+            cache.put(newEntity);
             return newEntity;
         }
 

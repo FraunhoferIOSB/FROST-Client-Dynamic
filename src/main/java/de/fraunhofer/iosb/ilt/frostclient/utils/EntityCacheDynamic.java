@@ -46,7 +46,7 @@ public class EntityCacheDynamic<U> {
 
     private final Map<U, Entity> entitiesByLocalId = new LinkedHashMap<>();
 
-    private final PropertyExtractor<U, Entity> localIdExtractor;
+    private PropertyExtractor<U, Entity> localIdExtractor;
 
     private PropertyExtractor<String, U> filterFromlocalId;
 
@@ -58,9 +58,13 @@ public class EntityCacheDynamic<U> {
 
     private Dao dao;
 
-    public EntityCacheDynamic(EntityType et, PropertyExtractor<U, Entity> localIdExtractor) {
-        this.entityType = et;
-        this.localIdExtractor = localIdExtractor;
+    public EntityCacheDynamic(EntityType et) {
+        this.entityType = dao.getEntityType();
+    }
+
+    public EntityCacheDynamic(Dao dao) {
+        this.dao = dao;
+        this.entityType = dao.getEntityType();
     }
 
     public Entity get(U localId) {
@@ -115,6 +119,11 @@ public class EntityCacheDynamic<U> {
 
     public boolean containsId(U localId) {
         return entitiesByLocalId.containsKey(localId);
+    }
+
+    public void put(Entity entity) {
+        U localId = localIdExtractor.extractFrom(entity);
+        put(localId, entity);
     }
 
     public void put(U localId, Entity entity) {
@@ -197,6 +206,11 @@ public class EntityCacheDynamic<U> {
 
     public EntityCacheDynamic<U> setDao(Dao dao) {
         this.dao = dao;
+        return this;
+    }
+
+    public EntityCacheDynamic<U> setLocalIdExtractor(PropertyExtractor<U, Entity> localIdExtractor) {
+        this.localIdExtractor = localIdExtractor;
         return this;
     }
 
