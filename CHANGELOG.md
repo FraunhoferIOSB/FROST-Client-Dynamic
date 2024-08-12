@@ -1,5 +1,11 @@
 # Changelog
 
+## Development Version 2.16
+
+**Updates**
+* Added ChangingStatusLogger for logging statistics.
+
+
 ## Release Version 2.15
 
 **Updates**
