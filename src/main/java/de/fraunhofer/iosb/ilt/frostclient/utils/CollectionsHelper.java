@@ -129,6 +129,13 @@ public class CollectionsHelper {
             return this;
         }
 
+        /**
+         * Sets the given path to the given value.
+         *
+         * @param path The path to set ('/' separated).
+         * @param value The value to set.
+         * @return this.
+         */
         public PropertyBuilder addPath(final String path, final Object value) {
             setOn(properties, path, value);
             return this;

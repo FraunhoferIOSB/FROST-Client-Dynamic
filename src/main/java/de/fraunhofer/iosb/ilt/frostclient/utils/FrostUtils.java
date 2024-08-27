@@ -121,6 +121,7 @@ public final class FrostUtils {
         if (cachedEntity == null) {
             create(newEntity);
             cache.put(newEntity);
+            LOGGER.info("Created {}: {}", newEntity.getEntityType(), cache.localIdFor(newEntity));
             return newEntity;
         }
 
@@ -129,7 +130,7 @@ public final class FrostUtils {
     }
 
     /**
-     * Checks if all entries in source exist in target, with the same value.If
+     * Checks if all entries in source exist in target, with the same value. If
      * not, target is updated and true is returned. Sub-maps are recursed.
      *
      * @param target the target map to update

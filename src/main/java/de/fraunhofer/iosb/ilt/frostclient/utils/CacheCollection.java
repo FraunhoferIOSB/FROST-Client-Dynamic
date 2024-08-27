@@ -28,6 +28,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties;
 import de.fraunhofer.iosb.ilt.frostclient.utils.EntityCacheDynamic.PropertyExtractor;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,9 +36,13 @@ import java.util.Map;
  */
 public class CacheCollection {
 
-    public SensorThingsService service;
-    public Map<String, EntityCacheDynamic<String>> caches;
+    private final SensorThingsService service;
+    private final Map<String, EntityCacheDynamic<String>> caches = new HashMap<>();
     private String defaultLocalIdKey = "localId";
+
+    public CacheCollection(SensorThingsService service) {
+        this.service = service;
+    }
 
     public CacheCollection setDefaultLocalIdKey(String defaultLocalIdKey) {
         this.defaultLocalIdKey = defaultLocalIdKey;
@@ -52,12 +57,28 @@ public class CacheCollection {
         return this;
     }
 
-    public CacheCollection createCache(final EntityType et) {
+    public CacheCollection createLocalIdCache(final EntityType et) {
+        if (caches.containsKey(et.getEntityName())) {
+            throw new IllegalStateException("CacheCollection already contains a cache for " + et.getEntityName());
+        }
         final PropertyExtractor<String, Entity> localIdExtractor = createLocalIdExtractor(et, defaultLocalIdKey);
-        final PropertyExtractor<String, String> filterFromlocalId = createFilterFromlocalId();
+        final PropertyExtractor<String, String> filterFromLocalId = createFilterFromLocalId();
         var ec = new EntityCacheDynamic<String>(service.dao(et))
                 .setLocalIdExtractor(localIdExtractor)
-                .setFilterFromlocalId(filterFromlocalId);
+                .setFilterFromlocalId(filterFromLocalId);
+        caches.put(et.getEntityName(), ec);
+        return this;
+    }
+
+    public CacheCollection createNameCache(final EntityType et) {
+        if (caches.containsKey(et.getEntityName())) {
+            throw new IllegalStateException("CacheCollection already contains a cache for " + et.getEntityName());
+        }
+        final PropertyExtractor<String, Entity> nameExtractor = createNameExtractor(et);
+        final PropertyExtractor<String, String> filterFromName = createFilterFromName();
+        var ec = new EntityCacheDynamic<String>(service.dao(et))
+                .setLocalIdExtractor(nameExtractor)
+                .setFilterFromlocalId(filterFromName);
         caches.put(et.getEntityName(), ec);
         return this;
     }
@@ -86,12 +107,37 @@ public class CacheCollection {
         return nameExtractor;
     }
 
-    private PropertyExtractor<String, String> createFilterFromlocalId() {
+    private PropertyExtractor<String, String> createFilterFromLocalId() {
         return localId -> "properties/" + defaultLocalIdKey + " eq " + StringHelper.quoteForUrl(localId) + "";
     }
 
+    private PropertyExtractor<String, String> createFilterFromName() {
+        return name -> "name eq " + StringHelper.quoteForUrl(name) + "";
+    }
+
+    /**
+     * Returns the configured cache for the given entity type.
+     *
+     * @param et The entity type to get the cache for.
+     * @return the existing entity cache, or null.
+     */
     public EntityCacheDynamic<String> getCache(final EntityType et) {
         return caches.get(et.getEntityName());
+    }
+
+    /**
+     * Returns the configured cache for the given entity type, and creates a new
+     * name-based cache if no cache exist yet.
+     *
+     * @param et The entity type to get the cache for.
+     * @return the existing entity cache, or a new name-based cache.
+     */
+    public EntityCacheDynamic<String> getCacheNameBased(final EntityType et) {
+        final EntityCacheDynamic<String> cache = caches.get(et.getEntityName());
+        if (cache == null) {
+            return createNameCache(et).getCache(et);
+        }
+        return cache;
     }
 
 }
