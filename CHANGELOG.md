@@ -1,9 +1,11 @@
 # Changelog
 
-## Development Version 2.16
+## Release Version 2.16
 
 **Updates**
 * Added ChangingStatusLogger for logging statistics.
+* Improved EntityCache
+* Bumped dependency versions.
 
 
 ## Release Version 2.15
