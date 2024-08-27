@@ -39,7 +39,6 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeEnumeration;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
-import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import java.util.Map;
 
@@ -133,7 +132,7 @@ public class SensorThingsV20Tasking implements DataModel {
                 .registerProperty(CommonProperties.EP_ID)
                 .registerProperty(CommonProperties.EP_NAME)
                 .registerProperty(CommonProperties.EP_DESCRIPTION)
-                .registerProperty(SensorThingsV11Sensing.EP_ENCODINGTYPE)
+                .registerProperty(CommonProperties.EP_ENCODINGTYPE)
                 .registerProperty(SensorThingsV11Sensing.EP_METADATA)
                 .registerProperty(CommonProperties.EP_PROPERTIES)
                 .registerProperty(npActuatorTaskingcaps);
@@ -201,29 +200,8 @@ public class SensorThingsV20Tasking implements DataModel {
                 .setProperty(CommonProperties.EP_PROPERTIES, properties);
     }
 
-    public static TaskingParametersBuilder taskingParametersBuilder() {
-        return new TaskingParametersBuilder();
-    }
-
-    public static class TaskingParametersBuilder {
-
-        private final DataRecord taskingParameters = new DataRecord();
-
-        public TaskingParametersBuilder taskingParameter(AbstractDataComponent field) {
-            taskingParameters.getFields().add(field);
-            return this;
-        }
-
-        public TaskingParametersBuilder taskingParameter(String name, AbstractDataComponent taskingParameter) {
-            if (!name.equals(taskingParameter.getName())) {
-                taskingParameter.setName(name);
-            }
-            return taskingParameter(taskingParameter);
-        }
-
-        public DataRecord build() {
-            return taskingParameters;
-        }
+    public static SensorThingsV11Tasking.TaskingParametersBuilder taskingParametersBuilder() {
+        return SensorThingsV11Tasking.taskingParametersBuilder();
     }
 
 }

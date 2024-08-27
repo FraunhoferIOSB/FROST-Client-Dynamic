@@ -62,6 +62,7 @@ public class CommonProperties {
 
     public static final String NAME_EP_DESCRIPTION = "description";
     public static final String NAME_EP_DEFINITION = "definition";
+    public static final String NAME_EP_ENCODINGTYPE = "encodingType";
     public static final String NAME_EP_NAME = "name";
     public static final String NAME_EP_PROPERTIES = "properties";
 
@@ -69,5 +70,6 @@ public class CommonProperties {
     public static final EntityPropertyMain<String> EP_DEFINITION = new EntityPropertyMain<>(NAME_EP_DEFINITION, EDM_STRING);
     public static final EntityPropertyMain<String> EP_NAME = new EntityPropertyMain<>(NAME_EP_NAME, EDM_STRING);
     public static final EntityPropertyMain<MapValue> EP_PROPERTIES = new EntityPropertyMain<>(NAME_EP_PROPERTIES, TypeComplex.STA_MAP);
+    public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
 
 }

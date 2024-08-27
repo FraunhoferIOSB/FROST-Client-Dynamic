@@ -26,6 +26,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimiti
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DEFINITION;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ENCODINGTYPE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
@@ -81,7 +82,6 @@ public class SensorThingsV11Sensing implements DataModel {
     public static final String NAME_SYMBOL = "symbol";
 
     public static final String NAME_EP_FEATURE = "feature";
-    public static final String NAME_EP_ENCODINGTYPE = "encodingType";
     public static final String NAME_EP_LOCATION = "location";
     public static final String NAME_EP_METADATA = "metadata";
     public static final String NAME_EP_OBSERVATIONTYPE = "observationType";
@@ -111,7 +111,6 @@ public class SensorThingsV11Sensing implements DataModel {
     public static final EntityPropertyMain<String> EP_SYMBOL = new EntityPropertyMain<>(NAME_EP_SYMBOL, EDM_STRING);
     public static final EntityPropertyMain<TimeInstant> EP_TIME = new EntityPropertyMain<>(NAME_EP_TIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = new EntityPropertyMain<>(NAME_EP_VALIDTIME, TypeComplex.STA_TIMEINTERVAL);
-    public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
 
     public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", false, UnitOfMeasurement::new, ParserUtils.getDefaultDeserializer(TYPE_REFERENCE_UOM), ParserUtils.getDefaultSerializer())
             .registerProperty(EP_NAME)

@@ -22,10 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
-import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DEFINITION;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ENCODINGTYPE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
@@ -58,7 +57,6 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
-import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
@@ -77,40 +75,23 @@ public class SensorThingsV20Core implements DataModel {
 
     public static final String MQTT_BASE_PATH = "v2.0/";
 
-    public static final String NAME_EP_CREATIONTIME = "creationTime";
-    public static final String NAME_EP_FEATURE = "feature";
-    public static final String NAME_EP_ENCODINGTYPE = "encodingType";
-    public static final String NAME_EP_LOCATION = "location";
-    public static final String NAME_EP_METADATA = "metadata";
     public static final String NAME_EP_RESULTTYPE = "resultType";
-    public static final String NAME_EP_OBSERVEDAREA = "observedArea";
-    public static final String NAME_EP_PHENOMENONTIME = "phenomenonTime";
-    public static final String NAME_EP_RESULT = "result";
-    public static final String NAME_EP_RESULTTIME = "resultTime";
-    public static final String NAME_EP_RESULTQUALITY = "resultQuality";
-    public static final String NAME_EP_SYMBOL = "symbol";
-    public static final String NAME_EP_TIME = "time";
-    public static final String NAME_EP_UNITOFMEASUREMENT = "unitOfMeasurement";
-    public static final String NAME_EP_VALIDTIME = "validTime";
 
     public static final String NAME_NP_PROXIMATEFOI = "ProximateFeatureOfInterest";
     public static final String NAME_NP_ULTIMATEFOI = "UltimateFeatureOfInterest";
 
-    public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = new EntityPropertyMain<>(NAME_EP_CREATIONTIME, EDM_DATETIMEOFFSET);
-    public static final EntityPropertyMain<Object> EP_FEATURE = new EntityPropertyMain<>(NAME_EP_FEATURE, TypePrimitive.EDM_GEOMETRY);
-    public static final EntityPropertyMain<Object> EP_LOCATION = new EntityPropertyMain<>(NAME_EP_LOCATION, TypePrimitive.EDM_GEOMETRY);
-    public static final EntityPropertyMain<String> EP_METADATA = new EntityPropertyMain<>(NAME_EP_METADATA, EDM_STRING);
-    public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypePrimitive.EDM_GEOMETRY).setReadOnly(true);
-    public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = new EntityPropertyMain<>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEVALUE);
-    public static final EntityPropertyMain<TimeInterval> EP_PHENOMENONTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);
-    public static final EntityPropertyMain<Object> EP_RESULT = new EntityPropertyMain<>(NAME_EP_RESULT, TypePrimitive.EDM_UNTYPED, true);
-    public static final EntityPropertyMain<TimeInstant> EP_RESULTTIME = new EntityPropertyMain<>(NAME_EP_RESULTTIME, EDM_DATETIMEOFFSET);
-    public static final EntityPropertyMain<TimeInterval> EP_RESULTTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_RESULTTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);
+    public static final EntityPropertyMain<Object> EP_FEATURE = SensorThingsV11Sensing.EP_FEATURE;
+    public static final EntityPropertyMain<Object> EP_LOCATION = SensorThingsV11Sensing.EP_LOCATION;
+    public static final EntityPropertyMain<String> EP_METADATA = SensorThingsV11Sensing.EP_METADATA;
+    public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = SensorThingsV11Sensing.EP_OBSERVEDAREA;
+    public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = SensorThingsV11Sensing.EP_PHENOMENONTIME;
+    public static final EntityPropertyMain<TimeInterval> EP_PHENOMENONTIMEDS = SensorThingsV11Sensing.EP_PHENOMENONTIMEDS;
+    public static final EntityPropertyMain<Object> EP_RESULT = SensorThingsV11Sensing.EP_RESULT;
+    public static final EntityPropertyMain<TimeInstant> EP_RESULTTIME = SensorThingsV11Sensing.EP_RESULTTIME;
+    public static final EntityPropertyMain<TimeInterval> EP_RESULTTIMEDS = SensorThingsV11Sensing.EP_RESULTTIMEDS;
     public static final EntityPropertyMain<AbstractDataComponent> EP_RESULTTYPE = new EntityPropertyMain<>(NAME_EP_RESULTTYPE, TypeComplex.STA_ABSTRACT_DATA_COMPONENT);
-    public static final EntityPropertyMain<Object> EP_RESULTQUALITY = new EntityPropertyMain<>(NAME_EP_RESULTQUALITY, TypeComplex.STA_OBJECT);
-    public static final EntityPropertyMain<TimeInstant> EP_TIME = new EntityPropertyMain<>(NAME_EP_TIME, EDM_DATETIMEOFFSET);
-    public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = new EntityPropertyMain<>(NAME_EP_VALIDTIME, TypeComplex.STA_TIMEINTERVAL);
-    public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
+    public static final EntityPropertyMain<TimeInstant> EP_TIME = SensorThingsV11Sensing.EP_TIME;
+    public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = SensorThingsV11Sensing.EP_VALIDTIME;
 
     public final NavigationPropertyEntity npObservationDatastream = new NavigationPropertyEntity(NAME_DATASTREAM);
     public final NavigationPropertyEntity npObservationProximateFoi = new NavigationPropertyEntity(NAME_NP_PROXIMATEFOI);
@@ -233,7 +214,6 @@ public class SensorThingsV20Core implements DataModel {
                 .registerProperty(EP_PHENOMENONTIME)
                 .registerProperty(EP_RESULTTIME)
                 .registerProperty(EP_RESULT)
-                .registerProperty(EP_RESULTQUALITY)
                 .registerProperty(EP_VALIDTIME)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npObservationDatastream)

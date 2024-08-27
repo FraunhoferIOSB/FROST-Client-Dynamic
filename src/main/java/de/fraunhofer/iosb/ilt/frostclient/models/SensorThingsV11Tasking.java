@@ -102,7 +102,7 @@ public class SensorThingsV11Tasking implements DataModel {
                 .registerProperty(CommonProperties.EP_ID)
                 .registerProperty(CommonProperties.EP_NAME)
                 .registerProperty(CommonProperties.EP_DESCRIPTION)
-                .registerProperty(SensorThingsV11Sensing.EP_ENCODINGTYPE)
+                .registerProperty(CommonProperties.EP_ENCODINGTYPE)
                 .registerProperty(SensorThingsV11Sensing.EP_METADATA)
                 .registerProperty(CommonProperties.EP_PROPERTIES)
                 .registerProperty(npActuatorTaskingcapabilities);
