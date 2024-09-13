@@ -3,6 +3,7 @@
 ## Development Version 2.17
 
 **Updates**
+* Added convenience methods to MapValue
 
 
 ## Release Version 2.16

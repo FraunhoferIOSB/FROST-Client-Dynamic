@@ -83,6 +83,11 @@ public class MapValue implements ComplexValue<MapValue> {
     }
 
     @JsonIgnore
+    public <P> P getProperty(Property<P> property, P dflt) {
+        return (P) content.getOrDefault(property.getJsonName(), dflt);
+    }
+
+    @JsonIgnore
     @Override
     public <P> MapValue setProperty(Property<P> property, P value) {
         content.put(property.getJsonName(), value);
@@ -92,6 +97,11 @@ public class MapValue implements ComplexValue<MapValue> {
     @Override
     public Object getProperty(String name) {
         return content.get(name);
+    }
+
+    @JsonIgnore
+    public <P> P getProperty(String name, P dflt) {
+        return (P) content.getOrDefault(name, dflt);
     }
 
     @Override
