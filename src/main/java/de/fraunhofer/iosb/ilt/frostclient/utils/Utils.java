@@ -36,6 +36,7 @@ import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.models.CSDLModel;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsPlus;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11MultiDatastream;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Projects;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
 import java.io.IOException;
@@ -81,7 +82,8 @@ public class Utils {
         STA_SENSING,
         STA_MULTIDATASTREAM,
         STA_TASKING,
-        STA_PLUS
+        STA_PLUS,
+        PROJECTS
     }
 
     /**
@@ -171,6 +173,8 @@ public class Utils {
                         foundModels.add(KnownModels.STA_TASKING);
                     } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings-staplus/1.0/conf/core")) {
                         foundModels.add(KnownModels.STA_PLUS);
+                    } else if (confClass.startsWith("https://fraunhoferiosb.github.io/FROST-Server/extensions/DataModel-Projects.html")) {
+                        foundModels.add(KnownModels.PROJECTS);
                     } else {
                         switch (confClass) {
                             case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttExpand.html":
@@ -204,6 +208,10 @@ public class Utils {
                         case "Parties":
                             foundModels.add(KnownModels.STA_PLUS);
                             break;
+
+                        case "Projects":
+                            foundModels.add(KnownModels.PROJECTS);
+                            break;
                     }
                 }
             }
@@ -223,6 +231,10 @@ public class Utils {
                 if (foundModels.contains(KnownModels.STA_PLUS)) {
                     LOGGER.info("Detected STAplus.");
                     serverInfo.addModel(new SensorThingsPlus());
+                }
+                if (foundModels.contains(KnownModels.PROJECTS)) {
+                    LOGGER.info("Detected Projects.");
+                    serverInfo.addModel(new SensorThingsV11Projects());
                 }
             }
         } catch (IOException ex) {
