@@ -665,6 +665,39 @@ public class SensorThingsService {
         }
     }
 
+    public boolean isMqttConnected() {
+        return mqttClient != null && mqttClient.isConnected();
+    }
+
+    public void mqttResubscribe() throws MqttException {
+        ensureMqttConnected();
+        synchronized (mqttSubscriptions) {
+            List<String> topics = new ArrayList<>();
+            int count = 0;
+            for (String topic : mqttSubscriptions.keySet()) {
+                topics.add(topic);
+                count++;
+                if (count == 100) {
+                    sendSubscribe(topics);
+                    count = 0;
+                    topics.clear();
+                }
+            }
+            if (count > 0) {
+                sendSubscribe(topics);
+                topics.clear();
+            }
+        }
+    }
+
+    private void sendSubscribe(List<String> topics) throws MqttException {
+        try {
+            mqttClient.subscribe(topics.toArray(String[]::new));
+        } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+            throw new MqttException("Failed to resubscribe", ex);
+        }
+    }
+
     private void ensureMqttConnected() throws MqttException {
         ensureMqttConfigured();
         if (mqttClient.isConnected()) {
@@ -675,6 +708,7 @@ public class SensorThingsService {
             if (mqttConfig.isAuthSet()) {
                 options.setUserName(mqttConfig.getUsername());
                 options.setPassword(mqttConfig.getPassword().toCharArray());
+                options.setAutomaticReconnect(true);
             }
             mqttClient.connect(options);
         } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
