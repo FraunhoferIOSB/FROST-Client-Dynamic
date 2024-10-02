@@ -3,6 +3,8 @@
 ## Development Version 2.18
 
 **Updates**
+* Added MQTT methods.
+* Improved version detection for OData.
 
 
 ## Release Version 2.17

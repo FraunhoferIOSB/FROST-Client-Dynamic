@@ -149,6 +149,7 @@ public class Utils {
             if (tree.has("@context") && odataVersion.length > 0) {
                 // Assume OData 4.01
                 LOGGER.info("Detected OData 4.01.");
+                serverInfo.setVersion(Version.V_ODATA_4_01);
                 if (!modelsPreSet) {
                     serverInfo.addModel(new CSDLModel());
                 }
@@ -237,12 +238,9 @@ public class Utils {
         String url = StringUtils.removeEnd(serverInfo.getBaseUrl().toString(), "/");
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
         Version detectedVersion = Version.findVersion(lastSegment);
-        if (detectedVersion == null) {
-            if (serverInfo.getVersion() == null) {
-                throw new IllegalArgumentException("endpoint URL does not contain version (e.g. http://example.org/v1.0/) nor version information explicitely provided");
-            }
+        if (detectedVersion != null) {
+            serverInfo.setVersion(detectedVersion);
         }
-        serverInfo.setVersion(detectedVersion);
     }
 
     public static void findMqttEndpoint(JsonNode serverSettings, ServerInfo result) {
