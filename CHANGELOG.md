@@ -1,11 +1,12 @@
 # Changelog
 
-## Development Version 2.18
+## Release Version 2.18
 
 **Updates**
 * Added MQTT methods.
 * Improved version detection for OData.
 * Added data model for Projects extension: https://fraunhoferiosb.github.io/FROST-Server/extensions/DataModel-Projects.html
+* Bumped dependency versions.
 
 
 ## Release Version 2.17
