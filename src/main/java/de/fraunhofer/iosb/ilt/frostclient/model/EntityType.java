@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
+
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
@@ -104,6 +106,12 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
      */
     private ModelRegistry modelRegistry;
 
+    /**
+     * The method to use when generating to user-readable String for an Entity
+     * of this EntityType.
+     */
+    private ToString toStringMethod;
+
     public EntityType(String singular) {
         this.entityName = singular;
         final int nameIdx = singular.lastIndexOf('.');
@@ -130,6 +138,11 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
             }
             throw new IllegalStateException("Main EntityContainer for " + entityName + " already set to " + this.mainSet);
         }
+    }
+
+    public EntityType setToStringMethod(ToString toStringMethod) {
+        this.toStringMethod = toStringMethod;
+        return this;
     }
 
     public EntityType registerProperty(Property property) {
@@ -315,6 +328,13 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return entityName;
     }
 
+    public String toString(Entity entity) {
+        if (toStringMethod == null) {
+            toStringMethod = ToString.generateDefault(this);
+        }
+        return toStringMethod.toString(entity);
+    }
+
     @Override
     public int compareTo(EntityType o) {
         return entityName.compareTo(o.entityName);
@@ -360,4 +380,20 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return this;
     }
 
+    /**
+     * An interface for adding dynamic toString methods to a class.
+     */
+    public static interface ToString {
+
+        public String toString(Entity entity);
+
+        public static ToString generateDefault(final EntityType et) {
+            if (et.hasProperty(EP_NAME)) {
+                return entity -> et.toString() + ": " + entity.getPrimaryKeyValues() + " " + entity.getProperty(EP_NAME);
+            } else {
+                return entity -> et.toString() + ": " + entity.getPrimaryKeyValues();
+            }
+        }
+
+    }
 }

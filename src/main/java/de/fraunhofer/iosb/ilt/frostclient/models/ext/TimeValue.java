@@ -218,4 +218,15 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
         throw new IllegalArgumentException("Can not set custom properties on TimeValue");
     }
 
+    @Override
+    public String toString() {
+        if (interval != null) {
+            return interval.toString();
+        }
+        if (instant != null) {
+            return instant.toString();
+        }
+        return "null";
+    }
+
 }

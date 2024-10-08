@@ -145,7 +145,8 @@ public class SensorThingsV11Sensing implements DataModel {
     public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS);
     public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS);
     public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES);
-    public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS);
+    public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS)
+            .setToStringMethod(e -> e.getEntityType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT));
     public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS);
     public final EntityType etHistoricalLocation = new EntityType(NAME_HISTORICALLOCATION, NAME_HISTORICALLOCATIONS);
     public final EntityType etFeatureOfInterest = new EntityType(NAME_FEATUREOFINTEREST, NAME_FEATURESOFINTEREST);

@@ -376,6 +376,6 @@ public class Entity implements ComplexValue<Entity> {
 
     @Override
     public String toString() {
-        return "Entity: " + entityType + " " + getPrimaryKeyValues();
+        return entityType.toString(this);
     }
 }

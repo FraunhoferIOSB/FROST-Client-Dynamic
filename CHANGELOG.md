@@ -3,6 +3,7 @@
 ## Development Version 2.19
 
 **Updates**
+* Allow EntityType-specific custom toString methods for Entity.
 
 
 ## Release Version 2.18
