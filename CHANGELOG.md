@@ -4,6 +4,7 @@
 
 **Updates**
 * Allow EntityType-specific custom toString methods for Entity.
+* Fixed Auth method not initialised correctly. The AuthMethod can now be set on the service before calling init.
 
 
 ## Release Version 2.18

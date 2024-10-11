@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
 import com.github.fge.jsonpatch.JsonPatchOperation;
+import de.fraunhofer.iosb.ilt.frostclient.auth.AuthMethod;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
 import de.fraunhofer.iosb.ilt.frostclient.exception.MqttException;
@@ -199,9 +200,7 @@ public class SensorThingsService {
         if (initialised) {
             return this;
         }
-        if (settings == null) {
-            settings = new ServiceSettings();
-        }
+        getSettings();
         requestTimeoutMs = settings.getRequestTimeoutMs();
         if (serverInfo.getModels().isEmpty()) {
             serverInfo.addModels(settings.getModels());
@@ -214,7 +213,7 @@ public class SensorThingsService {
             if (isNullOrEmpty(baseUrl)) {
                 throw new IllegalArgumentException("Base URL must be set before init is called.");
             }
-            setBaseUrl(new URL(baseUrl));
+            setBaseUrl(URI.create(baseUrl));
         }
         if (!serverInfo.isMqttUrlSet()) {
             String mqttUrl = settings.getMqttUrl();
@@ -232,6 +231,9 @@ public class SensorThingsService {
     }
 
     public ServiceSettings getSettings() {
+        if (settings == null) {
+            settings = new ServiceSettings();
+        }
         return settings;
     }
 
@@ -259,6 +261,11 @@ public class SensorThingsService {
         return jsonReader;
     }
 
+    public SensorThingsService setAuthMethod(AuthMethod authMethod) {
+        getSettings().getAuthSettings().setAuthMethod(authMethod);
+        return this;
+    }
+
     /**
      * Sets the endpoint URL/URI. Once the endpoint URL/URI is set it can not be
      * changed. The endpoint url MUST be set before the service can be used.
@@ -284,7 +291,7 @@ public class SensorThingsService {
             throw new IllegalStateException("endpoint URL already set.");
         }
         String url = StringUtils.removeEnd(endpoint.toString(), "/");
-        serverInfo.setBaseUrl(new URL(url + "/"));
+        serverInfo.setBaseUrl(URI.create(url + "/").toURL());
         return this;
     }
 

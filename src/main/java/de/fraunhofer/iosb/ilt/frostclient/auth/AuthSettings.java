@@ -37,6 +37,11 @@ public class AuthSettings extends ConfigProvider<AuthSettings> {
     @DefaultValue("")
     public static final String TAG_AUTH_PROVIDER_CLASS = "providerClass";
 
+    /**
+     * The programatically set auth method.
+     */
+    private AuthMethod authMethod;
+
     public AuthSettings(Settings settings) {
         super(settings);
     }
@@ -44,12 +49,24 @@ public class AuthSettings extends ConfigProvider<AuthSettings> {
     public void load(SensorThingsService service) {
         String authProviderClassName = get(TAG_AUTH_PROVIDER_CLASS);
         if (StringHelper.isNullOrEmpty(authProviderClassName)) {
+            if (authMethod != null) {
+                authMethod.setAuth(service);
+            }
             return;
         }
         AuthMethod authProvider = Utils.instantiateClass(authProviderClassName, AuthMethod.class);
         if (authProvider != null) {
             authProvider.setAuth(service);
         }
+    }
+
+    public AuthMethod getAuthMethod() {
+        return authMethod;
+    }
+
+    public AuthSettings setAuthMethod(AuthMethod authMethod) {
+        this.authMethod = authMethod;
+        return getThis();
     }
 
     @Override
