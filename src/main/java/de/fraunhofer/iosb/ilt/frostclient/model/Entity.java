@@ -374,6 +374,15 @@ public class Entity implements ComplexValue<Entity> {
         return hash;
     }
 
+    /**
+     * Returns a string that represents the Entity, like a name.
+     *
+     * @return A string that represents the Entity, like a name.
+     */
+    public String display() {
+        return entityType.display(this);
+    }
+
     @Override
     public String toString() {
         return entityType.toString(this);

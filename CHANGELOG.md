@@ -4,6 +4,7 @@
 
 **Updates**
 * Allow EntityType-specific custom toString methods for Entity.
+* Allow EntityType-specific custom display methods for Entity, to get a string for displaying in a GUI.
 * Fixed Auth method not initialised correctly. The AuthMethod can now be set on the service before calling init.
 
 

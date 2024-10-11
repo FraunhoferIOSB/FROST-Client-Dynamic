@@ -31,6 +31,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyAbstract;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -328,11 +329,28 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return entityName;
     }
 
-    public String toString(Entity entity) {
+    /**
+     * Get the display string of the Entity.
+     *
+     * @param entity The Entity to get the display string for.
+     * @return the display string of the Entity.
+     */
+    public String display(Entity entity) {
         if (toStringMethod == null) {
             toStringMethod = ToString.generateDefault(this);
         }
         return toStringMethod.toString(entity);
+    }
+
+    /**
+     * Returns a string composed of the name of the entityType, the primary key
+     * of the entity and the display string of the entity.
+     *
+     * @param entity The entity to toString.
+     * @return The string value of the entity.
+     */
+    public String toString(Entity entity) {
+        return toString() + ": " + entity.getPrimaryKeyValues() + " " + display(entity);
     }
 
     @Override
@@ -389,10 +407,17 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
 
         public static ToString generateDefault(final EntityType et) {
             if (et.hasProperty(EP_NAME)) {
-                return entity -> et.toString() + ": " + entity.getPrimaryKeyValues() + " " + entity.getProperty(EP_NAME);
-            } else {
-                return entity -> et.toString() + ": " + entity.getPrimaryKeyValues();
+                return entity -> entity.getProperty(EP_NAME);
+
             }
+            for (var prop : et.getEntityProperties()) {
+                if (prop.getType() == TypePrimitive.EDM_STRING) {
+                    final EntityPropertyMain<String> strngProp = prop;
+                    return entity -> entity.getProperty(strngProp);
+                }
+            }
+            return entity -> "";
+
         }
 
     }
