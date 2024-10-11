@@ -70,16 +70,23 @@ public class SensorThingsV11Projects implements DataModel {
     public static final EntityPropertyMain<TimeInstant> EP_USERPASS = new EntityPropertyMain<>(NAME_EP_USERPASS, TypePrimitive.EDM_STRING);
 
     public final NavigationPropertyEntitySet npFeatureOfInterestGeneratedForLocations = new NavigationPropertyEntitySet(NAME_NP_GENERATEDFORLOCATIONS);
-    public final NavigationPropertyEntitySet npLocationGeneratedFeature = new NavigationPropertyEntitySet(NAME_NP_GENERATEDFEATURE);
+    public final NavigationPropertyEntitySet npFeatureOfInterestProjects = new NavigationPropertyEntitySet(NAME_PROJECTS);
 
-    public final NavigationPropertyEntitySet npProjectFeaturesOfInterest = new NavigationPropertyEntitySet(NAME_FEATURESOFINTEREST);
-    public final NavigationPropertyEntitySet npProjectLocations = new NavigationPropertyEntitySet(NAME_LOCATIONS);
+    public final NavigationPropertyEntitySet npLocationGeneratedFeature = new NavigationPropertyEntitySet(NAME_NP_GENERATEDFEATURE, npFeatureOfInterestGeneratedForLocations);
+    public final NavigationPropertyEntitySet npLocationProjects = new NavigationPropertyEntitySet(NAME_PROJECTS);
+
+    public final NavigationPropertyEntitySet npProjectFeaturesOfInterest = new NavigationPropertyEntitySet(NAME_FEATURESOFINTEREST, npFeatureOfInterestProjects);
+    public final NavigationPropertyEntitySet npProjectLocations = new NavigationPropertyEntitySet(NAME_LOCATIONS, npLocationProjects);
     public final NavigationPropertyEntitySet npProjectSensors = new NavigationPropertyEntitySet(NAME_SENSORS);
     public final NavigationPropertyEntitySet npProjectThings = new NavigationPropertyEntitySet(NAME_THINGS);
     public final NavigationPropertyEntitySet npProjectUserProjectRoles = new NavigationPropertyEntitySet(NAME_USERPROJECTROLES);
 
     public final NavigationPropertyEntitySet npRoleUserProjectRoles = new NavigationPropertyEntitySet(NAME_USERPROJECTROLES);
     public final NavigationPropertyEntitySet npRoleUsers = new NavigationPropertyEntitySet(NAME_USERS);
+
+    public final NavigationPropertyEntitySet npSensorProjects = new NavigationPropertyEntitySet(NAME_PROJECTS, npProjectSensors);
+
+    public final NavigationPropertyEntitySet npThingProjects = new NavigationPropertyEntitySet(NAME_PROJECTS, npProjectThings);
 
     public final NavigationPropertyEntitySet npUserRoles = new NavigationPropertyEntitySet(NAME_ROLES, npRoleUsers);
     public final NavigationPropertyEntitySet npUserUserProjectRoles = new NavigationPropertyEntitySet(NAME_USERPROJECTROLES);
