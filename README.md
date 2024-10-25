@@ -63,7 +63,7 @@ SensorThingsService service = new SensorThingsService(modelSensing, modelTasking
 ```java
 Entity thing = new Entity(modelSensing.etThing)
     .setProperty(SensorThingsV11Sensing.EP_NAME, "Thingything")
-    .setProperty(SensorThingsV11Sensing.EP_DESCRIPTION, "I'm a thing!")
+    .setProperty(SensorThingsV11Sensing.EP_DESCRIPTION, "I'm a thing!");
 service.create(thing);
 
 // get Thing with numeric id 1234
