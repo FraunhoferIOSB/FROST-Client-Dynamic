@@ -26,7 +26,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.MomentDeserializer;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.TimeInstantDeserializer;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.TimeIntervalDeserializer;
+import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.TimeValueDeserializer;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.MomentSerializer;
+import de.fraunhofer.iosb.ilt.frostclient.json.serialize.TimeObjectSerializer;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import net.time4j.Moment;
 
 /**
@@ -47,8 +56,13 @@ public class SimpleJsonMapper {
      */
     public static ObjectMapper getSimpleObjectMapper() {
         if (simpleObjectMapper == null) {
-            SimpleModule module = new SimpleModule();
-            module.addSerializer(Moment.class, new MomentSerializer());
+            SimpleModule module = new SimpleModule()
+                    .addSerializer(Moment.class, new MomentSerializer())
+                    .addSerializer(TimeObject.class, new TimeObjectSerializer())
+                    .addDeserializer(Moment.class, new MomentDeserializer())
+                    .addDeserializer(TimeInstant.class, new TimeInstantDeserializer())
+                    .addDeserializer(TimeInterval.class, new TimeIntervalDeserializer())
+                    .addDeserializer(TimeValue.class, new TimeValueDeserializer());
             simpleObjectMapper = new ObjectMapper()
                     .setSerializationInclusion(JsonInclude.Include.ALWAYS)
                     .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)

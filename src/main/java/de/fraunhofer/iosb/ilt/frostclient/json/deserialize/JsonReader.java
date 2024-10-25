@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import net.time4j.Moment;
 
 /**
  * Allows parsing of STA entities from JSON.
@@ -88,6 +89,7 @@ public class JsonReader {
         module.addDeserializer(TimeInstant.class, new TimeInstantDeserializer());
         module.addDeserializer(TimeInterval.class, new TimeIntervalDeserializer());
         module.addDeserializer(TimeValue.class, new TimeValueDeserializer());
+        module.addDeserializer(Moment.class, new MomentDeserializer());
 
         mapper.registerModule(module);
         return mapper;
