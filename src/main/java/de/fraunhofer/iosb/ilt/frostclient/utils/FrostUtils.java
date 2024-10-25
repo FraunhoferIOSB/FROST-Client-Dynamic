@@ -71,6 +71,7 @@ public final class FrostUtils {
 
     private int countInsert;
     private int countUpdate;
+    private String logPrefix;
 
     public FrostUtils(final SensorThingsService service) {
         this.service = service;
@@ -81,13 +82,17 @@ public final class FrostUtils {
         return this;
     }
 
+    public void setLogPrefix(String logPrefix) {
+        this.logPrefix = logPrefix;
+    }
+
     public SensorThingsService getService() {
         return service;
     }
 
     public void update(final Entity entity) throws ServiceFailureException {
         if (dryRun) {
-            LOGGER.info("Dry Run: Not updating entity {}", entity);
+            LOGGER.info("{}Dry Run: Not updating entity {}", logPrefix, entity);
         } else {
             service.update(entity);
             countUpdate++;
@@ -96,7 +101,7 @@ public final class FrostUtils {
 
     public void create(final Entity entity) throws ServiceFailureException {
         if (dryRun) {
-            LOGGER.info("Dry Run: Not creating entity {}", entity);
+            LOGGER.info("{}Dry Run: Not creating entity {}", logPrefix, entity);
         } else {
             service.create(entity);
             countInsert++;
@@ -121,7 +126,7 @@ public final class FrostUtils {
         if (cachedEntity == null) {
             create(newEntity);
             cache.put(newEntity);
-            LOGGER.info("Created {}: {}", newEntity.getEntityType(), cache.localIdFor(newEntity));
+            LOGGER.info("{}Created {}: {}", logPrefix, newEntity.getEntityType(), cache.localIdFor(newEntity));
             return newEntity;
         }
 
