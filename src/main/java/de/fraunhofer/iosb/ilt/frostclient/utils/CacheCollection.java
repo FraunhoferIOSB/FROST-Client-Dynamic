@@ -83,7 +83,7 @@ public class CacheCollection {
         return this;
     }
 
-    private static PropertyExtractor<String, Entity> createLocalIdExtractor(final EntityType et, String localIdKey) {
+    public static PropertyExtractor<String, Entity> createLocalIdExtractor(final EntityType et, String localIdKey) {
         PropertyExtractor<String, Entity> localIdExtractor;
         final Property propProperties = et.getProperty("properties");
         if (propProperties == null) {

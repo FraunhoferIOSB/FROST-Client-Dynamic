@@ -59,7 +59,7 @@ public class EntityCacheDynamic<U> {
     private Dao dao;
 
     public EntityCacheDynamic(EntityType et) {
-        this.entityType = dao.getEntityType();
+        this.entityType = et;
     }
 
     public EntityCacheDynamic(Dao dao) {
