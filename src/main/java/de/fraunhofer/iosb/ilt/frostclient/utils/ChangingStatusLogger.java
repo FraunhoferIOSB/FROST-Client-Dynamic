@@ -129,11 +129,16 @@ public class ChangingStatusLogger extends ConfigProvider<ChangingStatusLogger> {
 
         @Override
         public void logIfChanged(Logger logger) {
-            process();
-            Object[] currentStatus = getCopyCurrentParams();
-            if (!Arrays.deepEquals(currentStatus, previous)) {
-                previous = currentStatus;
-                logger.info(logMessageTemplate, previous);
+            try {
+                process();
+                Object[] currentStatus = getCopyCurrentParams();
+                if (!Arrays.deepEquals(currentStatus, previous)) {
+                    previous = currentStatus;
+                    logger.info(logMessageTemplate, previous);
+                }
+            } catch (RuntimeException ex) {
+                logger.warn("Exception checking changes: {}", ex.getMessage());
+                logger.debug("Exception:", ex);
             }
         }
 
