@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.20
+## Release Version 2.20
 
 **Updates**
 * Added deserialisation support for Time4J Moment.
