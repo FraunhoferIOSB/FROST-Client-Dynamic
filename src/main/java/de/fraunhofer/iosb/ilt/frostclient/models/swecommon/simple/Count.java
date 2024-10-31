@@ -22,14 +22,20 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Count class.
  */
-public class Count extends AbstractSimpleComponent<Count, Long> {
+public class Count extends AbstractSimpleComponent<Count, Number> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Count.class.getName());
 
     /**
      * Value
@@ -37,7 +43,7 @@ public class Count extends AbstractSimpleComponent<Count, Long> {
      * an integer that must be within one of the constraint intervals or exactly
      * one of the enumerated values.
      */
-    private Long value;
+    private Number value;
 
     /**
      * Constraint
@@ -55,25 +61,69 @@ public class Count extends AbstractSimpleComponent<Count, Long> {
     }
 
     @Override
-    public Long getValue() {
+    public Number getValue() {
         return value;
     }
 
     @Override
-    public Count setValue(Long value) {
+    public Count setValue(Number value) {
         this.value = value;
         return this;
     }
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof JsonNode j) {
+            return validate(j);
+        }
+        if (input instanceof Number n) {
+            return validate(n);
+        }
+        LOGGER.debug("Non-integral value {} for Count.", input);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isIntegralNumber()) {
+            LOGGER.debug("Non-integral value {} for Count.", input);
             return false;
+        }
+        return validate(input.bigIntegerValue());
+
+    }
+
+    public boolean validate(Number input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof Double || input instanceof Float || input instanceof BigDecimal) {
+            if (input.doubleValue() != input.longValue()) {
+                LOGGER.debug("Non-integer value {} for Count!", input);
+                return false;
+            }
         }
         if (constraint == null) {
             return true;
         }
-        return constraint.isValid(new BigDecimal(value));
+        if (input instanceof BigInteger bi) {
+            return constraint.isValid(new BigDecimal(bi));
+        } else if (input instanceof BigDecimal bd) {
+            return constraint.isValid(bd);
+        } else {
+            return constraint.isValid(new BigDecimal(input.longValue()));
+        }
     }
 
     @Override

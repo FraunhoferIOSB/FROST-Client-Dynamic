@@ -22,13 +22,18 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Text class.
  */
 public class Text extends AbstractSimpleComponent<Text, String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Text.class.getName());
 
     /**
      * Value
@@ -96,13 +101,44 @@ public class Text extends AbstractSimpleComponent<Text, String> {
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof JsonNode j) {
+            return validate(j);
+        }
+        if (input instanceof String s) {
+            return validate(s);
+        }
+        LOGGER.debug("Non-String value {} for Text.", input);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isTextual()) {
+            LOGGER.debug("Non-Text value {} for Text.", input);
             return false;
+        }
+        return validate(input.asText());
+    }
+
+    public boolean validate(String input) {
+        if (input == null) {
+            return isOptional();
         }
         if (constraint == null) {
             return true;
         }
-        return constraint.isValid(value);
+        return constraint.isValid(input);
     }
 
     @Override

@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SWE Class CountRange.
  */
-public class CountRange extends AbstractSimpleComponent<CountRange, List<Long>> {
+public class CountRange extends AbstractRange<CountRange, Long> {
 
     /**
      * The logger for this class.
@@ -78,13 +79,42 @@ public class CountRange extends AbstractSimpleComponent<CountRange, List<Long>> 
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    protected boolean validateArray(JsonNode input) {
+        if (constraint == null) {
+            return true;
+        }
+        for (JsonNode item : input) {
+            if (!item.isIntegralNumber()) {
+                LOGGER.debug("Non-integral value {} for CountRange.", input);
+                return false;
+            }
+            if (!constraint.isValid(item.decimalValue())) {
+                LOGGER.error("Item '{}' does not fit the constraint", item);
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    @Override
+    public boolean validate(List<Long> input) {
+        if (input == null) {
+            return isOptional();
+        }
+        final int size = input.size();
+        if (size != 2) {
+            LOGGER.debug("Range must have 2 items, found: {}", size);
             return false;
         }
         if (constraint == null) {
             return true;
         }
-        for (Long item : value) {
+        for (Long item : input) {
             if (!constraint.isValid(new BigDecimal(item))) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;

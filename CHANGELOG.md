@@ -4,6 +4,7 @@
 
 **Updates**
 * Added deserialisation support for Time4J Moment.
+* Added validation method to SWE-Common implementation.
 
 
 ## Release Version 2.19

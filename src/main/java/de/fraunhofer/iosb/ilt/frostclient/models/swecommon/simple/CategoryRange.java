@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SWE Class CategoryRange.
  */
-public class CategoryRange extends AbstractSimpleComponent<CategoryRange, List<String>> {
+public class CategoryRange extends AbstractRange<CategoryRange, String> {
 
     /**
      * The logger for this class.
@@ -79,13 +80,42 @@ public class CategoryRange extends AbstractSimpleComponent<CategoryRange, List<S
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    protected boolean validateArray(JsonNode input) {
+        if (constraint == null) {
+            return true;
+        }
+        for (JsonNode item : input) {
+            if (!item.isTextual()) {
+                LOGGER.debug("Non-text item {} in array", item);
+                return false;
+            }
+            if (!constraint.isValid(item.asText())) {
+                LOGGER.error("Item '{}' does not fit the constraint", item);
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    @Override
+    public boolean validate(List<String> input) {
+        if (input == null) {
+            return isOptional();
+        }
+        final int size = input.size();
+        if (size != 2) {
+            LOGGER.debug("Range must have 2 items, found: {}", size);
             return false;
         }
         if (constraint == null) {
             return true;
         }
-        for (String item : value) {
+        for (String item : input) {
             if (!constraint.isValid(item)) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;

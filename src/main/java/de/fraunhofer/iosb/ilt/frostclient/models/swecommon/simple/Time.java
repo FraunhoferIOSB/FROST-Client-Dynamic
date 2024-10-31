@@ -22,15 +22,19 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTimes;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Time class.
  */
 public class Time extends AbstractSimpleComponent<Time, String> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Time.class.getName());
     /**
      * Reference Time
      *
@@ -130,13 +134,44 @@ public class Time extends AbstractSimpleComponent<Time, String> {
 
     @Override
     public boolean valueIsValid() {
-        if (getValue() == null) {
+        return validate(value);
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof JsonNode j) {
+            return validate(j);
+        }
+        if (input instanceof String s) {
+            return validate(s);
+        }
+        LOGGER.debug("Non-String value {} for Text.", input);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isTextual()) {
+            LOGGER.debug("Non-Text value {} for Text.", input);
             return false;
         }
-        if (getConstraint() == null) {
+        return validate(input.asText());
+    }
+
+    public boolean validate(String input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (constraint == null) {
             return true;
         }
-        return getConstraint().isValid(getValue(), getUom());
+        return constraint.isValid(input, getUom());
     }
 
     @Override

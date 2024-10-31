@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SWE Class QuantityRange.
  */
-public class QuantityRange extends AbstractSimpleComponent<QuantityRange, List<BigDecimal>> {
+public class QuantityRange extends AbstractRange<QuantityRange, BigDecimal> {
 
     /**
      * The logger for this class.
@@ -125,13 +126,42 @@ public class QuantityRange extends AbstractSimpleComponent<QuantityRange, List<B
 
     @Override
     public boolean valueIsValid() {
-        if (getValue() == null) {
-            return false;
-        }
-        if (getConstraint() == null) {
+        return validate(value);
+    }
+
+    @Override
+    protected boolean validateArray(JsonNode input) {
+        if (constraint == null) {
             return true;
         }
-        for (BigDecimal item : getValue()) {
+        for (JsonNode item : input) {
+            if (!item.isNumber()) {
+                LOGGER.debug("Non-number value {} for CountRange.", input);
+                return false;
+            }
+            if (!constraint.isValid(item.decimalValue())) {
+                LOGGER.error("Item '{}' does not fit the constraint", item);
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    @Override
+    public boolean validate(List<BigDecimal> input) {
+        if (input == null) {
+            return isOptional();
+        }
+        final int size = input.size();
+        if (size != 2) {
+            LOGGER.debug("Range must have 2 items, found: {}", size);
+            return false;
+        }
+        if (constraint == null) {
+            return true;
+        }
+        for (BigDecimal item : input) {
             if (!constraint.isValid(item)) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;

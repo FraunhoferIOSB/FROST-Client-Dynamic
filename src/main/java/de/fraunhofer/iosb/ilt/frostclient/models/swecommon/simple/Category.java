@@ -22,14 +22,19 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Category class.
  */
 public class Category extends AbstractSimpleComponent<Category, String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Category.class.getName());
 
     /**
      * Value
@@ -70,13 +75,41 @@ public class Category extends AbstractSimpleComponent<Category, String> {
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof String s) {
+            return validate(s);
+        }
+        LOGGER.debug("Value is not a String: {}", value);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isTextual()) {
+            LOGGER.debug("Given value is not textual: {}", input);
             return false;
+        }
+        return validate(input.asText());
+    }
+
+    public boolean validate(String input) {
+        if (input == null) {
+            return isOptional();
         }
         if (constraint == null) {
             return true;
         }
-        return constraint.isValid(value);
+        return constraint.isValid(input);
     }
 
     @Override

@@ -22,17 +22,23 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Class DataRecord.
  */
 public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Object>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataRecord.class.getName());
 
     private List<AbstractDataComponent> fields;
 
@@ -137,6 +143,110 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
         }
         for (AbstractDataComponent f : fields) {
             if (!f.valueIsValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input instanceof Map mapValue) {
+            return validate(mapValue);
+        } else if (input instanceof List list) {
+            return validate(list);
+        } else if (input instanceof JsonNode jsonValue) {
+            return validate(jsonValue);
+        } else {
+            LOGGER.debug("Value is not a Map or JsonNode: {}", input);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (!input.isObject() && !input.isArray()) {
+            LOGGER.debug("Value is not an Array or Object: {}", input);
+            return false;
+        }
+        if (fields == null) {
+            return true;
+        }
+        if (input.isObject()) {
+            return validateObject(input);
+        }
+        return validateArray(input);
+    }
+
+    public boolean validateObject(JsonNode input) {
+        for (AbstractDataComponent f : fields) {
+            final String fieldName = f.getName();
+            final JsonNode fieldValue = input.get(fieldName);
+            if (fieldValue == null) {
+                if (f.isOptional()) {
+                    continue;
+                } else {
+                    LOGGER.debug("No value for non-optional field {}", fieldName);
+                    return false;
+                }
+            }
+            if (!f.validate(fieldValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validate(Object... input) {
+        return validate(Arrays.asList(input));
+    }
+
+    public boolean validate(List<Object> input) {
+        if (input.size() != fields.size()) {
+            LOGGER.debug("Length of value list {} differs from fields array {}", input.size(), fields.size());
+            return false;
+        }
+        for (int idx = 0; idx < fields.size(); idx++) {
+            AbstractDataComponent field = fields.get(idx);
+            Object fieldValue = input.get(idx);
+            if (!field.validate(fieldValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validateArray(JsonNode input) {
+        if (input.size() != fields.size()) {
+            LOGGER.debug("Length of value array {} differs from fields array {}", input.size(), fields.size());
+            return false;
+        }
+        for (int idx = 0; idx < fields.size(); idx++) {
+            AbstractDataComponent field = fields.get(idx);
+            JsonNode fieldValue = input.get(idx);
+            if (!field.validate(fieldValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validate(Map<String, Object> input) {
+        if (fields == null) {
+            return true;
+        }
+        for (AbstractDataComponent field : fields) {
+            final String fieldName = field.getName();
+            final Object fieldValue = input.get(fieldName);
+            if (fieldValue == null) {
+                if (field.isOptional()) {
+                    continue;
+                } else {
+                    LOGGER.debug("No value for non-optional field {}", fieldName);
+                    return false;
+                }
+            }
+            if (!field.validate(fieldValue)) {
                 return false;
             }
         }

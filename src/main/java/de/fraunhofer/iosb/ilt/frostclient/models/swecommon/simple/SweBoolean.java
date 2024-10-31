@@ -22,12 +22,17 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Swe-Common Boolean.
  */
 public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SweBoolean.class.getName());
 
     public static final String SWE_NAME = "Boolean";
 
@@ -49,6 +54,37 @@ public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
 
     @Override
     public boolean valueIsValid() {
+        return true;
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof JsonNode j) {
+            return validate(j);
+        }
+        if (input instanceof Boolean b) {
+            return validate(b);
+        }
+        LOGGER.debug("Non-boolean value {} for Count.", input);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isBoolean()) {
+            LOGGER.debug("Non-boolean value {} for Count.", input);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validate(Boolean value) {
         return true;
     }
 

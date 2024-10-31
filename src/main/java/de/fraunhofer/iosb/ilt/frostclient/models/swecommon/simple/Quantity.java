@@ -22,15 +22,20 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.math.BigDecimal;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SWE Quantity class.
  */
-public class Quantity extends AbstractSimpleComponent<Quantity, BigDecimal> {
+public class Quantity extends AbstractSimpleComponent<Quantity, Number> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Quantity.class.getName());
 
     /**
      * Value
@@ -39,7 +44,7 @@ public class Quantity extends AbstractSimpleComponent<Quantity, BigDecimal> {
      * one of the enumerated values, and most importantly is expressed in the
      * unit specified.
      */
-    private BigDecimal value;
+    private Number value;
 
     /**
      * Constraint
@@ -66,25 +71,60 @@ public class Quantity extends AbstractSimpleComponent<Quantity, BigDecimal> {
     }
 
     @Override
-    public BigDecimal getValue() {
+    public Number getValue() {
         return value;
     }
 
     @Override
-    public Quantity setValue(BigDecimal value) {
+    public Quantity setValue(Number value) {
         this.value = value;
         return this;
     }
 
     @Override
     public boolean valueIsValid() {
-        if (value == null) {
+        return validate(value);
+    }
+
+    @Override
+    public boolean validate(Object input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (input instanceof JsonNode j) {
+            return validate(j);
+        }
+        if (input instanceof Number n) {
+            return validate(n);
+        }
+        LOGGER.debug("Non-integral value {} for Count.", input);
+        return false;
+    }
+
+    @Override
+    public boolean validate(JsonNode input) {
+        if (input == null) {
+            return isOptional();
+        }
+        if (!input.isNumber()) {
+            LOGGER.debug("Non-number value {} for Count.", input);
             return false;
+        }
+        return validate(input.decimalValue());
+    }
+
+    public boolean validate(Number input) {
+        if (input == null) {
+            return isOptional();
         }
         if (constraint == null) {
             return true;
         }
-        return constraint.isValid(value);
+        if (input instanceof BigDecimal bd) {
+            return constraint.isValid(bd);
+        } else {
+            return constraint.isValid(new BigDecimal(input.toString()));
+        }
     }
 
     public UnitOfMeasurement getUom() {

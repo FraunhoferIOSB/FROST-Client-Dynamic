@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTimes;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * SWE Class TimeRange.
  */
-public class TimeRange extends AbstractSimpleComponent<TimeRange, List<String>> {
+public class TimeRange extends AbstractRange<TimeRange, String> {
 
     /**
      * The logger for this class.
@@ -135,19 +136,49 @@ public class TimeRange extends AbstractSimpleComponent<TimeRange, List<String>> 
 
     @Override
     public boolean valueIsValid() {
-        if (getValue() == null) {
-            return false;
-        }
-        if (getConstraint() == null) {
+        return validate(value);
+    }
+
+    @Override
+    protected boolean validateArray(JsonNode input) {
+        if (constraint == null) {
             return true;
         }
-        for (String item : getValue()) {
+        for (JsonNode item : input) {
+            if (!item.isTextual()) {
+                LOGGER.debug("Non-text value {} for TimeRange.", input);
+                return false;
+            }
+            if (!constraint.isValid(item.asText(), uom)) {
+                LOGGER.error("Item '{}' does not fit the constraint", item);
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    @Override
+    public boolean validate(List<String> input) {
+        if (input == null) {
+            return isOptional();
+        }
+        final int size = input.size();
+        if (size != 2) {
+            LOGGER.debug("Range must have 2 items, found: {}", size);
+            return false;
+        }
+        if (constraint == null) {
+            return true;
+        }
+        for (String item : input) {
             if (!constraint.isValid(item, uom)) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;
             }
         }
         return true;
+
     }
 
     @Override

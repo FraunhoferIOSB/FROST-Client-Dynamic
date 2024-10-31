@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Objects;
 
 /**
@@ -126,6 +127,22 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
     public abstract V getValue();
 
     public abstract T setValue(V value);
+
+    /**
+     * Validate the given value against this component.
+     *
+     * @param input the value to validate.
+     * @return true if the value has the correct class and value.
+     */
+    public abstract boolean validate(Object input);
+
+    /**
+     * Validate the given value against this component.
+     *
+     * @param input the value to validate.
+     * @return true if the value has the correct type and value.
+     */
+    public abstract boolean validate(JsonNode input);
 
     public T setDefinition(String definition) {
         this.definition = definition;
