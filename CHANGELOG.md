@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.21
+## Release Version 2.21
 
 **Updates**
 * Fixed SWE-Common restrictions classes.
