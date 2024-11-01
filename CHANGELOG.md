@@ -5,6 +5,7 @@
 **Updates**
 * Fixed SWE-Common restrictions classes.
 * Fixed null in log messages when logPrefix not set.
+* Added isNullOrEmpty for Map.
 
 
 ## Release Version 2.20

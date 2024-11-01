@@ -43,6 +43,7 @@ import java.time.format.FormatStyle;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import net.time4j.Moment;
 import net.time4j.PlainDate;
@@ -248,6 +249,10 @@ public class StringHelper {
 
     public static boolean isNullOrEmpty(Collection arr) {
         return arr == null || arr.isEmpty();
+    }
+
+    public static boolean isNullOrEmpty(Map map) {
+        return map == null || map.isEmpty();
     }
 
     /**
