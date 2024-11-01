@@ -71,7 +71,7 @@ public final class FrostUtils {
 
     private int countInsert;
     private int countUpdate;
-    private String logPrefix;
+    private String logPrefix = "";
 
     public FrostUtils(final SensorThingsService service) {
         this.service = service;
@@ -82,8 +82,9 @@ public final class FrostUtils {
         return this;
     }
 
-    public void setLogPrefix(String logPrefix) {
+    public FrostUtils setLogPrefix(String logPrefix) {
         this.logPrefix = logPrefix;
+        return this;
     }
 
     public SensorThingsService getService() {
@@ -116,9 +117,10 @@ public final class FrostUtils {
         return countUpdate;
     }
 
-    public void resetCounts() {
+    public FrostUtils resetCounts() {
         countInsert = 0;
         countUpdate = 0;
+        return this;
     }
 
     public Entity findOrCreate(final Entity newEntity, EntityCacheDynamic cache) throws ServiceFailureException {

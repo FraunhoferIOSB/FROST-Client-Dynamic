@@ -3,6 +3,7 @@
 ## Development Version 2.21
 
 **Updates**
+* Fixed null in log messages when logPrefix not set.
 
 
 ## Release Version 2.20
