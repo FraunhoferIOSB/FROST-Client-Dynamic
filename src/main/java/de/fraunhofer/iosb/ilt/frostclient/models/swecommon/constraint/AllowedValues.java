@@ -38,14 +38,14 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
      *
      * The values that the user can choose from.
      */
-    private List<BigDecimal> value;
+    private List<BigDecimal> values;
 
     /**
      * Intervals
      *
-     * The intervals that the value must fall in.
+     * The intervals that the values must fall in.
      */
-    private List<List<BigDecimal>> interval;
+    private List<List<BigDecimal>> intervals;
 
     /**
      * Significant Figures
@@ -54,32 +54,47 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
      */
     private Integer significantFigures;
 
-    public List<BigDecimal> getValue() {
-        return value;
+    public List<BigDecimal> getValues() {
+        return values;
     }
 
-    public List<List<BigDecimal>> getInterval() {
-        return interval;
+    public AllowedValues setValues(List<BigDecimal> values) {
+        this.values = values;
+        return this;
+    }
+
+    public List<List<BigDecimal>> getIntervals() {
+        return intervals;
+    }
+
+    public AllowedValues setIntervals(List<List<BigDecimal>> intervals) {
+        this.intervals = intervals;
+        return this;
     }
 
     public Integer getSignificantFigures() {
         return significantFigures;
     }
 
+    public AllowedValues setSignificantFigures(Integer significantFigures) {
+        this.significantFigures = significantFigures;
+        return this;
+    }
+
     public boolean isValid(BigDecimal input) {
-        if (isNullOrEmpty(value) && isNullOrEmpty(interval) && significantFigures == 0) {
+        if (isNullOrEmpty(values) && isNullOrEmpty(intervals) && significantFigures == 0) {
             // This constraint is empty
             return true;
         }
-        if (value != null) {
-            for (BigDecimal item : value) {
+        if (values != null) {
+            for (BigDecimal item : values) {
                 if (item.compareTo(input) == 0) {
                     return true;
                 }
             }
         }
-        if (interval != null) {
-            for (List<BigDecimal> range : interval) {
+        if (intervals != null) {
+            for (List<BigDecimal> range : intervals) {
                 if (range.get(0).compareTo(input) < 0 && range.get(1).compareTo(input) > 0) {
                     return true;
                 }
@@ -89,26 +104,11 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
         return false;
     }
 
-    public AllowedValues setValue(List<BigDecimal> value) {
-        this.value = value;
-        return this;
-    }
-
-    public AllowedValues setInterval(List<List<BigDecimal>> interval) {
-        this.interval = interval;
-        return this;
-    }
-
-    public AllowedValues setSignificantFigures(Integer significantFigures) {
-        this.significantFigures = significantFigures;
-        return this;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.value);
-        hash = 17 * hash + Objects.hashCode(this.interval);
+        hash = 17 * hash + Objects.hashCode(this.values);
+        hash = 17 * hash + Objects.hashCode(this.intervals);
         hash = 17 * hash + Objects.hashCode(this.significantFigures);
         return hash;
     }
@@ -125,10 +125,10 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
             return false;
         }
         final AllowedValues other = (AllowedValues) obj;
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.values, other.values)) {
             return false;
         }
-        if (!Objects.equals(this.interval, other.interval)) {
+        if (!Objects.equals(this.intervals, other.intervals)) {
             return false;
         }
         return Objects.equals(this.significantFigures, other.significantFigures);

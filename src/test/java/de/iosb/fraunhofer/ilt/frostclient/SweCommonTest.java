@@ -42,7 +42,10 @@ public class SweCommonTest {
                   "name": "bikeCount",
                   "type": "Count",
                   "definition": "http://mmisw.org/ont/cf/parameter/bikeCount",
-                  "label": "Bike Count"
+                  "label": "Bike Count",
+                    "constraint": {
+                      "values": [5, 6, 7]
+                    }
                 },
                 {
                   "name": "pressure",
@@ -51,6 +54,16 @@ public class SweCommonTest {
                   "definition": "http://mmisw.org/ont/cf/parameter/air_pressure_at_mean_sea_level",
                   "label": "Air Pressure",
                   "uom": { "code": "mbar" }
+                },
+                {
+                  "name": "model",
+                  "type": "Text",
+                  "optional": true,
+                  "definition": "http://sensorml.com/ont/swe/property/ModelNumber",
+                  "label": "Model Number",
+                  "constraint": {
+                    "pattern": "^[A-Z]{3}[0-9]{2}S1$"
+                  }
                 }
               ]
             }""";
@@ -88,8 +101,31 @@ public class SweCommonTest {
         Assertions.assertTrue(dr.validate(value));
 
         value = CollectionsHelper.propertiesBuilder()
+                .addItem("bikeCount", 4)
+                .buildMap();
+        Assertions.assertFalse(dr.validate(value));
+
+        value = CollectionsHelper.propertiesBuilder()
                 .addItem("bikeCount", "5.1")
                 .addItem("pressure", 1000.5)
+                .buildMap();
+        Assertions.assertFalse(dr.validate(value));
+
+        value = CollectionsHelper.propertiesBuilder()
+                .addItem("model", "ABC12S1")
+                .addItem("bikeCount", 5)
+                .buildMap();
+        Assertions.assertTrue(dr.validate(value));
+
+        value = CollectionsHelper.propertiesBuilder()
+                .addItem("model", "ABC12")
+                .addItem("bikeCount", 5)
+                .buildMap();
+        Assertions.assertFalse(dr.validate(value));
+
+        value = CollectionsHelper.propertiesBuilder()
+                .addItem("model", "AB12S1")
+                .addItem("bikeCount", 5)
                 .buildMap();
         Assertions.assertFalse(dr.validate(value));
     }

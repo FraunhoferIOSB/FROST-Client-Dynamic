@@ -22,17 +22,11 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.SweTypeIdResolver;
-
 /**
  * The abstract class for constraints.
  *
  * @param <T> The type of the extending class.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeIdResolver(SweTypeIdResolver.class)
 public abstract class AbstractConstraint<T extends AbstractConstraint<T>> {
 
     /**

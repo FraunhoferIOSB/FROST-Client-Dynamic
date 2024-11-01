@@ -3,6 +3,7 @@
 ## Development Version 2.21
 
 **Updates**
+* Fixed SWE-Common restrictions classes.
 * Fixed null in log messages when logPrefix not set.
 
 

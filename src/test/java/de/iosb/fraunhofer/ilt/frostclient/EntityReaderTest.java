@@ -271,7 +271,7 @@ public class EntityReaderTest {
                                 "description": "ID of the datastream from which the observations should be taken.",
                                 "constraint": {
                                       "type": "AllowedValues",
-                                      "interval": [[0, 10000]]
+                                      "intervals": [[0, 10000]]
                                 }
                             },
                             {
@@ -280,8 +280,7 @@ public class EntityReaderTest {
                                 "label": "Destination Datastream",
                                 "description": "ID of the datastream to which the observations should be copied.",
                                 "constraint": {
-                                    "type": "AllowedValues",
-                                    "interval": [[0, 10000]]
+                                    "intervals": [[0, 10000]]
                                 }
                             }
                         ]
@@ -301,7 +300,7 @@ public class EntityReaderTest {
         intervallItem.add(new BigDecimal(10000));
         interval.add(intervallItem);
         AllowedValues allowedValues = new AllowedValues()
-                .setInterval(interval);
+                .setIntervals(interval);
 
         Count sourceDS = new Count();
         sourceDS.setLabel("Source Datastream");

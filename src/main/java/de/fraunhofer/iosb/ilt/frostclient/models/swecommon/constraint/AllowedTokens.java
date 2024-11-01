@@ -37,12 +37,12 @@ public class AllowedTokens extends AbstractConstraint<AllowedTokens> {
      *
      * The values that the user can choose from.
      */
-    private List<String> value;
+    private List<String> values;
 
     /**
      * Pattern
      *
-     * The regex(?) pattern that the value must match.
+     * The regex(?) pattern that the values must match.
      */
     private String pattern;
 
@@ -50,13 +50,17 @@ public class AllowedTokens extends AbstractConstraint<AllowedTokens> {
     }
 
     public AllowedTokens(String... tokens) {
-        this.value = Arrays.asList(tokens);
+        this.values = Arrays.asList(tokens);
+    }
+
+    public AllowedTokens(String pattern) {
+        this.pattern = pattern;
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 37 * hash + Objects.hashCode(this.value);
+        hash = 37 * hash + Objects.hashCode(this.values);
         hash = 37 * hash + Objects.hashCode(this.pattern);
         return hash;
     }
@@ -76,27 +80,33 @@ public class AllowedTokens extends AbstractConstraint<AllowedTokens> {
         if (!Objects.equals(this.pattern, other.pattern)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.values, other.values)) {
             return false;
         }
         return true;
-    }
-
-    public AllowedTokens(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public List<String> getValue() {
-        return value;
     }
 
     public String getPattern() {
         return pattern;
     }
 
+    public AllowedTokens setPattern(String pattern) {
+        this.pattern = pattern;
+        return this;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public AllowedTokens setValues(List<String> values) {
+        this.values = values;
+        return this;
+    }
+
     public boolean isValid(String input) {
-        if (value != null) {
-            for (String item : value) {
+        if (values != null) {
+            for (String item : values) {
                 if (item.equals(input)) {
                     return true;
                 }
@@ -110,16 +120,6 @@ public class AllowedTokens extends AbstractConstraint<AllowedTokens> {
         }
 
         return false;
-    }
-
-    public AllowedTokens setValue(List<String> value) {
-        this.value = value;
-        return this;
-    }
-
-    public AllowedTokens setPattern(String pattern) {
-        this.pattern = pattern;
-        return this;
     }
 
     @Override

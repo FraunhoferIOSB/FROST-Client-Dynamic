@@ -36,20 +36,20 @@ public class AllowedTimes extends AbstractConstraint<AllowedTimes> {
      *
      * The values that the user can choose from.
      */
-    private List<String> value;
+    private List<String> values;
 
     /**
      * Intervals
      *
-     * The intervals that the value must fall in.
+     * The intervals that the values must fall in.
      */
-    private List<List<String>> interval;
+    private List<List<String>> intervals;
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 11 * hash + Objects.hashCode(this.value);
-        hash = 11 * hash + Objects.hashCode(this.interval);
+        hash = 11 * hash + Objects.hashCode(this.values);
+        hash = 11 * hash + Objects.hashCode(this.intervals);
         hash = 11 * hash + Objects.hashCode(this.significantFigures);
         return hash;
     }
@@ -66,10 +66,10 @@ public class AllowedTimes extends AbstractConstraint<AllowedTimes> {
             return false;
         }
         final AllowedTimes other = (AllowedTimes) obj;
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.values, other.values)) {
             return false;
         }
-        if (!Objects.equals(this.interval, other.interval)) {
+        if (!Objects.equals(this.intervals, other.intervals)) {
             return false;
         }
         if (!Objects.equals(this.significantFigures, other.significantFigures)) {
@@ -85,35 +85,35 @@ public class AllowedTimes extends AbstractConstraint<AllowedTimes> {
      */
     private Integer significantFigures;
 
-    public List<String> getValue() {
-        return value;
+    public List<String> getValues() {
+        return values;
     }
 
-    public List<List<String>> getInterval() {
-        return interval;
+    public AllowedTimes setValues(List<String> values) {
+        this.values = values;
+        return this;
+    }
+
+    public List<List<String>> getIntervals() {
+        return intervals;
+    }
+
+    public AllowedTimes setIntervals(List<List<String>> intervals) {
+        this.intervals = intervals;
+        return this;
     }
 
     public Integer getSignificantFigures() {
         return significantFigures;
     }
 
-    public boolean isValid(String input, UnitOfMeasurement uom) {
-        return true;
-    }
-
-    public AllowedTimes setValue(List<String> value) {
-        this.value = value;
-        return this;
-    }
-
-    public AllowedTimes setInterval(List<List<String>> interval) {
-        this.interval = interval;
-        return this;
-    }
-
     public AllowedTimes setSignificantFigures(Integer significantFigures) {
         this.significantFigures = significantFigures;
         return this;
+    }
+
+    public boolean isValid(String input, UnitOfMeasurement uom) {
+        return true;
     }
 
     @Override

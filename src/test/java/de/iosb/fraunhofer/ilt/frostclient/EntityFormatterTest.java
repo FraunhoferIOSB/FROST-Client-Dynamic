@@ -480,8 +480,7 @@ public class EntityFormatterTest {
                                 "description": "Specifies turning the light On or Off",
                                 "type": "Category",
                                 "constraint": {
-                                    "type": "AllowedTokens",
-                                    "value": [
+                                    "values": [
                                         "on", "off"
                                     ]
                                 }
@@ -492,7 +491,6 @@ public class EntityFormatterTest {
                                 "description": "Specifies the light color in RGB HEX format. Example: #FF11A0",
                                 "type": "Text",
                                 "constraint": {
-                                    "type": "AllowedTokens",
                                     "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
                                 }
                             }
