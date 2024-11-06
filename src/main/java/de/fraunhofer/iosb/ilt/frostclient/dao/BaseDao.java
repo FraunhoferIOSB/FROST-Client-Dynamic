@@ -261,7 +261,8 @@ public class BaseDao implements Dao {
         return uri;
     }
 
-    protected SensorThingsService getService() {
+    @Override
+    public SensorThingsService getService() {
         return service;
     }
 

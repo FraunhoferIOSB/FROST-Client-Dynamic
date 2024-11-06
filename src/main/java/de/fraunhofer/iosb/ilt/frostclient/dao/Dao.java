@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.dao;
 
 import com.github.fge.jsonpatch.JsonPatchOperation;
+import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
@@ -114,4 +115,10 @@ public interface Dao {
      */
     Query query();
 
+    /**
+     * Get the service that this dao fetches data from.
+     *
+     * @return The service that backs this dao.
+     */
+    SensorThingsService getService();
 }
