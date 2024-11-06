@@ -1,6 +1,6 @@
 # Changelog
 
-## Development Version 2.22
+## Release Version 2.22
 
 **Updates**
 * Added `getService()` method to Dao interface.
