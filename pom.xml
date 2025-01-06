@@ -71,26 +71,26 @@
 
         <version.commons-lang3>3.17.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
-        <version.jackson>2.18.1</version.jackson>
+        <version.jackson>2.18.2</version.jackson>
         <version.jackson-databind>${version.jackson}</version.jackson-databind>
         <version.jacksonGeojson>1.14</version.jacksonGeojson>
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.json-patch>1.13</version.json-patch>
         <version.jsonwebtoken>0.12.6</version.jsonwebtoken>
-        <version.junit>5.11.3</version.junit>
-        <version.logback>1.5.12</version.logback>
+        <version.junit>5.11.4</version.junit>
+        <version.logback>1.5.16</version.logback>
 
         <version.maven.plugin.compiler>3.13.0</version.maven.plugin.compiler>
-        <version.maven.plugin.dependency-check>11.1.0</version.maven.plugin.dependency-check>
+        <version.maven.plugin.dependency-check>11.1.1</version.maven.plugin.dependency-check>
         <version.maven.plugin.gpg>3.2.7</version.maven.plugin.gpg>
         <version.maven.plugin.jacoco>0.8.12</version.maven.plugin.jacoco>
-        <version.maven.plugin.javadoc>3.10.1</version.maven.plugin.javadoc>
+        <version.maven.plugin.javadoc>3.11.2</version.maven.plugin.javadoc>
         <version.maven.plugin.nexus-staging>1.7.0</version.maven.plugin.nexus-staging>
         <version.maven.plugin.source>3.3.1</version.maven.plugin.source>
         <version.maven.plugin.spotless>2.43.0</version.maven.plugin.spotless>
-        <version.maven.plugin.surefire>3.5.1</version.maven.plugin.surefire>
+        <version.maven.plugin.surefire>3.5.2</version.maven.plugin.surefire>
 
-        <version.mockito>5.14.2</version.mockito>
+        <version.mockito>5.15.2</version.mockito>
         <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.16</version.slf4j>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.17.0</version>
+            <version>2.18.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
