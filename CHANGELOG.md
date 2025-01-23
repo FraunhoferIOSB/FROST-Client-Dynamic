@@ -3,6 +3,7 @@
 ## Development Version 2.23
 
 **Updates**
+* Made setVersion fluent.
 
 
 ## Release Version 2.22

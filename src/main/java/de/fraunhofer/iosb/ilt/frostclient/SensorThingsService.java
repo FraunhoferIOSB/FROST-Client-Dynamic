@@ -545,9 +545,11 @@ public class SensorThingsService {
      * standard and do not have the version number in the URL.
      *
      * @param version the version to use.
+     * @return this.
      */
-    public void setVersion(Version version) {
+    public SensorThingsService setVersion(Version version) {
         this.serverInfo.setVersion(version);
+        return this;
     }
 
     public ServerInfo getServerInfo() {
