@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
-import de.fraunhofer.iosb.ilt.frostclient.model.EntitySetImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
@@ -178,7 +177,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         if (propertyData.property instanceof NavigationPropertyEntitySet npes) {
             EntitySet entitySet = result.getProperty(npes);
             if (entitySet == null) {
-                entitySet = new EntitySetImpl(npes);
+                entitySet = new EntitySet(result, npes);
                 result.setProperty(npes, entitySet);
             }
             entitySet.setCount(parser.getLongValue());
@@ -193,7 +192,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         if (propertyData.property instanceof NavigationPropertyEntitySet npes) {
             EntitySet entitySet = result.getProperty(npes);
             if (entitySet == null) {
-                entitySet = new EntitySetImpl(npes);
+                entitySet = new EntitySet(result, npes);
                 result.setProperty(npes, entitySet);
             }
             entitySet.setNextLink(parser.getValueAsString());
@@ -204,7 +203,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         final EntityType setType = navProperty.getEntityType();
         EntitySet entitySet = result.getProperty(navProperty);
         if (entitySet == null) {
-            entitySet = new EntitySetImpl(navProperty);
+            entitySet = new EntitySet(result, navProperty);
             result.setProperty(navProperty, entitySet);
         }
         EntityDeserializer setEntityDeser = getInstance(modelRegistry, setType);

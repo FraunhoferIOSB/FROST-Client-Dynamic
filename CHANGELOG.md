@@ -5,6 +5,7 @@
 **Updates**
 * Made setVersion fluent.
 * Added Expand API.
+* Changed EntitySet iterator to be repeatable.
 
 
 ## Release Version 2.22

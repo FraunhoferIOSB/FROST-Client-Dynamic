@@ -98,7 +98,7 @@ public class Expand {
 
         private final NavigationProperty navProp;
 
-        private boolean count;
+        private Boolean count;
         private String[] select;
         private String filter;
         private String orderby;
@@ -115,7 +115,7 @@ public class Expand {
         }
 
         @Override
-        public ExpandItem count(boolean count) {
+        public ExpandItem count(Boolean count) {
             this.count = count;
             return this;
         }
@@ -177,7 +177,9 @@ public class Expand {
         @Override
         public ExpandItem expand(Expand expand) {
             this.expand = expand;
-            expand.onType = navProp.getEntityType();
+            if (navProp != null) {
+                expand.onType = navProp.getEntityType();
+            }
             return this;
         }
 
@@ -233,8 +235,8 @@ public class Expand {
                 target.append(join).append("$orderby=").append(orderby);
                 join = separator;
             }
-            if (count) {
-                target.append(join).append("$count=true");
+            if (count != null) {
+                target.append(join).append("$count=").append(count.toString());
                 join = separator;
             }
             if (expand != null) {

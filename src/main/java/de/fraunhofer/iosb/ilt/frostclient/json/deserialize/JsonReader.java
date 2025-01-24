@@ -32,7 +32,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
-import de.fraunhofer.iosb.ilt.frostclient.model.EntitySetImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
@@ -82,7 +81,6 @@ public class JsonReader {
                 .build();
 
         SimpleModule module = new SimpleModule();
-        module.addAbstractTypeMapping(EntitySet.class, EntitySetImpl.class);
         for (EntityType entityType : modelRegistry.getEntityTypes()) {
             EntityDeserializer.getInstance(modelRegistry, entityType);
         }

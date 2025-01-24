@@ -29,7 +29,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
-import de.fraunhofer.iosb.ilt.frostclient.model.EntitySetImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import java.io.IOException;
@@ -78,7 +77,7 @@ public class EntitySetDeserializer extends JsonDeserializer<EntitySet> {
 
     @Override
     public EntitySet deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
-        EntitySetImpl result = new EntitySetImpl(entityType);
+        EntitySet result = new EntitySet(entityType);
 
         boolean failOnUnknown = ctxt.isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
@@ -94,7 +93,7 @@ public class EntitySetDeserializer extends JsonDeserializer<EntitySet> {
                 deserialiseEntitySet(parser, ctxt, result);
             } else if (failOnUnknown) {
                 final String message = "Unknown field: " + fieldName + " on " + entityType.entityName + " set.";
-                throw new UnrecognizedPropertyException(parser, message, parser.getCurrentLocation(), EntitySet.class, fieldName, null);
+                throw new UnrecognizedPropertyException(parser, message, parser.currentLocation(), EntitySet.class, fieldName, null);
             }
             currentToken = parser.nextToken();
         }

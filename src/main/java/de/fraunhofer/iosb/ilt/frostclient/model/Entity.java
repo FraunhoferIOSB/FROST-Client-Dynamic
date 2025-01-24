@@ -32,6 +32,8 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.query.Expand;
+import de.fraunhofer.iosb.ilt.frostclient.query.Expand.ExpandItem;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
@@ -60,6 +62,10 @@ public class Entity implements ComplexValue<Entity> {
      * The STA service this entity is loaded from.
      */
     private SensorThingsService service;
+    /**
+     * The expand that was applied to this entity when loading.
+     */
+    private Expand expand;
 
     /**
      * The selfLink or @id of this entity.
@@ -201,10 +207,12 @@ public class Entity implements ComplexValue<Entity> {
         if (property instanceof NavigationPropertyEntitySet npes) {
             EntitySet entitySet = (EntitySet) navProperties.get(npes);
             if (entitySet == null && autoLoad) {
-                entitySet = new EntitySetImpl(npes);
+                entitySet = new EntitySet(this, npes);
                 if (autoLoad && service != null) {
                     String startLink = service.getFullPathString(this, npes);
+                    entitySet.setInitialLink(startLink);
                     entitySet.setNextLink(startLink);
+                    entitySet.setExpandItem(getExpandItemFor(npes));
                 }
                 setProperty(npes, entitySet);
             }
@@ -262,7 +270,7 @@ public class Entity implements ComplexValue<Entity> {
     public Entity addNavigationEntity(NavigationPropertyEntitySet navProperty, Entity linkedEntity) {
         EntitySet entitySet = getProperty(navProperty);
         if (entitySet == null) {
-            entitySet = new EntitySetImpl(navProperty);
+            entitySet = new EntitySet(this, navProperty);
             setProperty(navProperty, entitySet);
         }
         entitySet.add(linkedEntity);
@@ -304,6 +312,21 @@ public class Entity implements ComplexValue<Entity> {
         if (service == null) {
             throw new IllegalArgumentException("Can not subscribe, entity not sent to service yet.");
         }
+    }
+
+    public Expand getExpand() {
+        return expand;
+    }
+
+    public ExpandItem getExpandItemFor(NavigationProperty navProp) {
+        if (expand == null) {
+            return null;
+        }
+        return expand.getItemFor(navProp);
+    }
+
+    public void setExpand(Expand expand) {
+        this.expand = expand;
     }
 
     /**

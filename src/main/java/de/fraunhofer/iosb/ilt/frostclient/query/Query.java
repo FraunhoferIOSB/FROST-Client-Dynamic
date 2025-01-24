@@ -124,7 +124,7 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
     }
 
     @Override
-    public Query count(boolean count) {
+    public Query count(Boolean count) {
         this.count = count;
         return this;
     }
@@ -232,11 +232,13 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
             Utils.throwIfNotOk(httpGet, response);
             String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             list = service.getJsonReader().parseEntitySet(entityType, json);
+            list.setInitialLink(httpGet.getURI().toString());
         } catch (IOException ex) {
             throw new ServiceFailureException("Failed to fetch entities from query.", ex);
         }
 
         list.setService(service);
+        list.setExpandItem(createExpandItem());
         return list;
     }
 

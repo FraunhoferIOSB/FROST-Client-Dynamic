@@ -336,6 +336,10 @@ public class SensorThingsService {
         return getBaseUrl().toString() + ParserUtils.relationPath(parent, relation);
     }
 
+    public String getFullPathString(EntityType entityType) {
+        return getBaseUrl().toString() + entityType.mainSet;
+    }
+
     /**
      * The full path to the entity or collection.
      *

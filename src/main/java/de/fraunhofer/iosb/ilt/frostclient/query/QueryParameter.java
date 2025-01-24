@@ -76,12 +76,12 @@ public interface QueryParameter<T extends QueryParameter<T>> {
 
     /**
      * Add the count parameter as specified by the SensorThingsAPI
-     * specification.
+     * specification. When set to null, the server default behaviour is used.
      *
      * @param count the value for the count parameter.
      * @return this
      */
-    public T count(boolean count);
+    public T count(Boolean count);
 
     /**
      * Add an expand to the query.
