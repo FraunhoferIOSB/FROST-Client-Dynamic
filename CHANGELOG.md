@@ -4,6 +4,7 @@
 
 **Updates**
 * Made setVersion fluent.
+* Added Expand API.
 
 
 ## Release Version 2.22

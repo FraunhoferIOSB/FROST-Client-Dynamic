@@ -29,14 +29,15 @@ import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.query.Expand.ExpandItem;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
@@ -53,7 +54,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A query for reading operations.
  */
-public class Query implements QueryRequest<Query>, QueryParameter {
+public class Query implements QueryRequest<Query>, QueryParameter<Query> {
 
     /**
      * The logger for this class.
@@ -63,7 +64,15 @@ public class Query implements QueryRequest<Query>, QueryParameter {
     private final EntityType entityType;
     private final Entity parent;
     private final NavigationPropertyEntitySet navigationLink;
-    private final List<NameValuePair> params = new ArrayList<>();
+
+    private Boolean count;
+    private String[] select;
+    private String filter;
+    private String orderby;
+    private int skip = -1;
+    private int top = -1;
+    private String expandString;
+    private Expand expand;
 
     public Query(SensorThingsService service, EntityType entityType) {
         this.service = service;
@@ -90,83 +99,115 @@ public class Query implements QueryRequest<Query>, QueryParameter {
         return service;
     }
 
-    private void removeAllParams(String key) {
-        for (Iterator<NameValuePair> it = params.iterator(); it.hasNext();) {
-            NameValuePair param = it.next();
-            if (param.getName().equals(key)) {
-                it.remove();
-                break;
-            }
-        }
-    }
-
     @Override
-    public Query filter(String options) {
-        removeAllParams("$filter");
-        if (!StringHelper.isNullOrEmpty(options)) {
-            params.add(new BasicNameValuePair("$filter", options));
-        }
+    public Query filter(String filter) {
+        this.filter = filter;
         return this;
     }
 
     @Override
-    public Query top(int n) {
-        removeAllParams("$top");
-        params.add(new BasicNameValuePair("$top", Integer.toString(n)));
+    public Query top(int top) {
+        this.top = top;
         return this;
     }
 
     @Override
-    public Query orderBy(String clause) {
-        removeAllParams("$orderby");
-        if (!StringHelper.isNullOrEmpty(clause)) {
-            params.add(new BasicNameValuePair("$orderby", clause));
-        }
+    public Query orderBy(String orderby) {
+        this.orderby = orderby;
         return this;
     }
 
     @Override
-    public Query skip(int n) {
-        removeAllParams("$skip");
-        if (n > 0) {
-            params.add(new BasicNameValuePair("$skip", Integer.toString(n)));
-        }
+    public Query skip(int skip) {
+        this.skip = skip;
         return this;
     }
 
     @Override
-    public Query count() {
-        removeAllParams("$count");
-        params.add(new BasicNameValuePair("$count", "true"));
+    public Query count(boolean count) {
+        this.count = count;
         return this;
     }
 
     public Query expand(String expansion) {
-        removeAllParams("$expand");
-        if (!StringHelper.isNullOrEmpty(expansion)) {
-            params.add(new BasicNameValuePair("$expand", expansion));
+        this.expandString = expansion;
+        return this;
+    }
+
+    @Override
+    public Query expand(Expand expand) {
+        this.expand = expand;
+        if (expand != null) {
+            expand.setOnType(entityType);
         }
         return this;
     }
 
-    public Query select(String... fields) {
-        removeAllParams("$select");
-        if (fields == null) {
-            return this;
+    @Override
+    public Query addExpandItem(Expand.ExpandItem item) {
+        if (expand == null) {
+            expand = new Expand()
+                    .setOnType(entityType);
         }
-        StringBuilder selectValue = new StringBuilder();
-        for (String field : fields) {
-            selectValue.append(field).append(",");
-        }
-        if (selectValue.length() == 0) {
-            return this;
-        }
-        String select = selectValue.substring(0, selectValue.length() - 1);
-        if (select.isEmpty()) {
-            return this;
-        }
-        params.add(new BasicNameValuePair("$select", select));
+        expand.addItem(item);
         return this;
+    }
+
+    private ExpandItem createExpandItem() {
+        return new ExpandItem(null)
+                .count(count)
+                .top(top)
+                .skip(skip)
+                .select(select)
+                .filter(filter)
+                .orderBy(orderby)
+                .expand(expand);
+    }
+
+    @Override
+    public Query select(String... fields) {
+        this.select = fields;
+        return this;
+    }
+
+    public URI buildUrl() throws ServiceFailureException {
+        try {
+            URIBuilder uriBuilder;
+            if (parent == null) {
+                uriBuilder = new URIBuilder(service.getFullPath(entityType).toURI());
+            } else {
+                uriBuilder = new URIBuilder(service.getFullPath(parent, navigationLink).toURI());
+            }
+            List<NameValuePair> params = new ArrayList<>();
+            if (count != null) {
+                params.add(new BasicNameValuePair("$count", "true"));
+            }
+            if (top >= 0) {
+                params.add(new BasicNameValuePair("$top", Integer.toString(top)));
+            }
+            if (skip > 0) {
+                params.add(new BasicNameValuePair("$skip", Integer.toString(skip)));
+            }
+            if (!StringHelper.isNullOrEmpty(select)) {
+                params.add(new BasicNameValuePair("$select", String.join(",", select)));
+            }
+            if (!StringHelper.isNullOrEmpty(orderby)) {
+                params.add(new BasicNameValuePair("$orderby", orderby));
+            }
+            if (!StringHelper.isNullOrEmpty(filter)) {
+                params.add(new BasicNameValuePair("$filter", filter));
+            }
+            if (expand != null) {
+                params.add(new BasicNameValuePair("$expand", expand.toUrl()));
+            } else if (!StringHelper.isNullOrEmpty(expandString)) {
+                params.add(new BasicNameValuePair("$expand", expandString));
+            }
+
+            uriBuilder.addParameters(params);
+            return uriBuilder.build();
+        } catch (URISyntaxException ex) {
+            throw new ServiceFailureException("Failed to fetch entities from query.", ex);
+        }
     }
 
     @Override
@@ -182,20 +223,7 @@ public class Query implements QueryRequest<Query>, QueryParameter {
     @Override
     public EntitySet list() throws ServiceFailureException {
         EntitySet list;
-        HttpGet httpGet;
-        try {
-            URIBuilder uriBuilder;
-            if (parent == null) {
-                uriBuilder = new URIBuilder(service.getFullPath(entityType).toURI());
-            } else {
-                uriBuilder = new URIBuilder(service.getFullPath(parent, navigationLink).toURI());
-            }
-
-            uriBuilder.addParameters(params);
-            httpGet = new HttpGet(uriBuilder.build());
-        } catch (URISyntaxException ex) {
-            throw new ServiceFailureException("Failed to fetch entities from query.", ex);
-        }
+        HttpGet httpGet = new HttpGet(buildUrl());
 
         LOGGER.debug("Fetching: {}", httpGet.getURI());
         httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
@@ -225,29 +253,21 @@ public class Query implements QueryRequest<Query>, QueryParameter {
             tt = navigationLink.getEntityType();
         }
         StringBuilder collectedParams = new StringBuilder();
-        for (NameValuePair param : params) {
-            final String paramName = param.getName();
-            switch (paramName) {
-                case "$expand":
-                    if (service.getServerInfo().isMqttExpandAllowed()) {
-                        addParamToTopic(collectedParams, param);
-                    }
-                    break;
 
-                case "$filter":
-                    if (service.getServerInfo().isMqttFilterAllowed()) {
-                        addParamToTopic(collectedParams, param);
-                    }
-                    break;
-
-                case "$select":
-                    addParamToTopic(collectedParams, param);
-                    break;
-
-                default:
-                    LOGGER.debug("Ignoring parameter {} for MQTT", paramName);
+        if (service.getServerInfo().isMqttExpandAllowed()) {
+            if (expand != null) {
+                addParamToTopic(collectedParams, "$expand", expand.toUrl());
+            } else if (!StringHelper.isNullOrEmpty(expandString)) {
+                addParamToTopic(collectedParams, "$expand", expandString);
             }
         }
+        if (service.getServerInfo().isMqttFilterAllowed() && !StringHelper.isNullOrEmpty(filter)) {
+            addParamToTopic(collectedParams, "$filter", filter);
+        }
+        if (!StringHelper.isNullOrEmpty(select)) {
+            addParamToTopic(collectedParams, "$select", String.join(",", select));
+        }
+
         topic.append(collectedParams);
         sub.setTopic(topic.toString())
                 .setReturnType(tt);
@@ -255,21 +275,15 @@ public class Query implements QueryRequest<Query>, QueryParameter {
         return this;
     }
 
-    public void addParamToTopic(StringBuilder collectedParam, NameValuePair param) {
+    public void addParamToTopic(StringBuilder collectedParam, String name, String value) {
         if (collectedParam.isEmpty()) {
-            collectedParam.append('?').append(param.getName()).append('=').append(param.getValue());
+            collectedParam.append('?').append(name).append('=').append(value);
         } else {
-            collectedParam.append('&').append(param.getName()).append('=').append(param.getValue());
+            collectedParam.append('&').append(name).append('=').append(value);
         }
     }
 
     public void delete() throws ServiceFailureException {
-        removeAllParams("$top");
-        removeAllParams("$skip");
-        removeAllParams("$count");
-        removeAllParams("$select");
-        removeAllParams("$expand");
-
         HttpDelete httpDelete;
         try {
             URIBuilder uriBuilder;
@@ -277,6 +291,10 @@ public class Query implements QueryRequest<Query>, QueryParameter {
                 uriBuilder = new URIBuilder(service.getFullPath(parent, navigationLink).toURI());
             } else {
                 uriBuilder = new URIBuilder(service.getFullPath(entityType).toURI());
+            }
+            List<NameValuePair> params = new ArrayList<>();
+            if (!StringHelper.isNullOrEmpty(filter)) {
+                params.add(new BasicNameValuePair("$filter", filter));
             }
             uriBuilder.addParameters(params);
             httpDelete = new HttpDelete(uriBuilder.build());

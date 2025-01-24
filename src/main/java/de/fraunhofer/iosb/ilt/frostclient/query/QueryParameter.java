@@ -22,50 +22,80 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.query;
 
+import de.fraunhofer.iosb.ilt.frostclient.query.Expand.ExpandItem;
+
 /**
  * Request parameters a query should support.
+ *
+ * @param <T> The exact class implementing this interface.
  */
-public interface QueryParameter {
+public interface QueryParameter<T extends QueryParameter<T>> {
+
+    /**
+     * Add the select parameter as specified by the SensorThingsAPI
+     * specification.
+     *
+     * @param fields the fields to select.
+     * @return this
+     */
+    public T select(String... fields);
 
     /**
      * Add the filter parameter as specified by the SensorThingsAPI
      * specification.
      *
-     * @param options the filter options as a string
-     * @return the updated instance of the query
+     * @param filter the filter options as a string
+     * @return this
      */
-    public Query filter(String options);
+    public T filter(String filter);
 
     /**
      * Add the top parameter as specified by the SensorThingsAPI specification.
      *
-     * @param n the limit
-     * @return the updated instance of the query
+     * @param top the limit
+     * @return this
      */
-    public Query top(int n);
+    public T top(int top);
 
     /**
      * Add the orderBy parameter as specified by the SensorThingsAPI
      * specification.
      *
-     * @param clause the order clause
-     * @return the updated instance of the query
+     * @param orderBy the order clause
+     * @return this
      */
-    public Query orderBy(String clause);
+    public T orderBy(String orderBy);
 
     /**
      * Add the skip parameter as specified by the SensorThingsAPI specification.
      *
-     * @param n the number of entities to skip
-     * @return the updated instance of the query
+     * @param skip the number of entities to skip
+     * @return this
      */
-    public Query skip(int n);
+    public T skip(int skip);
 
     /**
      * Add the count parameter as specified by the SensorThingsAPI
      * specification.
      *
-     * @return the updated instance of the query
+     * @param count the value for the count parameter.
+     * @return this
      */
-    public Query count();
+    public T count(boolean count);
+
+    /**
+     * Add an expand to the query.
+     *
+     * @param expand the expand.
+     * @return this
+     */
+    public T expand(Expand expand);
+
+    /**
+     * Add an expand item, creating an Expand if required.
+     *
+     * @param item the expandItem to add.
+     * @return this
+     */
+    public T addExpandItem(ExpandItem item);
 }
