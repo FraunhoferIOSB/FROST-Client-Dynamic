@@ -3,9 +3,9 @@
 ![FROST-Client Logo](https://raw.githubusercontent.com/hylkevds/FROST-Client-Dynamic/main/images/FROST-Client-darkgrey.png)
 
 The **FR**aunhofer **O**pensource **S**ensor**T**hings-Client-Dynamic is a Java-based client
-library for the [SensorThingsAPI](https://github.com/opengeospatial/sensorthings) and
-other data models.
-It aims to simplify development of SensorThings enabled client applications.
+library for the [SensorThingsAPI](https://github.com/opengeospatial/sensorthings) and other data models, allowing dynamic data model extensions.
+It aims to simplify development of client applications for the SensorThings API or other OData services.
+
 
 ## Features
 
