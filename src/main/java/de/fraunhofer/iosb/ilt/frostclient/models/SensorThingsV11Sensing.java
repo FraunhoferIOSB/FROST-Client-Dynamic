@@ -103,7 +103,7 @@ public class SensorThingsV11Sensing implements DataModel {
     public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypePrimitive.EDM_GEOMETRY).setReadOnly(true);
     public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = new EntityPropertyMain<>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEVALUE);
     public static final EntityPropertyMain<TimeInterval> EP_PHENOMENONTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);
-    public static final EntityPropertyMain<Map<String, Object>> EP_PARAMETERS = new EntityPropertyMain<>(NAME_EP_PARAMETERS, TypeComplex.STA_MAP);
+    public static final EntityPropertyMain<MapValue> EP_PARAMETERS = new EntityPropertyMain<>(NAME_EP_PARAMETERS, TypeComplex.STA_MAP);
     public static final EntityPropertyMain<Object> EP_RESULT = new EntityPropertyMain<>(NAME_EP_RESULT, TypePrimitive.EDM_UNTYPED, true);
     public static final EntityPropertyMain<TimeInstant> EP_RESULTTIME = new EntityPropertyMain<>(NAME_EP_RESULTTIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInterval> EP_RESULTTIMEDS = new EntityPropertyMain<TimeInterval>(NAME_EP_RESULTTIME, TypeComplex.STA_TIMEINTERVAL).setReadOnly(true);

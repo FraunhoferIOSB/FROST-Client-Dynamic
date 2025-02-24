@@ -3,6 +3,7 @@
 ## Development Version 2.23
 
 **Updates**
+* Changed type of Obseration/parameters to MapValue.
 * Made setVersion fluent.
 * Added Expand API.
 * Changed EntitySet iterator to be repeatable.
