@@ -44,6 +44,24 @@ public class EntityCacheDynamic<U> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCacheDynamic.class.getName());
 
+    /**
+     * Rule for what to do when a duplicate ID is found.
+     */
+    public static enum DuplicateRule {
+        /**
+         * Throw an IllegalStateException when a duplicate localId is found.
+         */
+        ERROR,
+        /**
+         * Log a warning when a duplicate localId is found.
+         */
+        WARN,
+        /**
+         * Ignore duplicate localIds, use the first.
+         */
+        IGNORE
+    }
+
     private final Map<U, Entity> entitiesByLocalId = new LinkedHashMap<>();
 
     private PropertyExtractor<U, Entity> localIdExtractor;
@@ -57,6 +75,8 @@ public class EntityCacheDynamic<U> {
     private final EntityType entityType;
 
     private Dao dao;
+
+    private DuplicateRule duplicateRule = DuplicateRule.ERROR;
 
     public EntityCacheDynamic(EntityType et) {
         this.entityType = et;
@@ -97,7 +117,8 @@ public class EntityCacheDynamic<U> {
         if (filterFromlocalId != null) {
             final String filter = filterFromlocalId.extractFrom(localId);
             Query query = dao.query()
-                    .filter(filter);
+                    .filter(filter)
+                    .top(2);
             if (!StringHelper.isNullOrEmpty(expand)) {
                 // TODO: clean up once new version is released
                 query = query.expand(expand);
@@ -105,9 +126,14 @@ public class EntityCacheDynamic<U> {
             final List<Entity> entities = query.list()
                     .toList();
             if (entities.size() > 1) {
-                throw new IllegalStateException("More than one " + entityType.entityName + " matches filter " + filter);
+                if (duplicateRule == DuplicateRule.ERROR) {
+                    throw new IllegalStateException("More than one " + entityType.entityName + " matches filter " + filter);
+                }
+                if (duplicateRule == DuplicateRule.WARN) {
+                    LOGGER.warn("More than one {} matches filter {}", entityType.entityName, filter);
+                }
             }
-            if (entities.size() == 1) {
+            if (!entities.isEmpty()) {
                 entity = entities.get(0);
             }
             if (entity != null) {
@@ -221,6 +247,11 @@ public class EntityCacheDynamic<U> {
 
     public EntityCacheDynamic<U> setExpand(String expand) {
         this.expand = expand;
+        return this;
+    }
+
+    public EntityCacheDynamic<U> setDuplicateRule(DuplicateRule duplicateRule) {
+        this.duplicateRule = duplicateRule;
         return this;
     }
 

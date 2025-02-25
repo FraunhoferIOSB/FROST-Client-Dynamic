@@ -3,6 +3,7 @@
 ## Development Version 2.24
 
 **Updates**
+* Added option to EntityCache to set how to deal with duplicates.
 
 
 ## Release Version 2.23
