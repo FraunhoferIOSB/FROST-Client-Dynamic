@@ -721,8 +721,8 @@ public class SensorThingsService {
             if (mqttConfig.isAuthSet()) {
                 options.setUserName(mqttConfig.getUsername());
                 options.setPassword(mqttConfig.getPassword().toCharArray());
-                options.setAutomaticReconnect(true);
             }
+            options.setAutomaticReconnect(true);
             mqttClient.connect(options);
         } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
             throw new MqttException("MQTT connection failed", exc);

@@ -61,6 +61,9 @@ public class MqttConfig {
     }
 
     public MqttConnectOptions getOptions() {
+        if (options == null) {
+            options = new MqttConnectOptions();
+        }
         return options;
     }
 

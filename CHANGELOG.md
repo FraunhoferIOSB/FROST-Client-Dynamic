@@ -3,6 +3,7 @@
 ## Development Version 2.24
 
 **Updates**
+* Set automaticReconnect on MQTT connect options.
 * Added option to EntityCache to set how to deal with duplicates.
 
 
