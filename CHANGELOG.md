@@ -3,6 +3,7 @@
 ## Development Version 2.25
 
 **Updates**
+* Bumped dependency versions.
 * Added custom attribute `secret` to AbstractDataComponent to flag to clients that values should be encrypted or stored securely.
   Secret fields are treated as optional.
 
