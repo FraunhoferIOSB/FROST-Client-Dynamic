@@ -78,7 +78,7 @@
         <version.json-patch>1.13</version.json-patch>
         <version.jsonwebtoken>0.12.6</version.jsonwebtoken>
         <version.junit>5.12.1</version.junit>
-        <version.logback>1.5.17</version.logback>
+        <version.logback>1.5.18</version.logback>
 
         <version.maven.plugin.compiler>3.14.0</version.maven.plugin.compiler>
         <version.maven.plugin.dependency-check>12.1.0</version.maven.plugin.dependency-check>
