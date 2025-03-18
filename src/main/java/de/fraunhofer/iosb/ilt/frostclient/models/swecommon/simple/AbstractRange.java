@@ -41,7 +41,7 @@ public abstract class AbstractRange<T extends AbstractSimpleComponent<T, List<V>
     @Override
     public final boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof JsonNode j) {
             return validate(j);
@@ -59,7 +59,7 @@ public abstract class AbstractRange<T extends AbstractSimpleComponent<T, List<V>
     @Override
     public final boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input.isArray()) {
             return validateArray(input);

@@ -79,7 +79,7 @@ public class Count extends AbstractSimpleComponent<Count, Number> {
     @Override
     public boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof JsonNode j) {
             return validate(j);
@@ -94,7 +94,7 @@ public class Count extends AbstractSimpleComponent<Count, Number> {
     @Override
     public boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (!input.isIntegralNumber()) {
             LOGGER.debug("Non-integral value {} for Count.", input);
@@ -106,7 +106,7 @@ public class Count extends AbstractSimpleComponent<Count, Number> {
 
     public boolean validate(Number input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof Double || input instanceof Float || input instanceof BigDecimal) {
             if (input.doubleValue() != input.longValue()) {

@@ -60,7 +60,7 @@ public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
     @Override
     public boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof JsonNode j) {
             return validate(j);
@@ -75,7 +75,7 @@ public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
     @Override
     public boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (!input.isBoolean()) {
             LOGGER.debug("Non-boolean value {} for Count.", input);

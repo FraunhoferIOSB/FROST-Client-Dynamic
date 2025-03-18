@@ -40,6 +40,12 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
     private String name;
 
     /**
+     * Flag indicating this property should be treated as a secret and values
+     * should be encrypted when possible.
+     */
+    private boolean secret;
+
+    /**
      * A scoped name that maps to a controlled term defined in a (web
      * accessible) dictionary, registry or ontology.
      */
@@ -103,12 +109,12 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
     }
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public Boolean isOptional() {
+    public boolean isOptional() {
         return optional;
     }
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    public Boolean isUpdatable() {
+    public boolean isUpdatable() {
         return updatable;
     }
 
@@ -156,6 +162,16 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
 
     public T setUpdatable(boolean updatable) {
         this.updatable = updatable;
+        return self();
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public boolean isSecret() {
+        return secret;
+    }
+
+    public T setSecret(boolean secret) {
+        this.secret = secret;
         return self();
     }
 

@@ -179,18 +179,18 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
     }
 
     public boolean validateObject(JsonNode input) {
-        for (AbstractDataComponent f : fields) {
-            final String fieldName = f.getName();
+        for (AbstractDataComponent field : fields) {
+            final String fieldName = field.getName();
             final JsonNode fieldValue = input.get(fieldName);
             if (fieldValue == null) {
-                if (f.isOptional()) {
+                if (field.isOptional() || field.isSecret()) {
                     continue;
                 } else {
                     LOGGER.debug("No value for non-optional field {}", fieldName);
                     return false;
                 }
             }
-            if (!f.validate(fieldValue)) {
+            if (!field.validate(fieldValue)) {
                 return false;
             }
         }
@@ -239,7 +239,7 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
             final String fieldName = field.getName();
             final Object fieldValue = input.get(fieldName);
             if (fieldValue == null) {
-                if (field.isOptional()) {
+                if (field.isOptional() || field.isSecret()) {
                     continue;
                 } else {
                     LOGGER.debug("No value for non-optional field {}", fieldName);

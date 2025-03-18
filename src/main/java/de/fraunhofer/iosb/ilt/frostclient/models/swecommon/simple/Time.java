@@ -140,7 +140,7 @@ public class Time extends AbstractSimpleComponent<Time, String> {
     @Override
     public boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof JsonNode j) {
             return validate(j);
@@ -155,7 +155,7 @@ public class Time extends AbstractSimpleComponent<Time, String> {
     @Override
     public boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (!input.isTextual()) {
             LOGGER.debug("Non-Text value {} for Text.", input);
@@ -166,7 +166,7 @@ public class Time extends AbstractSimpleComponent<Time, String> {
 
     public boolean validate(String input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (constraint == null) {
             return true;

@@ -89,7 +89,7 @@ public class Quantity extends AbstractSimpleComponent<Quantity, Number> {
     @Override
     public boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof JsonNode j) {
             return validate(j);
@@ -104,7 +104,7 @@ public class Quantity extends AbstractSimpleComponent<Quantity, Number> {
     @Override
     public boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (!input.isNumber()) {
             LOGGER.debug("Non-number value {} for Count.", input);
@@ -115,7 +115,7 @@ public class Quantity extends AbstractSimpleComponent<Quantity, Number> {
 
     public boolean validate(Number input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (constraint == null) {
             return true;

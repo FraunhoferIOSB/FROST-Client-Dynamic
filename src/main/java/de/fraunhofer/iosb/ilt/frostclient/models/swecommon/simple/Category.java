@@ -81,7 +81,7 @@ public class Category extends AbstractSimpleComponent<Category, String> {
     @Override
     public boolean validate(Object input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (input instanceof String s) {
             return validate(s);
@@ -93,7 +93,7 @@ public class Category extends AbstractSimpleComponent<Category, String> {
     @Override
     public boolean validate(JsonNode input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (!input.isTextual()) {
             LOGGER.debug("Given value is not textual: {}", input);
@@ -104,7 +104,7 @@ public class Category extends AbstractSimpleComponent<Category, String> {
 
     public boolean validate(String input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         if (constraint == null) {
             return true;

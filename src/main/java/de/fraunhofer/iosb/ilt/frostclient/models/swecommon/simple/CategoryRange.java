@@ -105,7 +105,7 @@ public class CategoryRange extends AbstractRange<CategoryRange, String> {
     @Override
     public boolean validate(List<String> input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         final int size = input.size();
         if (size != 2) {

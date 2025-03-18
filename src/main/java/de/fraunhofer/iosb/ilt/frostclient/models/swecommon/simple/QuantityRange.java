@@ -151,7 +151,7 @@ public class QuantityRange extends AbstractRange<QuantityRange, BigDecimal> {
     @Override
     public boolean validate(List<BigDecimal> input) {
         if (input == null) {
-            return isOptional();
+            return isOptional() || isSecret();
         }
         final int size = input.size();
         if (size != 2) {
