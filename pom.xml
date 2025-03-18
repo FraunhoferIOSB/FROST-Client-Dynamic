@@ -71,13 +71,13 @@
 
         <version.commons-lang3>3.17.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
-        <version.jackson>2.18.2</version.jackson>
+        <version.jackson>2.18.3</version.jackson>
         <version.jackson-databind>${version.jackson}</version.jackson-databind>
         <version.jacksonGeojson>1.14</version.jacksonGeojson>
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.json-patch>1.13</version.json-patch>
         <version.jsonwebtoken>0.12.6</version.jsonwebtoken>
-        <version.junit>5.12.0</version.junit>
+        <version.junit>5.12.1</version.junit>
         <version.logback>1.5.17</version.logback>
 
         <version.maven.plugin.compiler>3.14.0</version.maven.plugin.compiler>
@@ -90,7 +90,7 @@
         <version.maven.plugin.spotless>2.44.3</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.5.2</version.maven.plugin.surefire>
 
-        <version.mockito>5.15.2</version.mockito>
+        <version.mockito>5.16.1</version.mockito>
         <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
         <version.slf4j>2.0.17</version.slf4j>
