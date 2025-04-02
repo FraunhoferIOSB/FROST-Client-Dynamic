@@ -758,11 +758,17 @@ public class SensorThingsService {
             }
         });
         if (mqttClient != null) {
+            if (mqttClient.isConnected()) {
+                try {
+                    mqttClient.disconnect();
+                } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+                    LOGGER.warn("error disconnecting MQTT conection", ex);
+                }
+            }
             try {
-                mqttClient.disconnect();
                 mqttClient.close(true);
             } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
-                LOGGER.warn("error closing MQTT conection", ex);
+                LOGGER.warn("error closing MQTT client", ex);
             }
         }
         mqttClient = null;

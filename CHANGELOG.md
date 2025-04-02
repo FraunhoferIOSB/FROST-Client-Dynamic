@@ -3,6 +3,7 @@
 ## Development Version 2.26
 
 **Updates**
+* Improved MQTT disconnect logic.
 * Changed type of Sensor and Actuator metadata to Any (EDM.Untyped).
 
 
