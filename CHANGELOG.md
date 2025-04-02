@@ -1,6 +1,12 @@
 # Changelog
 
-## Development Version 2.25
+## Development Version 2.26
+
+**Updates**
+* Changed type of Sensor and Actuator metadata to Any (EDM.Untyped).
+
+
+## Release Version 2.25
 
 **Updates**
 * Bumped dependency versions.

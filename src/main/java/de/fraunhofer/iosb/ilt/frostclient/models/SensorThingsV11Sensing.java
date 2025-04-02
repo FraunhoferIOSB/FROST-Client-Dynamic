@@ -98,7 +98,7 @@ public class SensorThingsV11Sensing implements DataModel {
 
     public static final EntityPropertyMain<Object> EP_FEATURE = new EntityPropertyMain<>(NAME_EP_FEATURE, TypePrimitive.EDM_GEOMETRY);
     public static final EntityPropertyMain<Object> EP_LOCATION = new EntityPropertyMain<>(NAME_EP_LOCATION, TypePrimitive.EDM_GEOMETRY);
-    public static final EntityPropertyMain<String> EP_METADATA = new EntityPropertyMain<>(NAME_EP_METADATA, EDM_STRING);
+    public static final EntityPropertyMain<Object> EP_METADATA = new EntityPropertyMain<>(NAME_EP_METADATA, TypePrimitive.EDM_UNTYPED);
     public static final EntityPropertyMain<String> EP_OBSERVATIONTYPE = new EntityPropertyMain<>(NAME_EP_OBSERVATIONTYPE, EDM_STRING);
     public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = new EntityPropertyMain<GeoJsonObject>(NAME_EP_OBSERVEDAREA, TypePrimitive.EDM_GEOMETRY).setReadOnly(true);
     public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = new EntityPropertyMain<>(NAME_EP_PHENOMENONTIME, TypeComplex.STA_TIMEVALUE);

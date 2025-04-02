@@ -82,7 +82,7 @@ public class SensorThingsV20Core implements DataModel {
 
     public static final EntityPropertyMain<Object> EP_FEATURE = SensorThingsV11Sensing.EP_FEATURE;
     public static final EntityPropertyMain<Object> EP_LOCATION = SensorThingsV11Sensing.EP_LOCATION;
-    public static final EntityPropertyMain<String> EP_METADATA = SensorThingsV11Sensing.EP_METADATA;
+    public static final EntityPropertyMain<Object> EP_METADATA = SensorThingsV11Sensing.EP_METADATA;
     public static final EntityPropertyMain<GeoJsonObject> EP_OBSERVEDAREA = SensorThingsV11Sensing.EP_OBSERVEDAREA;
     public static final EntityPropertyMain<TimeValue> EP_PHENOMENONTIME = SensorThingsV11Sensing.EP_PHENOMENONTIME;
     public static final EntityPropertyMain<TimeInterval> EP_PHENOMENONTIMEDS = SensorThingsV11Sensing.EP_PHENOMENONTIMEDS;
