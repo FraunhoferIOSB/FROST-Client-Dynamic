@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_ENUM;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_MAXIMUM;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_MINIMUM;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -147,15 +150,15 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
         if (values != null) {
             final ArrayNode children = new ArrayNode(JsonNodeFactory.instance);
             values.stream().forEach(t -> children.add(t));
-            schema.set("enum", children);
+            schema.set(JSON_SCHEMA_KEY_ENUM, children);
         }
         if (intervals != null && !intervals.isEmpty()) {
             List<BigDecimal> interval = intervals.get(0);
             if (!interval.isEmpty()) {
-                schema.put("minimum", interval.get(0));
+                schema.put(JSON_SCHEMA_KEY_MINIMUM, interval.get(0));
             }
             if (interval.size() > 1) {
-                schema.put("maximum", interval.get(1));
+                schema.put(JSON_SCHEMA_KEY_MAXIMUM, interval.get(1));
             }
         }
     }

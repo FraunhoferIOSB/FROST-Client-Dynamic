@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_ENUM;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -129,7 +131,7 @@ public class AllowedTimes extends AbstractConstraint<AllowedTimes> {
         if (values != null) {
             final ArrayNode children = new ArrayNode(JsonNodeFactory.instance);
             values.stream().forEach(t -> children.add(t));
-            schema.set("enum", children);
+            schema.set(JSON_SCHEMA_KEY_ENUM, children);
         }
     }
 

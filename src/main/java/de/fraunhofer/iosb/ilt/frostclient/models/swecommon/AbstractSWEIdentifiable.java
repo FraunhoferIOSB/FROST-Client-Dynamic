@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TITLE;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -135,8 +138,8 @@ public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<
     @Override
     public ObjectNode asJsonSchema() {
         ObjectNode schema = new ObjectNode(JsonNodeFactory.instance)
-                .put("title", getLabel())
-                .put("description", getDescription());
+                .put(JSON_SCHEMA_KEY_TITLE, getLabel())
+                .put(JSON_SCHEMA_KEY_DESCRIPTION, getDescription());
         return schema;
     }
 

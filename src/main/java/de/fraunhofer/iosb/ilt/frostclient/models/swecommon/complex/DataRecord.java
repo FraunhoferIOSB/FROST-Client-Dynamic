@@ -22,6 +22,11 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_PROPERTIES;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_REQUIRED;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TYPE;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_TYPE_OBJECT;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -272,10 +277,10 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
             }
         }
         ObjectNode schema = super.asJsonSchema()
-                .put("type", "object")
-                .set("properties", properties);
+                .put(JSON_SCHEMA_KEY_TYPE, JSON_SCHEMA_TYPE_OBJECT)
+                .set(JSON_SCHEMA_KEY_PROPERTIES, properties);
         if (!required.isEmpty()) {
-            schema.set("required", required);
+            schema.set(JSON_SCHEMA_KEY_REQUIRED, required);
         }
         return schema;
     }

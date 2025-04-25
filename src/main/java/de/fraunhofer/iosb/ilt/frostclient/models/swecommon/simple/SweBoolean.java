@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TYPE;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_TYPE_BOOLEAN;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Objects;
@@ -123,7 +126,7 @@ public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
     @Override
     public ObjectNode asJsonSchema() {
         ObjectNode schema = super.asJsonSchema()
-                .put("type", "boolean");
+                .put(JSON_SCHEMA_KEY_TYPE, JSON_SCHEMA_TYPE_BOOLEAN);
         return schema;
     }
 

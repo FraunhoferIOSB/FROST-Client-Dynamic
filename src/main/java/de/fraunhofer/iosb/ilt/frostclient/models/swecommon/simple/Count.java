@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TYPE;
+import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_TYPE_INTEGER;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
@@ -165,7 +168,7 @@ public class Count extends AbstractSimpleComponent<Count, Number> {
     @Override
     public ObjectNode asJsonSchema() {
         ObjectNode schema = super.asJsonSchema()
-                .put("type", "integer");
+                .put(JSON_SCHEMA_KEY_TYPE, JSON_SCHEMA_TYPE_INTEGER);
         if (constraint != null) {
             constraint.addToSchema(schema);
         }
