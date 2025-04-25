@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * The abstract class for constraints.
  *
@@ -44,5 +46,7 @@ public abstract class AbstractConstraint<T extends AbstractConstraint<T>> {
     }
 
     protected abstract T self();
+
+    public abstract void addToSchema(ObjectNode schema);
 
 }

@@ -24,6 +24,7 @@ package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Objects;
 
 /**
@@ -173,6 +174,15 @@ public abstract class AbstractDataComponent<T extends AbstractDataComponent<T, V
     public T setSecret(boolean secret) {
         this.secret = secret;
         return self();
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = super.asJsonSchema();
+        if (isSecret()) {
+            schema.put("secret", isSecret());
+        }
+        return schema;
     }
 
 }

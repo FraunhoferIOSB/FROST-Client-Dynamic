@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.Map;
 import java.util.Objects;
@@ -149,6 +150,16 @@ public class Category extends AbstractSimpleComponent<Category, String> {
     @Override
     protected Category self() {
         return this;
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = super.asJsonSchema()
+                .put("type", "string");
+        if (constraint != null) {
+            constraint.addToSchema(schema);
+        }
+        return schema;
     }
 
 }

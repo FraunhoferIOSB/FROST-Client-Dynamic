@@ -23,6 +23,9 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -256,6 +259,25 @@ public class DataRecord extends AbstractDataComponent<DataRecord, Map<String, Ob
     @Override
     protected DataRecord self() {
         return this;
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode properties = new ObjectNode(JsonNodeFactory.instance);
+        ArrayNode required = new ArrayNode(JsonNodeFactory.instance);
+        for (var field : fields) {
+            properties.set(field.getName(), field.asJsonSchema());
+            if (!field.isOptional()) {
+                required.add(field.getName());
+            }
+        }
+        ObjectNode schema = super.asJsonSchema()
+                .put("type", "object")
+                .set("properties", properties);
+        if (!required.isEmpty()) {
+            schema.set("required", required);
+        }
+        return schema;
     }
 
 }

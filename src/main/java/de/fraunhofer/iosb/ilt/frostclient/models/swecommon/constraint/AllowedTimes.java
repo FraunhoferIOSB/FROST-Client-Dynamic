@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.util.List;
 import java.util.Objects;
@@ -119,6 +122,15 @@ public class AllowedTimes extends AbstractConstraint<AllowedTimes> {
     @Override
     protected AllowedTimes self() {
         return this;
+    }
+
+    @Override
+    public void addToSchema(ObjectNode schema) {
+        if (values != null) {
+            final ArrayNode children = new ArrayNode(JsonNodeFactory.instance);
+            values.stream().forEach(t -> children.add(t));
+            schema.set("enum", children);
+        }
     }
 
 }

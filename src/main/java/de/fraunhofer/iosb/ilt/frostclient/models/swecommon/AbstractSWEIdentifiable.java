@@ -24,6 +24,8 @@ package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.SweTypeIdResolver;
 import java.util.Objects;
 
@@ -129,5 +131,13 @@ public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<
     }
 
     protected abstract T self();
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = new ObjectNode(JsonNodeFactory.instance)
+                .put("title", getLabel())
+                .put("description", getDescription());
+        return schema;
+    }
 
 }

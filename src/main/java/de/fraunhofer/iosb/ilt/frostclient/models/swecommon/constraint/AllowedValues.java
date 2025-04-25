@@ -24,6 +24,9 @@ package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
@@ -137,6 +140,24 @@ public class AllowedValues extends AbstractConstraint<AllowedValues> {
     @Override
     protected AllowedValues self() {
         return this;
+    }
+
+    @Override
+    public void addToSchema(ObjectNode schema) {
+        if (values != null) {
+            final ArrayNode children = new ArrayNode(JsonNodeFactory.instance);
+            values.stream().forEach(t -> children.add(t));
+            schema.set("enum", children);
+        }
+        if (intervals != null && !intervals.isEmpty()) {
+            List<BigDecimal> interval = intervals.get(0);
+            if (!interval.isEmpty()) {
+                schema.put("minimum", interval.get(0));
+            }
+            if (interval.size() > 1) {
+                schema.put("maximum", interval.get(1));
+            }
+        }
     }
 
 }

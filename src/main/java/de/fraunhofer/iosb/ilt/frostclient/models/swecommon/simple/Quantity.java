@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.math.BigDecimal;
@@ -172,6 +173,16 @@ public class Quantity extends AbstractSimpleComponent<Quantity, Number> {
     @Override
     protected Quantity self() {
         return this;
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = super.asJsonSchema()
+                .put("type", "numer");
+        if (constraint != null) {
+            constraint.addToSchema(schema);
+        }
+        return schema;
     }
 
 }

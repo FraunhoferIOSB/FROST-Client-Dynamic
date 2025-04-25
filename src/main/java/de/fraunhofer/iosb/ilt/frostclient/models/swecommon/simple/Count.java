@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -159,6 +160,16 @@ public class Count extends AbstractSimpleComponent<Count, Number> {
     @Override
     protected Count self() {
         return this;
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = super.asJsonSchema()
+                .put("type", "integer");
+        if (constraint != null) {
+            constraint.addToSchema(schema);
+        }
+        return schema;
     }
 
 }

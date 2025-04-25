@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +118,13 @@ public class SweBoolean extends AbstractSimpleComponent<SweBoolean, Boolean> {
     @Override
     protected SweBoolean self() {
         return this;
+    }
+
+    @Override
+    public ObjectNode asJsonSchema() {
+        ObjectNode schema = super.asJsonSchema()
+                .put("type", "boolean");
+        return schema;
     }
 
 }

@@ -3,6 +3,7 @@
 ## Development Version 2.27
 
 **Updates**
+* Added experimental feature to generate JSON-Schema from SWE-Common.
 
 
 ## Release Version 2.26

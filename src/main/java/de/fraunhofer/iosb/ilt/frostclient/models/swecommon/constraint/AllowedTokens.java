@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -125,6 +128,17 @@ public class AllowedTokens extends AbstractConstraint<AllowedTokens> {
     @Override
     protected AllowedTokens self() {
         return this;
+    }
+
+    @Override
+    public void addToSchema(ObjectNode schema) {
+        if (pattern != null) {
+            schema.put("pattern", pattern);
+        } else if (values != null) {
+            final ArrayNode children = new ArrayNode(JsonNodeFactory.instance);
+            values.stream().forEach(t -> children.add(t));
+            schema.set("enum", children);
+        }
     }
 
 }
