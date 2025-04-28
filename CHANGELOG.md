@@ -1,8 +1,9 @@
 # Changelog
 
-## Development Version 2.27
+## Release Version 2.27
 
 **Updates**
+* Bumped dependency versions.
 * Added experimental feature to generate JSON-Schema from SWE-Common.
 
 

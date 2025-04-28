@@ -4,7 +4,7 @@
 
     <groupId>de.fraunhofer.iosb.ilt</groupId>
     <artifactId>FROST-Client-Dynamic</artifactId>
-    <version>2.27-SNAPSHOT</version>
+    <version>2.27</version>
     <packaging>jar</packaging>
 
     <name>FROST-Client-Dynamic</name>
@@ -42,7 +42,7 @@
     <scm>
         <connection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</connection>
         <developerConnection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v2.27</tag>
         <url>https://github.com/hylkevds/FROST-Client-Dynamic</url>
     </scm>
 
@@ -69,6 +69,7 @@
 
         <version.Configurable>0.36</version.Configurable>
 
+        <version.commons-io>2.19.0</version.commons-io>
         <version.commons-lang3>3.17.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
         <version.jackson>2.19.0</version.jackson>
@@ -138,7 +139,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.19.0</version>
+            <version>${version.commons-io}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
