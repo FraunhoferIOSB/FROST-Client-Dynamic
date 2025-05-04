@@ -310,7 +310,7 @@
                         <importOrder/>
                         <removeUnusedImports/>
                         <licenseHeader>
-                            <file>${root.basedir}/license-header</file>
+                            <file>${root.basedir}/scripts/license-header</file>
                         </licenseHeader>
                     </java>
                 </configuration>
