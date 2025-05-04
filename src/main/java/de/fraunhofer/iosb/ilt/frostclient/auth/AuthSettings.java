@@ -23,11 +23,11 @@
 package de.fraunhofer.iosb.ilt.frostclient.auth;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigProvider;
-import de.fraunhofer.iosb.ilt.frostclient.settings.Settings;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
+import de.fraunhofer.iosb.ilt.settings.ConfigProvider;
+import de.fraunhofer.iosb.ilt.settings.Settings;
+import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValue;
 
 /**
  * Settings holder for Auth* settings.

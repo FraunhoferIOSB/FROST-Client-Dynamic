@@ -22,9 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
-import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigProvider;
-import de.fraunhofer.iosb.ilt.frostclient.settings.Settings;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValueInt;
+import de.fraunhofer.iosb.ilt.settings.ConfigProvider;
+import de.fraunhofer.iosb.ilt.settings.Settings;
+import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValueInt;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

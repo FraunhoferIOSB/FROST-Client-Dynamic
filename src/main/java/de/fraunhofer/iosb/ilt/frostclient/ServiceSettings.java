@@ -24,12 +24,12 @@ package de.fraunhofer.iosb.ilt.frostclient;
 
 import de.fraunhofer.iosb.ilt.frostclient.auth.AuthSettings;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
-import de.fraunhofer.iosb.ilt.frostclient.settings.CachedSettings;
-import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigProvider;
-import de.fraunhofer.iosb.ilt.frostclient.settings.Settings;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValueInt;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
+import de.fraunhofer.iosb.ilt.settings.CachedSettings;
+import de.fraunhofer.iosb.ilt.settings.ConfigProvider;
+import de.fraunhofer.iosb.ilt.settings.Settings;
+import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValue;
+import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValueInt;
 import java.util.ArrayList;
 import java.util.List;
 

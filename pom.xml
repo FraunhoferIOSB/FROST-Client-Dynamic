@@ -43,12 +43,12 @@
         <connection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</connection>
         <developerConnection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</developerConnection>
         <tag>HEAD</tag>
-        <url>https://github.com/hylkevds/FROST-Client-Dynamic</url>
+        <url>https://github.com/FraunhoferIOSB/FROST-Client-Dynamic</url>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/hylkevds/FROST-Client-Dynamic/issues</url>
+        <url>https://github.com/FraunhoferIOSB/FROST-Client-Dynamic/issues</url>
     </issueManagement>
 
     <distributionManagement>
@@ -94,11 +94,17 @@
         <version.mockito>5.17.0</version.mockito>
         <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
+        <version.settings>1.0</version.settings>
         <version.slf4j>2.0.17</version.slf4j>
         <version.time4j>5.9.4</version.time4j>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Settings</artifactId>
+            <version>${version.settings}</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

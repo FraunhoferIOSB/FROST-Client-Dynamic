@@ -26,10 +26,10 @@ import de.fraunhofer.iosb.ilt.configurable.AnnotatedConfigurable;
 import de.fraunhofer.iosb.ilt.configurable.annotations.ConfigurableField;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorString;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
-import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigDefaults;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
-import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.SensitiveValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
+import de.fraunhofer.iosb.ilt.settings.ConfigDefaults;
+import de.fraunhofer.iosb.ilt.settings.annotation.DefaultValue;
+import de.fraunhofer.iosb.ilt.settings.annotation.SensitiveValue;
 import org.apache.http.HttpRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 
