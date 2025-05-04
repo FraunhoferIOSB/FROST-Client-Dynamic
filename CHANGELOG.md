@@ -3,6 +3,7 @@
 ## Development Version 2.28
 
 **Updates**
+* Fixed setting auth method from environment variables
 
 
 ## Release Version 2.27

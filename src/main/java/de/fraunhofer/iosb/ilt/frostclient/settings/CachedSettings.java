@@ -62,7 +62,7 @@ public class CachedSettings extends Settings {
      * @param prefix
      */
     public CachedSettings(Settings parent, String prefix) {
-        super(parent.getProperties(), prefix, false, parent.getLogSensitiveData());
+        super(parent.getProperties(), parent.getPrefix() + prefix, false, parent.getLogSensitiveData());
     }
 
     /**

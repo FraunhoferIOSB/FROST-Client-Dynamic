@@ -27,6 +27,9 @@ import de.fraunhofer.iosb.ilt.configurable.annotations.ConfigurableField;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorPassword;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorString;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigDefaults;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.SensitiveValue;
 import java.io.IOException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -35,11 +38,20 @@ import org.slf4j.LoggerFactory;
 /**
  * Authentication using Cookies.
  */
-public class AuthPostCookie implements AnnotatedConfigurable<Void, Void>, AuthMethod {
+public class AuthPostCookie implements AnnotatedConfigurable<Void, Void>, AuthMethod, ConfigDefaults {
 
     public static final String HTTPREQUEST_HEADER_ACCEPT = "Accept";
     public static final String HTTPREQUEST_HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HTTPREQUEST_TYPE_JSON = "application/json";
+
+    @DefaultValue("")
+    public static final String NAME_VAR_POSTURL = "posturl";
+    @DefaultValue("")
+    public static final String NAME_VAR_USERNAME = "username";
+    @DefaultValue("")
+    @SensitiveValue
+    public static final String NAME_VAR_PASSWORD = "password";
+
     /**
      * The logger for this class.
      */
@@ -68,6 +80,13 @@ public class AuthPostCookie implements AnnotatedConfigurable<Void, Void>, AuthMe
 
     @Override
     public void setAuth(SensorThingsService service) {
+        AuthSettings authSettings = service.getSettings().getAuthSettings();
+        if (postUrl == null) {
+            postUrl = authSettings.getSettings().get(NAME_VAR_POSTURL, getClass());
+            username = authSettings.getSettings().get(NAME_VAR_USERNAME, getClass());
+            password = authSettings.getSettings().get(NAME_VAR_PASSWORD, getClass());
+        }
+
         String finalUrl = postUrl.replace("{username}", username);
         finalUrl = finalUrl.replace("{password}", password);
         CloseableHttpClient client = service.getHttpClient();

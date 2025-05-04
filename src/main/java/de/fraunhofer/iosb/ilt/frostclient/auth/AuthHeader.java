@@ -26,6 +26,9 @@ import de.fraunhofer.iosb.ilt.configurable.AnnotatedConfigurable;
 import de.fraunhofer.iosb.ilt.configurable.annotations.ConfigurableField;
 import de.fraunhofer.iosb.ilt.configurable.editor.EditorString;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigDefaults;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.SensitiveValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
 import org.apache.http.HttpRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -33,7 +36,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 /**
  * Authentication using custom Headers added to each request.
  */
-public class AuthHeader implements AnnotatedConfigurable<Void, Void>, AuthMethod {
+public class AuthHeader implements AnnotatedConfigurable<Void, Void>, AuthMethod, ConfigDefaults {
+
+    @DefaultValue("")
+    public static final String NAME_VAR_HEADERNAME = "headername";
+    @DefaultValue("")
+    @SensitiveValue
+    public static final String NAME_VAR_HEADERVALUE = "headervalue";
 
     @ConfigurableField(editor = EditorString.class,
             label = "Header Name",
@@ -49,6 +58,11 @@ public class AuthHeader implements AnnotatedConfigurable<Void, Void>, AuthMethod
 
     @Override
     public void setAuth(SensorThingsService service) {
+        AuthSettings authSettings = service.getSettings().getAuthSettings();
+        if (headerName == null) {
+            headerName = authSettings.getSettings().get(NAME_VAR_HEADERNAME, getClass());
+            headerValue = authSettings.getSettings().get(NAME_VAR_HEADERVALUE, getClass());
+        }
         service.setTokenManager(new TokenManager() {
             @Override
             public void addAuthHeader(HttpRequest hr) {

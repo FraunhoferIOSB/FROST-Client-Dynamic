@@ -31,6 +31,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.settings.ConfigDefaults;
 import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValue;
 import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.DefaultValueBoolean;
+import de.fraunhofer.iosb.ilt.frostclient.settings.annotation.SensitiveValue;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ServerInfo;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -59,6 +60,7 @@ public class AuthBasic implements AnnotatedConfigurable<Void, Void>, AuthMethod,
     @DefaultValue("")
     public static final String NAME_VAR_USERNAME = "username";
     @DefaultValue("")
+    @SensitiveValue
     public static final String NAME_VAR_PASSWORD = "password";
     @DefaultValueBoolean(false)
     public static final String NAME_VAR_IGNORE_SSL_ERRORS = "ignoreSslErrors";

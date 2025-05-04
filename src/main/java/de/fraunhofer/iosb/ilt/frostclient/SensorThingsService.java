@@ -206,8 +206,6 @@ public class SensorThingsService {
             serverInfo.addModels(settings.getModels());
         }
 
-        settings.getAuthSettings().load(this);
-
         if (!serverInfo.isBaseUrlSet()) {
             String baseUrl = settings.getBaseUrl();
             if (isNullOrEmpty(baseUrl)) {
@@ -215,6 +213,9 @@ public class SensorThingsService {
             }
             setBaseUrl(URI.create(baseUrl));
         }
+
+        settings.getAuthSettings().load(this);
+
         if (!serverInfo.isMqttUrlSet()) {
             String mqttUrl = settings.getMqttUrl();
             if (!isNullOrEmpty(mqttUrl)) {
