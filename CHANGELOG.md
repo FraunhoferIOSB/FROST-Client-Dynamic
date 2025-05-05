@@ -1,19 +1,20 @@
 # Changelog
 
-## Development Version 2.28
+## Version 2.28
 
 **Updates**
+* Moved handling of environment variables to a separate library: [Settings](https://github.com/FraunhoferIOSB/Settings/).
 * Fixed setting auth method from environment variables
 
 
-## Release Version 2.27
+## Version 2.27
 
 **Updates**
 * Bumped dependency versions.
 * Added experimental feature to generate JSON-Schema from SWE-Common.
 
 
-## Release Version 2.26
+## Version 2.26
 
 **Updates**
 * Bumped dependency versions.
@@ -21,7 +22,7 @@
 * Changed type of Sensor and Actuator metadata to Any (EDM.Untyped).
 
 
-## Release Version 2.25
+## Version 2.25
 
 **Updates**
 * Bumped dependency versions.
@@ -29,7 +30,7 @@
   Secret fields are treated as optional.
 
 
-## Release Version 2.24
+## Version 2.24
 
 **Updates**
 * Bumped dependency versions.
@@ -37,7 +38,7 @@
 * Added option to EntityCache to set how to deal with duplicates.
 
 
-## Release Version 2.23
+## Version 2.23
 
 **Updates**
 * Bumped dependency versions.
@@ -47,13 +48,13 @@
 * Changed EntitySet iterator to be repeatable.
 
 
-## Release Version 2.22
+## Version 2.22
 
 **Updates**
 * Added `getService()` method to Dao interface.
 
 
-## Release Version 2.21
+## Version 2.21
 
 **Updates**
 * Fixed SWE-Common restrictions classes.
@@ -61,14 +62,14 @@
 * Added isNullOrEmpty for Map.
 
 
-## Release Version 2.20
+## Version 2.20
 
 **Updates**
 * Added deserialisation support for Time4J Moment.
 * Added validation method to SWE-Common implementation.
 
 
-## Release Version 2.19
+## Version 2.19
 
 **Updates**
 * Allow EntityType-specific custom toString methods for Entity.
@@ -77,7 +78,7 @@
 * Fixed relations in Projects data model.
 
 
-## Release Version 2.18
+## Version 2.18
 
 **Updates**
 * Added MQTT methods.
@@ -86,14 +87,14 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.17
+## Version 2.17
 
 **Updates**
 * Added convenience methods to MapValue
 * Bumped dependency versions.
 
 
-## Release Version 2.16
+## Version 2.16
 
 **Updates**
 * Added ChangingStatusLogger for logging statistics.
@@ -101,7 +102,7 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.15
+## Version 2.15
 
 **Updates**
 * Introduced PkValue object to wrap Object[] for primary key values.
@@ -112,13 +113,13 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.14
+## Version 2.14
 
 **Updates**
 * Allow setting auth using environment variables (basic auth only for now).
 
 
-## Release Version 2.13
+## Version 2.13
 
 **Updates**
 * Renamed may classes and moved constants around.
@@ -132,7 +133,7 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.12
+## Version 2.12
 
 **Updates**
 * Renamed TypeSimpleSet to TypeCollection
@@ -141,67 +142,67 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.11
+## Version 2.11
 
 **Updates**
 * Fixed Entity hashCode method, allowing entities to be keys in Maps
 * Bumped dependency versions.
 
 
-## Release Version 2.10
+## Version 2.10
 
 **Updates**
 * Fixed return type on Entity.getProperty for Entity navigation Properties.
 * Bumped dependency versions.
 
 
-## Release Version 2.9
+## Version 2.9
 
 **Updates**
 * Fixed model initialisation when using external ModelRegistry.
 
 
-## Release Version 2.8
+## Version 2.8
 
 **Updates**
 * Fixed namespace not being set on EntityTypes.
 * Fixed exception trying to auto load navlinks on unconnected entities.
 
 
-## Release Version 2.7
+## Version 2.7
 
 **Updates**
 * Added automatic model sniffing when creating a SensorThingsService without model.
 
 
-## Release Version 2.6
+## Version 2.6
 
 **Updates**
 * Bumped dependency versions.
 * Implemented loading models from OData 4.01 CSDL ($metadata).
 
 
-## Release Version 2.5
+## Version 2.5
 
 **Updates**
 * Bumped dependency versions.
 * Updated for the published STAplus standard.
 
 
-## Release Version 2.4
+## Version 2.4
 
 **Updates**
 * Fixed incorrect URL generation for sub DOAs like Datastream(x)/Observations.
 * Simplified equals methods on Entity and EntitySet.
 
 
-## Release Version 2.3
+## Version 2.3
 
 **Updates**
 * Allow Service to be initialised with an existing ModelRegistry.
 
 
-## Release Version 2.2
+## Version 2.2
 
 **Updates**
 * Reworked PropertyTypes.
@@ -211,7 +212,7 @@
   when the EntityType does not have the property.
 
 
-## Release Version 2.1
+## Version 2.1
 
 **Updates**
 * Replaced the concept of Id with the concept of PrimaryKey.
@@ -220,7 +221,7 @@
 * Bumped dependency versions.
 
 
-## Release Version 2.0
+## Version 2.0
 
 **Updates**
 * Complete redesign of FROST-Client to become data model agnostic.
