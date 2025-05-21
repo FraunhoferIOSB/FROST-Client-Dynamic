@@ -80,7 +80,7 @@
         <version.maven.plugin.spotless>2.44.4</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.5.3</version.maven.plugin.surefire>
 
-        <version.mockito>5.17.0</version.mockito>
+        <version.mockito>5.18.0</version.mockito>
         <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
         <version.settings>1.0</version.settings>
