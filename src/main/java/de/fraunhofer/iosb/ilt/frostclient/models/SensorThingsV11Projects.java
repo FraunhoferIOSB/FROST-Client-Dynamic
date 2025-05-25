@@ -22,6 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAM;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATUREOFINTEREST;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURESOFINTEREST;
@@ -32,13 +35,16 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_TH
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THINGS;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
-import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
+import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
+import java.util.Map;
 
 /**
  * The Data Model implements the SensorThings Tasking extension.
@@ -63,11 +69,11 @@ public class SensorThingsV11Projects implements DataModel {
     public static final String NAME_NP_GENERATEDFEATURE = "GeneratedFeature";
     public static final String NAME_NP_GENERATEDFORLOCATIONS = "GeneratedForLocations";
 
-    public static final EntityPropertyMain<TimeInstant> EP_PUBLIC = new EntityPropertyMain<>(NAME_EP_PUBLIC, TypePrimitive.EDM_BOOLEAN);
-    public static final EntityPropertyMain<TimeInstant> EP_RESTRICTED = new EntityPropertyMain<>(NAME_EP_RESTRICTED, TypePrimitive.EDM_BOOLEAN);
-    public static final EntityPropertyMain<TimeInstant> EP_ROLENAME = new EntityPropertyMain<>(NAME_EP_ROLENAME, TypePrimitive.EDM_STRING);
-    public static final EntityPropertyMain<TimeInstant> EP_USERNAME = new EntityPropertyMain<>(NAME_EP_USERNAME, TypePrimitive.EDM_STRING);
-    public static final EntityPropertyMain<TimeInstant> EP_USERPASS = new EntityPropertyMain<>(NAME_EP_USERPASS, TypePrimitive.EDM_STRING);
+    public static final EntityPropertyMain<Boolean> EP_PUBLIC = new EntityPropertyMain<>(NAME_EP_PUBLIC, TypePrimitive.EDM_BOOLEAN);
+    public static final EntityPropertyMain<Boolean> EP_RESTRICTED = new EntityPropertyMain<>(NAME_EP_RESTRICTED, TypePrimitive.EDM_BOOLEAN);
+    public static final EntityPropertyMain<String> EP_ROLENAME = new EntityPropertyMain<>(NAME_EP_ROLENAME, TypePrimitive.EDM_STRING);
+    public static final EntityPropertyMain<String> EP_USERNAME = new EntityPropertyMain<>(NAME_EP_USERNAME, TypePrimitive.EDM_STRING);
+    public static final EntityPropertyMain<String> EP_USERPASS = new EntityPropertyMain<>(NAME_EP_USERPASS, TypePrimitive.EDM_STRING);
 
     public final NavigationPropertyEntitySet npFeatureOfInterestGeneratedForLocations = new NavigationPropertyEntitySet(NAME_NP_GENERATEDFORLOCATIONS);
     public final NavigationPropertyEntitySet npFeatureOfInterestProjects = new NavigationPropertyEntitySet(NAME_PROJECTS);
@@ -149,14 +155,18 @@ public class SensorThingsV11Projects implements DataModel {
                 .registerProperty(npUserProjectRoleRole)
                 .registerProperty(npUserProjectRoleUser);
 
-        mr.getEntityTypeForName(NAME_DATASTREAM).registerProperty(EP_RESTRICTED);
+        mr.getEntityTypeForName(NAME_DATASTREAM)
+                .registerProperty(EP_RESTRICTED);
         mr.getEntityTypeForName(NAME_FEATUREOFINTEREST)
                 .registerProperty(EP_RESTRICTED)
-                .registerProperty(npFeatureOfInterestGeneratedForLocations);
+                .registerProperty(npFeatureOfInterestGeneratedForLocations)
+                .registerProperty(npFeatureOfInterestProjects);
         mr.getEntityTypeForName(NAME_LOCATION)
                 .registerProperty(EP_RESTRICTED)
                 .registerProperty(npLocationGeneratedFeature);
-        mr.getEntityTypeForName(NAME_THING).registerProperty(EP_RESTRICTED);
+        mr.getEntityTypeForName(NAME_THING)
+                .registerProperty(EP_RESTRICTED)
+                .registerProperty(npThingProjects);
     }
 
     @Override
