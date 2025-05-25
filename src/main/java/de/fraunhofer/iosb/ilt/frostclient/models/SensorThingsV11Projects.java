@@ -178,4 +178,73 @@ public class SensorThingsV11Projects implements DataModel {
         return mr;
     }
 
+    public Entity newUser() {
+        return new Entity(etUser);
+    }
+
+    public Entity newUser(String username, String password) {
+        return newUser()
+                .setProperty(EP_USERNAME, username)
+                .setProperty(EP_USERPASS, password);
+    }
+
+    public Entity newRole() {
+        return new Entity(etRole);
+    }
+
+    public Entity newRole(String rolename, String description) {
+        return newRole()
+                .setProperty(EP_ROLENAME, rolename)
+                .setProperty(EP_DESCRIPTION, description);
+    }
+
+    public Entity newRole(String rolename, String description, MapValue properties) {
+        return newRole(rolename, description)
+                .setProperty(EP_PROPERTIES, properties);
+    }
+
+    public Entity newRole(String rolename, String description, Map<String, Object> properties) {
+        return newRole(rolename, description, new MapValue(properties));
+    }
+
+    public Entity newProject() {
+        return new Entity(etProject);
+    }
+
+    public Entity newProject(String projectname, String description) {
+        return newProject()
+                .setProperty(EP_NAME, projectname)
+                .setProperty(EP_DESCRIPTION, description);
+    }
+
+    public Entity newProject(String rolename, String description, MapValue properties) {
+        return newProject(rolename, description)
+                .setProperty(EP_PROPERTIES, properties);
+    }
+
+    public Entity newProject(String rolename, String description, Map<String, Object> properties) {
+        return newProject(rolename, description, new MapValue(properties));
+    }
+
+    public Entity newUserProjectRole() {
+        return new Entity(etUserProjectRole);
+    }
+
+    public Entity newUserProjectRole(Object... pk) {
+        return newUserProjectRole()
+                .setPrimaryKeyValues(PkValue.of(pk));
+    }
+
+    public Entity newUserProjectRole(PkValue pk) {
+        return newUserProjectRole()
+                .setPrimaryKeyValues(pk);
+    }
+
+    public Entity newUserProjectRole(Entity user, Entity project, Entity role) {
+        return newUserProjectRole()
+                .setProperty(npUserProjectRoleUser, user)
+                .setProperty(npUserProjectRoleProject, project)
+                .setProperty(npUserProjectRoleRole, role);
+    }
+
 }
