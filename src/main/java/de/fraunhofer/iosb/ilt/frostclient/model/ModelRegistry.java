@@ -167,9 +167,9 @@ public class ModelRegistry {
         return this;
     }
 
-    public synchronized void initFinalise() {
+    public synchronized ModelRegistry initFinalise() {
         if (initialised) {
-            return;
+            return this;
         }
         LOGGER.info("Finalising {} EntityTypes.", entityTypes.size());
         for (EntityType type : entityTypes) {
@@ -179,6 +179,7 @@ public class ModelRegistry {
             }
         }
         initialised = true;
+        return this;
     }
 
     public boolean isInitialised() {
