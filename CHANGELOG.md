@@ -1,8 +1,11 @@
 # Changelog
 
-## Version 2.29-SNAPSHOT
+## Version 2.29
 
 **Updates**
+* Added entity creation methods for Projects plugin.
+* Fixed data model for Projects plugin.
+* Made ModelRegistry.initFinalise fluent.
 
 
 ## Version 2.28
