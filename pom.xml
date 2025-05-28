@@ -56,7 +56,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <root.basedir>${project.basedir}</root.basedir>
 
-        <version.Configurable>0.36</version.Configurable>
+        <version.Configurable>0.37</version.Configurable>
 
         <version.commons-io>2.19.0</version.commons-io>
         <version.commons-lang3>3.17.0</version.commons-lang3>
@@ -77,10 +77,10 @@
         <version.maven.plugin.jacoco>0.8.13</version.maven.plugin.jacoco>
         <version.maven.plugin.javadoc>3.11.2</version.maven.plugin.javadoc>
         <version.maven.plugin.source>3.3.1</version.maven.plugin.source>
-        <version.maven.plugin.spotless>2.44.4</version.maven.plugin.spotless>
+        <version.maven.plugin.spotless>2.44.5</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.5.3</version.maven.plugin.surefire>
 
-        <version.mockito>5.17.0</version.mockito>
+        <version.mockito>5.18.0</version.mockito>
         <version.paho>1.2.5</version.paho>
         <version.reflections>0.10.2</version.reflections>
         <version.settings>1.0</version.settings>
