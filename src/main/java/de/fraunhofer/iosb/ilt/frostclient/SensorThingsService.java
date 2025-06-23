@@ -109,6 +109,11 @@ public class SensorThingsService {
         @Override
         public void connectComplete(boolean reconnect, String serverURI) {
             LOGGER.info("MQTT connection established");
+            try {
+                mqttResubscribe();
+            } catch (MqttException ex) {
+                LOGGER.error("Failed to resubscribe to topics after connect.", ex);
+            }
         }
 
         @Override
