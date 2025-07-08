@@ -674,6 +674,7 @@ public class SensorThingsService {
         for (MqttSubscription sub : mqttSubscriptions.getOrDefault(topic, Collections.emptySet())) {
             try {
                 Entity entity = jsonReader.parseEntity(sub.getReturnType(), message.toString());
+                entity.setService(this);
                 Predicate<Entity> filter = sub.getFilter();
                 if (filter == null || filter.test(entity)) {
                     sub.getHandler().accept(entity);

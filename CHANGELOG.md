@@ -3,6 +3,8 @@
 ## Version 2.30-SNAPSHOT
 
 **Updates**
+* Fixed entities received over MQTT not having a service set.
+* Added resubscribe after reconnect.
 
 
 ## Version 2.29
