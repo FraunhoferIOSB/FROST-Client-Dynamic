@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 2.30-SNAPSHOT
+## Version 2.30
 
 **Updates**
 * Fixed entities received over MQTT not having a service set.
