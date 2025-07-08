@@ -23,11 +23,11 @@
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties;
-import de.fraunhofer.iosb.ilt.frostclient.utils.EntityCacheDynamic.PropertyExtractor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,13 +74,18 @@ public class CacheCollection {
         if (caches.containsKey(et.getEntityName())) {
             throw new IllegalStateException("CacheCollection already contains a cache for " + et.getEntityName());
         }
-        final PropertyExtractor<String, Entity> nameExtractor = createNameExtractor(et);
-        final PropertyExtractor<String, String> filterFromName = createFilterFromName();
-        var ec = new EntityCacheDynamic<String>(service.dao(et))
-                .setLocalIdExtractor(nameExtractor)
-                .setFilterFromlocalId(filterFromName);
+        var ec = createNameCache(et, service.dao(et));
         caches.put(et.getEntityName(), ec);
         return this;
+    }
+
+    public static EntityCacheDynamic<String> createNameCache(final EntityType et, Dao dao) {
+        final PropertyExtractor<String, Entity> nameExtractor = CacheCollection.createNameExtractor(et);
+        final PropertyExtractor<String, String> filterFromName = PropertyExtractor.createFilterFromName();
+        var ec = new EntityCacheDynamic<String>(dao)
+                .setLocalIdExtractor(nameExtractor)
+                .setFilterFromlocalId(filterFromName);
+        return ec;
     }
 
     public static PropertyExtractor<String, Entity> createLocalIdExtractor(final EntityType et, String localIdKey) {
@@ -107,12 +112,8 @@ public class CacheCollection {
         return nameExtractor;
     }
 
-    private PropertyExtractor<String, String> createFilterFromLocalId() {
+    public PropertyExtractor<String, String> createFilterFromLocalId() {
         return localId -> "properties/" + defaultLocalIdKey + " eq " + StringHelper.quoteForUrl(localId) + "";
-    }
-
-    private PropertyExtractor<String, String> createFilterFromName() {
-        return name -> "name eq " + StringHelper.quoteForUrl(name) + "";
     }
 
     /**

@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
-import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
@@ -77,10 +76,6 @@ public class EntityCacheDynamic<U> {
     private Dao dao;
 
     private DuplicateRule duplicateRule = DuplicateRule.ERROR;
-
-    public EntityCacheDynamic(EntityType et) {
-        this.entityType = et;
-    }
 
     public EntityCacheDynamic(Dao dao) {
         this.dao = dao;
@@ -168,16 +163,20 @@ public class EntityCacheDynamic<U> {
         return entitiesByLocalId.isEmpty();
     }
 
-    public int load(BaseDao dao, String filter) throws ServiceFailureException {
-        return load(dao, filter, "", "");
+    public int load() throws ServiceFailureException {
+        return load(null);
     }
 
-    public int load(BaseDao dao, String filter, String select, String expand) throws ServiceFailureException {
+    public int load(String filter) throws ServiceFailureException {
+        return load(filter, null, null);
+    }
+
+    public int load(String filter, String select, String expand) throws ServiceFailureException {
         final Query query = dao.query();
-        if (!select.isEmpty()) {
+        if (!StringHelper.isNullOrEmpty(select)) {
             query.select(select);
         }
-        if (!expand.isEmpty()) {
+        if (!StringHelper.isNullOrEmpty(expand)) {
             query.expand(expand);
         }
         if (!StringHelper.isNullOrEmpty(filter)) {
@@ -230,9 +229,17 @@ public class EntityCacheDynamic<U> {
         return this;
     }
 
+    public Dao getDao() {
+        return dao;
+    }
+
     public EntityCacheDynamic<U> setDao(Dao dao) {
         this.dao = dao;
         return this;
+    }
+
+    public PropertyExtractor<U, Entity> getLocalIdExtractor() {
+        return localIdExtractor;
     }
 
     public EntityCacheDynamic<U> setLocalIdExtractor(PropertyExtractor<U, Entity> localIdExtractor) {
@@ -240,9 +247,17 @@ public class EntityCacheDynamic<U> {
         return this;
     }
 
+    public PropertyExtractor<String, U> getFilterFromlocalId() {
+        return filterFromlocalId;
+    }
+
     public EntityCacheDynamic<U> setFilterFromlocalId(PropertyExtractor<String, U> filterFromlocalId) {
         this.filterFromlocalId = filterFromlocalId;
         return this;
+    }
+
+    public String getExpand() {
+        return expand;
     }
 
     public EntityCacheDynamic<U> setExpand(String expand) {
@@ -250,14 +265,13 @@ public class EntityCacheDynamic<U> {
         return this;
     }
 
+    public DuplicateRule getDuplicateRule() {
+        return duplicateRule;
+    }
+
     public EntityCacheDynamic<U> setDuplicateRule(DuplicateRule duplicateRule) {
         this.duplicateRule = duplicateRule;
         return this;
-    }
-
-    public static interface PropertyExtractor<U, T> {
-
-        public U extractFrom(T input);
     }
 
 }
