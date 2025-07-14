@@ -9,7 +9,7 @@
 
     <name>FROST-Client-Dynamic</name>
     <description>A client implementation of the OGC SensorThings API with a dynamic data model.</description>
-    <url>https://github.com/FraunhoferIOSB/FROST-Client</url>
+    <url>https://github.com/FraunhoferIOSB/FROST-Client-Dynamic</url>
     <inceptionYear>2023</inceptionYear>
 
     <organization>
@@ -40,8 +40,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</connection>
-        <developerConnection>scm:git:git@github.com:hylkevds/FROST-Client-Dynamic.git</developerConnection>
+        <connection>scm:git:git@github.com:FraunhoferIOSB/FROST-Client-Dynamic.git</connection>
+        <developerConnection>scm:git:git@github.com:FraunhoferIOSB/FROST-Client-Dynamic.git</developerConnection>
         <tag>HEAD</tag>
         <url>https://github.com/FraunhoferIOSB/FROST-Client-Dynamic</url>
     </scm>
