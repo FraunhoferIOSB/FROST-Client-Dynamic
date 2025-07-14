@@ -3,6 +3,7 @@
 ## Version 2.31-SNAPSHOT
 
 **Updates**
+* Added SWE-Common DataArray class.
 
 
 ## Version 2.30
