@@ -141,4 +141,12 @@ public class CacheCollection {
         return cache;
     }
 
+    /**
+     * Calls clear on all the caches.
+     */
+    public void clear() {
+        for (var cache : caches.values()) {
+            cache.clear();
+        }
+    }
 }
