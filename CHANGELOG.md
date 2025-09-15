@@ -1,8 +1,10 @@
 # Changelog
 
-## Version 2.31-SNAPSHOT
+## Version 2.31
 
 **Updates**
+* Bumped Dependencies.
+* Added clear() method to CacheCollection.
 * Added SWE-Common DataArray class.
 
 
