@@ -58,5 +58,8 @@ jobs:
 
 
     - name: Build with Maven
+      env:
+        OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
+        OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
       run: mvn -B install --file pom.xml -DautoUpdate=false --settings scripts/maven-ci-settings.xml
 

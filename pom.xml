@@ -222,6 +222,7 @@
                     <failBuildOnCVSS>8</failBuildOnCVSS>
                     <nvdApiServerId>NIST_NVD_API</nvdApiServerId>
                     <nvdMaxRetryCount>20</nvdMaxRetryCount>
+                    <ossIndexServerId>ossindex</ossIndexServerId>
                 </configuration>
                 <executions>
                     <execution>
