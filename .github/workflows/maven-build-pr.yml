@@ -1,11 +1,9 @@
 name: Maven Build
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-      - develop
-      - develop-*
   workflow_dispatch:
 
 jobs:
@@ -33,29 +31,6 @@ jobs:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-maven
-
-    - name: Restore CVD Database from Cache
-      uses: actions/cache/restore@v4
-      with:
-        path: |
-          ~/.m2/repository/org/owasp/dependency-check-data
-        key: ${{ runner.os }}-maven-owasp-cvedb-${{ steps.get-date.outputs.date }}
-        restore-keys: ${{ runner.os }}-maven-owasp-cvedb
-
-    - name: Update CVD Database
-      continue-on-error: true
-      env:
-        NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY }}
-      run: |
-        mvn -B -DnvdApiDelay=6000 --settings scripts/maven-ci-settings.xml org.owasp:dependency-check-maven:update-only
-
-    - name: Save CVD Database to Cache
-      uses: actions/cache/save@v4
-      with:
-        path: |
-          ~/.m2/repository/org/owasp/dependency-check-data
-        key: ${{ runner.os }}-maven-owasp-cvedb-${{ steps.get-date.outputs.date }}
-
 
     - name: Build with Maven
       env:
