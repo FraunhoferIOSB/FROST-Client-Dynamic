@@ -49,9 +49,10 @@ public interface Dao {
      * Create a new entity.
      *
      * @param entity the entity to create
+     * @return The entity itself, for chaining calls.
      * @throws ServiceFailureException the operation failed
      */
-    void create(Entity entity) throws ServiceFailureException;
+    Entity create(Entity entity) throws ServiceFailureException;
 
     /**
      * Find an entity.

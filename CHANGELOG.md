@@ -3,6 +3,7 @@
 ## Version 2.32-SNAPSHOT
 
 **Updates**
+* Updated create methods to return the new Entity.
 
 
 ## Version 2.31

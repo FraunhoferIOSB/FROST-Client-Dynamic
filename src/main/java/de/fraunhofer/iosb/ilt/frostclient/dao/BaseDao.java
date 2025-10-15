@@ -108,7 +108,7 @@ public class BaseDao implements Dao {
     }
 
     @Override
-    public void create(Entity entity) throws ServiceFailureException {
+    public Entity create(Entity entity) throws ServiceFailureException {
         URIBuilder uriBuilder;
         String json;
         HttpPost httpPost;
@@ -136,6 +136,7 @@ public class BaseDao implements Dao {
             String stringPkValue = newLocation.substring(pos1, pos2);
             entity.setPrimaryKeyValues(ParserUtils.tryToParse(stringPkValue));
             entity.setService(service);
+            return entity;
         } catch (IOException exc) {
             throw new ServiceFailureException("Failed to create entity.", exc);
         }

@@ -441,10 +441,11 @@ public class SensorThingsService {
      * the entity in the Service and it will be linked to the Service.
      *
      * @param entity The entity to create in the service.
+     * @return The entity itself, for chaining calls.
      * @throws ServiceFailureException in case the server rejects the POST.
      */
-    public void create(Entity entity) throws ServiceFailureException {
-        new BaseDao(this, entity.getEntityType()).create(entity);
+    public Entity create(Entity entity) throws ServiceFailureException {
+        return new BaseDao(this, entity.getEntityType()).create(entity);
     }
 
     /**
