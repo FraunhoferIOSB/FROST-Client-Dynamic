@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.32-SNAPSHOT
+## Version 2.32
 
 **Updates**
+* Bumped Dependencies.
 * Updated V2 model implementation.
 * Updated create methods to return the new Entity.
 * Added that Entities can create their own selfLink, both absolute and relative.
