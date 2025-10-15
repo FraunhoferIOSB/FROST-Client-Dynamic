@@ -41,6 +41,8 @@ public class CommonProperties {
     // STA-Common
     public static final String NAME_DATASTREAM = "Datastream";
     public static final String NAME_DATASTREAMS = "Datastreams";
+    public static final String NAME_DATASTREAMS_PROXIMATE = "DatastreamsProximate";
+    public static final String NAME_DATASTREAMS_ULTIMATE = "DatastreamsUltimate";
     public static final String NAME_FEATURE = "Feature";
     public static final String NAME_FEATURES = "Features";
     public static final String NAME_FEATURE_TYPE = "FeatureType";

@@ -30,6 +30,8 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAM;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAMS;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAMS_PROXIMATE;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAMS_ULTIMATE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURES;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURE_TYPE;
@@ -69,7 +71,7 @@ import java.util.Map;
 import org.geojson.GeoJsonObject;
 
 /**
- * The core SensorThings v1.1 Sensing data model.
+ * The core SensorThings v2.0 Sensing data model.
  */
 public class SensorThingsV20Core implements DataModel {
 
@@ -109,10 +111,12 @@ public class SensorThingsV20Core implements DataModel {
     public final NavigationPropertyEntity npDatastreamSensor = new NavigationPropertyEntity(NAME_SENSOR, npSensorDatastreams);
     public final NavigationPropertyEntity npDatastreamThing = new NavigationPropertyEntity(NAME_THING, npThingDatastreams);
     public final NavigationPropertyEntity npDatastreamUltimateFoi = new NavigationPropertyEntity(NAME_NP_ULTIMATEFOI);
+    public final NavigationPropertyEntity npDatastreamProximateFoi = new NavigationPropertyEntity(NAME_NP_PROXIMATEFOI);
 
     public final NavigationPropertyEntitySet npFeatureFeatureTypes = new NavigationPropertyEntitySet(NAME_FEATURE_TYPES);
     public final NavigationPropertyEntitySet npFeatureObservations = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npObservationProximateFoi);
-    public final NavigationPropertyEntitySet npFeatureDatastreams = new NavigationPropertyEntitySet(NAME_DATASTREAMS, npDatastreamUltimateFoi);
+    public final NavigationPropertyEntitySet npFeatureDatastreamsProximate = new NavigationPropertyEntitySet(NAME_DATASTREAMS_PROXIMATE, npDatastreamProximateFoi);
+    public final NavigationPropertyEntitySet npFeatureDatastreamsUltimate = new NavigationPropertyEntitySet(NAME_DATASTREAMS_ULTIMATE, npDatastreamUltimateFoi);
 
     public final NavigationPropertyEntitySet npFeatureTypeFeatures = new NavigationPropertyEntitySet(NAME_FEATURES, npFeatureFeatureTypes);
 
@@ -171,6 +175,7 @@ public class SensorThingsV20Core implements DataModel {
                 .registerProperty(EP_RESULTTIMEDS)
                 .registerProperty(npDatastreamSensor)
                 .registerProperty(npDatastreamThing)
+                .registerProperty(npDatastreamProximateFoi)
                 .registerProperty(npDatastreamUltimateFoi)
                 .registerProperty(npDatastreamObservedproperties)
                 .registerProperty(npDatastreamObservations);
@@ -183,7 +188,8 @@ public class SensorThingsV20Core implements DataModel {
                 .registerProperty(EP_FEATURE)
                 .registerProperty(EP_PROPERTIES)
                 .registerProperty(npFeatureFeatureTypes)
-                .registerProperty(npFeatureDatastreams)
+                .registerProperty(npFeatureDatastreamsProximate)
+                .registerProperty(npFeatureDatastreamsUltimate)
                 .registerProperty(npFeatureObservations);
 
         etFeatureType
