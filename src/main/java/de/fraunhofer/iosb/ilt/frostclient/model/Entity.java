@@ -37,6 +37,7 @@ import de.fraunhofer.iosb.ilt.frostclient.query.Expand.ExpandItem;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
+import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -126,7 +127,22 @@ public class Entity implements ComplexValue<Entity> {
     }
 
     public String getSelfLink() {
-        return selfLink;
+        return getSelfLink(true);
+    }
+
+    public String getSelfLink(boolean absolute) {
+        if (selfLink != null && selfLink.startsWith("http") == absolute) {
+            return selfLink;
+        }
+        if (absolute) {
+            try {
+                return service.getFullPath(entityType) + "(" + StringHelper.formatKeyValuesForUrl(entityType.getPrimaryKey(), getPrimaryKeyValues()) + ")";
+            } catch (ServiceFailureException ex) {
+                throw new IllegalStateException("Failed to generate selfLink", ex);
+            }
+        } else {
+            return entityType.mainSet + "(" + StringHelper.formatKeyValuesForUrl(entityType.getPrimaryKey(), getPrimaryKeyValues()) + ")";
+        }
     }
 
     public Entity setSelfLink(String selfLink) {

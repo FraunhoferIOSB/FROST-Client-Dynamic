@@ -4,6 +4,7 @@
 
 **Updates**
 * Updated create methods to return the new Entity.
+* Added that Entities can create their own selfLink, both absolute and relative.
 
 
 ## Version 2.31
