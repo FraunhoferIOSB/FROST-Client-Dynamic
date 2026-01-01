@@ -153,7 +153,7 @@ public class ParserUtils {
                 } catch (JsonProcessingException ex) {
                     // Not GeoJSON
                 }
-                return simpleObjectMapper.treeToValue(valueTree, String.class);
+                return simpleObjectMapper.treeToValue(valueTree, Object.class);
             }
         };
     }

@@ -3,6 +3,7 @@
 ## Version 2.33-SNAPSHOT
 
 **Updates**
+* Fixed exception on invalid GeoJSON.
 
 
 ## Version 2.32
