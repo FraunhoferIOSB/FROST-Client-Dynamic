@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.33-SNAPSHOT
+## Version 2.33
 
 **Updates**
+* Bumped Dependencies.
 * Fixed exception on invalid GeoJSON.
 
 
