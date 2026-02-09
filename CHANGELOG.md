@@ -3,6 +3,9 @@
 ## Version 2.34-SNAPSHOT
 
 **Updates**
+* Updated V2 model:
+  * Changed Datastream -> UltimateFeaturesOfInterest to many-to-many.
+  * Added runLog (Object) to Task.
 
 
 ## Version 2.33

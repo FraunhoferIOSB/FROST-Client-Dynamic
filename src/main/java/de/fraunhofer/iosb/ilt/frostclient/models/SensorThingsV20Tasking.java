@@ -80,6 +80,7 @@ public class SensorThingsV20Tasking implements DataModel {
 
     public static final String NAME_EP_TASKINGPARAMETERS = SensorThingsV11Tasking.NAME_EP_TASKINGPARAMETERS;
     public static final String NAME_EP_RUNTIME = "runTime";
+    public static final String NAME_EP_RUNLOG = "runLog";
     public static final String NAME_EP_STATUS = "status";
     public static final String NAME_EP_CREATIONTIME = SensorThingsV11Tasking.NAME_EP_CREATIONTIME;
     public static final String NAME_NP_ACTUATABLEPROPERTIES = "actuatableProperties";
@@ -88,13 +89,14 @@ public class SensorThingsV20Tasking implements DataModel {
 
     public static final EntityPropertyMain<TimeInstant> EP_CREATIONTIME = SensorThingsV11Tasking.EP_CREATIONTIME;
     public static final EntityPropertyMain<TimeValue> EP_RUNTIME = new EntityPropertyMain<>(NAME_EP_RUNTIME, TypeComplex.STA_TIMEVALUE);
+    public static final EntityPropertyMain<TimeValue> EP_RUNLOG = new EntityPropertyMain<>(NAME_EP_RUNLOG, TypeComplex.STA_MAP);
     public static final EntityPropertyMain<Status> EP_STATUS = new EntityPropertyMain<>(NAME_EP_STATUS, PT_STATUS);
     public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS_TC = SensorThingsV11Tasking.EP_TASKINGPARAMETERS_TC;
     public static final EntityPropertyMain<MapValue> EP_TASKINGPARAMETERS_T = SensorThingsV11Tasking.EP_TASKINGPARAMETERS_T;
 
     public final NavigationPropertyEntity npTaskingcapActuator = new NavigationPropertyEntity(NAME_ACTUATOR);
     public final NavigationPropertyEntity npTaskingcapThing = new NavigationPropertyEntity(NAME_THING);
-    public final NavigationPropertyEntity npTaskingcapUltimateFeature = new NavigationPropertyEntity(SensorThingsV20Core.NAME_NP_ULTIMATEFOI);
+    public final NavigationPropertyEntitySet npTaskingcapUltimateFeatures = new NavigationPropertyEntitySet(SensorThingsV20Core.NAME_NP_ULTIMATEFOIS);
     public final NavigationPropertyEntitySet npTaskingcapActuatableProperties = new NavigationPropertyEntitySet(NAME_NP_ACTUATABLEPROPERTIES);
     public final NavigationPropertyEntitySet npTaskingcapTasks = new NavigationPropertyEntitySet(NAME_TASKS);
 
@@ -103,7 +105,7 @@ public class SensorThingsV20Tasking implements DataModel {
 
     public final NavigationPropertyEntitySet npActuatorTaskingcaps = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapActuator);
     public final NavigationPropertyEntitySet npFeatureTasks = new NavigationPropertyEntitySet(NAME_TASKS, npTaskProximateFeature);
-    public final NavigationPropertyEntitySet npFeatureTaskingcaps = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapUltimateFeature);
+    public final NavigationPropertyEntitySet npFeatureTaskingcaps = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapUltimateFeatures);
     public final NavigationPropertyEntitySet npObspropTaskingcaps = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapActuatableProperties);
     public final NavigationPropertyEntitySet npThingTaskingcapabilities = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapThing);
 
@@ -156,7 +158,7 @@ public class SensorThingsV20Tasking implements DataModel {
                 .registerProperty(npTaskingcapActuator)
                 .registerProperty(npTaskingcapTasks)
                 .registerProperty(npTaskingcapThing)
-                .registerProperty(npTaskingcapUltimateFeature);
+                .registerProperty(npTaskingcapUltimateFeatures);
 
         mr.getEntityTypeForName(NAME_THING)
                 .registerProperty(npThingTaskingcapabilities);
