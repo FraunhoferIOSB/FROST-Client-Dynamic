@@ -27,12 +27,12 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchem
 import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_MINIMUM;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * SWE Class AllowedValues constraint implementation.

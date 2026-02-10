@@ -3,6 +3,7 @@
 ## Version 2.34-SNAPSHOT
 
 **Updates**
+* Updated Jackson to 3.x
 * Updated V2 model:
   * Changed Datastream -> UltimateFeaturesOfInterest to many-to-many.
   * Added runLog (Object) to Task.

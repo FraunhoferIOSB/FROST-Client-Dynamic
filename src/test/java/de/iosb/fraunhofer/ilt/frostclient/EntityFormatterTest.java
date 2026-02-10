@@ -33,9 +33,6 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.t
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
@@ -61,6 +58,12 @@ import org.geojson.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public class EntityFormatterTest {
 
@@ -453,12 +456,16 @@ public class EntityFormatterTest {
     }
 
     private boolean jsonEqual(String string1, String string2) {
-        ObjectMapper mapper = new ObjectMapper().enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        ObjectMapper mapper = JsonMapper.builder()
+                .disable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+                .build();
         try {
             JsonNode json1 = mapper.readTree(string1);
             JsonNode json2 = mapper.readTree(string2);
             return json1.equals(json2);
-        } catch (IOException ex) {
+        } catch (JacksonException ex) {
             Logger.getLogger(EntityFormatterTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;

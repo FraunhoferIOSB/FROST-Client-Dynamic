@@ -24,19 +24,6 @@ package de.fraunhofer.iosb.ilt.frostclient.utils;
 
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking.TYPE_REFERENCE_DATARECORD;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
@@ -47,9 +34,20 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
-import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.geojson.GeoJsonObject;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.core.TreeNode;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 public class ParserUtils {
 
@@ -111,28 +109,28 @@ public class ParserUtils {
         return Boolean.parseBoolean(data.toString());
     }
 
-    public static <T> JsonDeserializer<T> getDefaultDeserializer(TypeReference<T> tr) {
-        return new JsonDeserializer<T>() {
+    public static <T> ValueDeserializer<T> getDefaultDeserializer(TypeReference<T> tr) {
+        return new ValueDeserializer<T>() {
             @Override
-            public T deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
+            public T deserialize(JsonParser jp, DeserializationContext dc) throws JacksonException {
                 return jp.readValueAs(tr);
             }
         };
     }
 
-    public static <T> JsonDeserializer<T> getDefaultDeserializer(Class<T> clazz) {
-        return new JsonDeserializer<T>() {
+    public static <T> ValueDeserializer<T> getDefaultDeserializer(Class<T> clazz) {
+        return new ValueDeserializer<T>() {
             @Override
-            public T deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
+            public T deserialize(JsonParser jp, DeserializationContext dc) throws JacksonException {
                 return jp.readValueAs(clazz);
             }
         };
     }
 
-    public static JsonDeserializer<DataRecord> getDataRecordDeserializer() {
-        return new JsonDeserializer<DataRecord>() {
+    public static ValueDeserializer<DataRecord> getDataRecordDeserializer() {
+        return new ValueDeserializer<DataRecord>() {
             @Override
-            public DataRecord deserialize(JsonParser jp, DeserializationContext dc) throws IOException, JacksonException {
+            public DataRecord deserialize(JsonParser jp, DeserializationContext dc) throws JacksonException {
                 TreeNode tree = jp.readValueAsTree();
                 if (tree.size() == 0) {
                     return null;
@@ -142,15 +140,15 @@ public class ParserUtils {
         };
     }
 
-    public static JsonDeserializer<Object> getLocationDeserializer() {
-        return new JsonDeserializer<Object>() {
+    public static ValueDeserializer<Object> getLocationDeserializer() {
+        return new ValueDeserializer<Object>() {
             @Override
-            public Object deserialize(JsonParser jp, DeserializationContext dc) throws IOException {
+            public Object deserialize(JsonParser jp, DeserializationContext dc) throws JacksonException {
                 final ObjectMapper simpleObjectMapper = SimpleJsonMapper.getSimpleObjectMapper();
                 final TreeNode valueTree = jp.readValueAsTree();
                 try {
                     return simpleObjectMapper.treeToValue(valueTree, GeoJsonObject.class);
-                } catch (JsonProcessingException ex) {
+                } catch (JacksonException ex) {
                     // Not GeoJSON
                 }
                 return simpleObjectMapper.treeToValue(valueTree, Object.class);
@@ -158,20 +156,20 @@ public class ParserUtils {
         };
     }
 
-    public static JsonDeserializer<ComplexValue> getComplexTypeDeserializer(TypeComplex type) {
+    public static ValueDeserializer<ComplexValue> getComplexTypeDeserializer(TypeComplex type) {
         return new ComplexTypeDeserializer(type);
     }
 
-    public static JsonSerializer<Object> getDefaultSerializer() {
-        return new JsonSerializer<Object>() {
+    public static ValueSerializer<Object> getDefaultSerializer() {
+        return new ValueSerializer<Object>() {
             @Override
-            public void serialize(Object t, JsonGenerator jg, SerializerProvider sp) throws IOException {
+            public void serialize(Object t, JsonGenerator jg, SerializationContext ctx) throws JacksonException {
                 jg.writePOJO(t);
             }
         };
     }
 
-    private static class ComplexTypeDeserializer extends JsonDeserializer<ComplexValue> {
+    private static class ComplexTypeDeserializer extends ValueDeserializer<ComplexValue> {
 
         private final TypeComplex type;
 
@@ -180,21 +178,21 @@ public class ParserUtils {
         }
 
         @Override
-        public ComplexValue deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+        public ComplexValue deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
             ComplexValue result = type.instantiate();
             JsonToken currentToken = parser.currentToken();
             if (currentToken == JsonToken.VALUE_NULL) {
                 return null;
             }
             currentToken = parser.nextToken();
-            while (currentToken == JsonToken.FIELD_NAME) {
-                String fieldName = parser.getCurrentName();
+            while (currentToken == JsonToken.PROPERTY_NAME) {
+                String fieldName = parser.currentName();
                 parser.nextValue();
                 Property property = type.getProperty(fieldName);
                 if (property == null) {
                     if (!type.isOpenType()) {
                         final String message = "Unknown field: " + fieldName + " on " + type.getName() + " expected one of: " + type.getPropertiesByName().keySet();
-                        throw new UnrecognizedPropertyException(parser, message, parser.getCurrentLocation(), TypeComplex.class, fieldName, null);
+                        throw new UnrecognizedPropertyException(parser, message, parser.currentLocation(), TypeComplex.class, fieldName, null);
                     } else {
                         result.setProperty(fieldName, parser.readValueAsTree());
                     }
@@ -207,7 +205,7 @@ public class ParserUtils {
             return result;
         }
 
-        private void deserializeProperty(JsonParser parser, DeserializationContext ctxt, Property property, ComplexValue result) throws IOException {
+        private void deserializeProperty(JsonParser parser, DeserializationContext ctxt, Property property, ComplexValue result) throws JacksonException {
             if (property instanceof EntityPropertyMain epm) {
                 deserializeEntityProperty(parser, ctxt, epm, result);
             } else if (property instanceof NavigationProperty) {
@@ -215,8 +213,8 @@ public class ParserUtils {
             }
         }
 
-        private void deserializeEntityProperty(JsonParser parser, DeserializationContext ctxt, EntityPropertyMain property, ComplexValue result) throws IOException {
-            final JsonDeserializer deserializer = property.getType().getDeserializer();
+        private void deserializeEntityProperty(JsonParser parser, DeserializationContext ctxt, EntityPropertyMain property, ComplexValue result) throws JacksonException {
+            final ValueDeserializer deserializer = property.getType().getDeserializer();
             if (deserializer == null) {
                 Object value = parser.readValueAs(Object.class);
                 result.setProperty(property, value);

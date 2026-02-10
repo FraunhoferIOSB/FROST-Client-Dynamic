@@ -32,13 +32,14 @@ import static de.fraunhofer.iosb.ilt.frostclient.model.csdl.CsdlPropertyNavigati
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.DatabindContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
 import java.io.Writer;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindContext;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.annotation.JsonTypeIdResolver;
+import tools.jackson.databind.jsontype.impl.TypeIdResolverBase;
+import tools.jackson.databind.type.TypeFactory;
 
 /**
  * Interface for schema items.
@@ -78,32 +79,32 @@ public interface CsdlSchemaItem {
         }
 
         @Override
-        public JavaType typeFromId(DatabindContext context, String id) throws IOException {
+        public JavaType typeFromId(DatabindContext context, String id) throws JacksonException {
             if (id == null) {
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlPropertyEntity.class);
+                return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlPropertyEntity.class);
             }
 
             switch (id) {
                 case NAME_KIND_COMPLEXTYPE:
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlItemComplexType.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlItemComplexType.class);
                 case NAME_KIND_ENTITYCONTAINER:
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlItemEntityContainer.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlItemEntityContainer.class);
                 case NAME_KIND_ENTITYTYPE:
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlItemEntityType.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlItemEntityType.class);
                 case NAME_KIND_TYPEDEFINITION:
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlItemTypeDefinition.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlItemTypeDefinition.class);
                 case NAME_KIND_NAVIGATIONPROPERTY:
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlPropertyNavigation.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlPropertyNavigation.class);
                 case NAME_KIND_ENTITYPROPERTY:
                 case "":
-                    return TypeFactory.defaultInstance().constructSpecializedType(baseType, CsdlPropertyEntity.class);
+                    return TypeFactory.createDefaultInstance().constructSpecializedType(baseType, CsdlPropertyEntity.class);
                 default:
                     throw new IllegalArgumentException("Unknown $kind: " + id);
             }
         }
 
         @Override
-        public String idFromValue(Object value) {
+        public String idFromValue(DatabindContext ctxt, Object value) {
             if (value instanceof CsdlSchemaItem si) {
                 return si.getKind();
             }
@@ -111,7 +112,7 @@ public interface CsdlSchemaItem {
         }
 
         @Override
-        public String idFromValueAndType(Object value, Class<?> suggestedType) {
+        public String idFromValueAndType(DatabindContext ctxt, Object value, Class<?> suggestedType) {
             if (value instanceof CsdlSchemaItem si) {
                 return si.getKind();
             }

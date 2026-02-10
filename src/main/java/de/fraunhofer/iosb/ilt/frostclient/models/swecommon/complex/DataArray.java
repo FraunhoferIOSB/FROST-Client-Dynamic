@@ -22,11 +22,11 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * SWE Class DataArray.
@@ -91,8 +91,7 @@ public class DataArray extends AbstractDataComponent<DataArray, List<Object>> {
     @Override
     public boolean validate(JsonNode input) {
         if (input.isArray()) {
-            for (var it = input.values(); it.hasNext();) {
-                JsonNode item = it.next();
+            for (var item : input.values()) {
                 if (!elementType.validate(item)) {
                     return false;
                 }

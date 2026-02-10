@@ -22,14 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
@@ -42,6 +34,15 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import net.time4j.Moment;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 /**
  * Allows parsing of STA entities from JSON.
@@ -73,23 +74,24 @@ public class JsonReader {
      * @return The created object mapper.
      */
     private static ObjectMapper createObjectMapper(ModelRegistry modelRegistry) {
+        for (EntityType entityType : modelRegistry.getEntityTypes()) {
+            EntityDeserializer.getInstance(modelRegistry, entityType);
+        }
+        SimpleModule module = new SimpleModule()
+                .addDeserializer(TimeInstant.class, new TimeInstantDeserializer())
+                .addDeserializer(TimeInterval.class, new TimeIntervalDeserializer())
+                .addDeserializer(TimeValue.class, new TimeValueDeserializer())
+                .addDeserializer(Moment.class, new MomentDeserializer());
         ObjectMapper mapper = JsonMapper.builder()
+                .disable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
                 .enable(DeserializationFeature.USE_LONG_FOR_INTS)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+                .addModule(module)
                 .build();
 
-        SimpleModule module = new SimpleModule();
-        for (EntityType entityType : modelRegistry.getEntityTypes()) {
-            EntityDeserializer.getInstance(modelRegistry, entityType);
-        }
-        module.addDeserializer(TimeInstant.class, new TimeInstantDeserializer());
-        module.addDeserializer(TimeInterval.class, new TimeIntervalDeserializer());
-        module.addDeserializer(TimeValue.class, new TimeValueDeserializer());
-        module.addDeserializer(Moment.class, new MomentDeserializer());
-
-        mapper.registerModule(module);
         return mapper;
     }
 
@@ -138,16 +140,14 @@ public class JsonReader {
     }
 
     private Entity parseEntity(final JsonParser parser, EntityType entityType) throws IOException {
-        DefaultDeserializationContext dsc = (DefaultDeserializationContext) mapper.getDeserializationContext();
-        dsc = dsc.createInstance(mapper.getDeserializationConfig(), parser, mapper.getInjectableValues());
+        DeserializationContext dsc = mapper._deserializationContext();
         return EntityDeserializer.getInstance(modelRegistry, entityType)
                 .deserializeFull(parser, dsc);
     }
 
     public EntitySet parseEntitySet(EntityType entityType, String value) throws IOException {
         try (final JsonParser parser = mapper.createParser(value)) {
-            DefaultDeserializationContext dsc = (DefaultDeserializationContext) mapper.getDeserializationContext();
-            dsc = dsc.createInstance(mapper.getDeserializationConfig(), parser, mapper.getInjectableValues());
+            DeserializationContext dsc = mapper._deserializationContext();
             return EntitySetDeserializer.getInstance(modelRegistry, entityType)
                     .deserializeFull(parser, dsc);
         } catch (StackOverflowError err) {
@@ -157,8 +157,7 @@ public class JsonReader {
 
     public EntitySet parseEntitySet(EntityType entityType, Reader value) throws IOException {
         try (final JsonParser parser = mapper.createParser(value)) {
-            DefaultDeserializationContext dsc = (DefaultDeserializationContext) mapper.getDeserializationContext();
-            dsc = dsc.createInstance(mapper.getDeserializationConfig(), parser, mapper.getInjectableValues());
+            DeserializationContext dsc = mapper._deserializationContext();
             return EntitySetDeserializer.getInstance(modelRegistry, entityType)
                     .deserializeFull(parser, dsc);
         } catch (StackOverflowError err) {

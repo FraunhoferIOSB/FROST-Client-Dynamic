@@ -22,23 +22,24 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 /**
  * Deserialises top-level entity sets. Nested sets are handled separately.
  */
-public class EntitySetDeserializer extends JsonDeserializer<EntitySet> {
+public class EntitySetDeserializer extends ValueDeserializer<EntitySet> {
 
     private static final Map<ModelRegistry, Map<EntityType, EntitySetDeserializer>> instancePerModelAndType = new HashMap<>();
 
@@ -76,14 +77,14 @@ public class EntitySetDeserializer extends JsonDeserializer<EntitySet> {
     }
 
     @Override
-    public EntitySet deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    public EntitySet deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
         EntitySet result = new EntitySet(entityType);
 
         boolean failOnUnknown = ctxt.isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         JsonToken currentToken = parser.nextToken();
-        while (currentToken == JsonToken.FIELD_NAME) {
-            String fieldName = parser.getCurrentName();
+        while (currentToken == JsonToken.PROPERTY_NAME) {
+            String fieldName = parser.currentName();
             parser.nextValue();
             if (fieldName.endsWith("count")) {
                 result.setCount(parser.readValueAs(Long.class));
@@ -101,7 +102,7 @@ public class EntitySetDeserializer extends JsonDeserializer<EntitySet> {
         return result;
     }
 
-    private void deserialiseEntitySet(JsonParser parser, DeserializationContext ctxt, EntitySet targetSet) throws IOException {
+    private void deserialiseEntitySet(JsonParser parser, DeserializationContext ctxt, EntitySet targetSet) throws JacksonException {
         EntityDeserializer entityDeser = EntityDeserializer.getInstance(modelRegistry, targetSet.getEntityType());
         JsonToken curToken = parser.nextToken();
         while (curToken != null && curToken != JsonToken.END_ARRAY) {

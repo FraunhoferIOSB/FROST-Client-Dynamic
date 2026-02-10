@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.dao;
 
-import com.github.fge.jsonpatch.JsonPatchOperation;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
@@ -30,8 +29,8 @@ import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
+import jakarta.json.JsonPatch;
 import java.net.URI;
-import java.util.List;
 
 /**
  * CRUD operations for Entity Types.
@@ -99,7 +98,7 @@ public interface Dao {
      * @param patch The patch to apply to the entity.
      * @throws ServiceFailureException the operation failed
      */
-    void patch(Entity entity, List<JsonPatchOperation> patch) throws ServiceFailureException;
+    void patch(Entity entity, JsonPatch patch) throws ServiceFailureException;
 
     /**
      * Delete an entity.

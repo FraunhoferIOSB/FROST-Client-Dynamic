@@ -22,13 +22,13 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTimes;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * SWE Class TimeRange.
@@ -149,7 +149,7 @@ public class TimeRange extends AbstractRange<TimeRange, String> {
                 LOGGER.debug("Non-text value {} for TimeRange.", input);
                 return false;
             }
-            if (!constraint.isValid(item.asText(), uom)) {
+            if (!constraint.isValid(item.asString(), uom)) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;
             }

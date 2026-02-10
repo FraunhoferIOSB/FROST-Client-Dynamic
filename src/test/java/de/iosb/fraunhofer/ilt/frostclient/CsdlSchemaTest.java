@@ -22,9 +22,6 @@
  */
 package de.iosb.fraunhofer.ilt.frostclient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.CsdlDocument;
@@ -33,6 +30,9 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Tests for the CSDL Schema generation and parsing.
@@ -78,7 +78,7 @@ public class CsdlSchemaTest {
         Assertions.assertTrue(jsonEquals(schemaData, schemaDataRebuild));
     }
 
-    public boolean jsonEquals(String expectedJson, String actualJson) throws JsonProcessingException {
+    public boolean jsonEquals(String expectedJson, String actualJson) throws JacksonException {
         final ObjectMapper objectMapper = SimpleJsonMapper.getSimpleObjectMapper();
         final JsonNode tree1 = objectMapper.readTree(expectedJson);
         final JsonNode tree2 = objectMapper.readTree(actualJson);

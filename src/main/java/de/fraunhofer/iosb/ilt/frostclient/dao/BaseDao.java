@@ -22,8 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.dao;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.fge.jsonpatch.JsonPatchOperation;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
@@ -36,11 +34,11 @@ import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
+import jakarta.json.JsonPatch;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.Consts;
 import org.apache.http.Header;
@@ -56,6 +54,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
 
 /**
  * The implementation of a data access object.
@@ -116,7 +115,7 @@ public class BaseDao implements Dao {
             uriBuilder = new URIBuilder(getSetPath().toURI());
             json = JsonWriter.writeEntity(entity);
             httpPost = new HttpPost(uriBuilder.build());
-        } catch (URISyntaxException | JsonProcessingException ex) {
+        } catch (URISyntaxException | JacksonException ex) {
             throw new ServiceFailureException("Failed to create entity.", ex);
         }
 
@@ -190,7 +189,7 @@ public class BaseDao implements Dao {
             final URI uri = buildUri(entity.getPrimaryKeyValues());
             json = JsonWriter.writeEntity(entity);
             httpPatch = new HttpPatch(uri);
-        } catch (JsonProcessingException | URISyntaxException ex) {
+        } catch (JacksonException | URISyntaxException ex) {
             throw new ServiceFailureException(ex);
         }
 
@@ -206,14 +205,14 @@ public class BaseDao implements Dao {
     }
 
     @Override
-    public void patch(Entity entity, List<JsonPatchOperation> patch) throws ServiceFailureException {
+    public void patch(Entity entity, JsonPatch patch) throws ServiceFailureException {
         HttpPatch httpPatch;
         String json;
         try {
             final URI uri = buildUri(entity.getPrimaryKeyValues());
             json = JsonWriter.writeObject(patch);
             httpPatch = new HttpPatch(uri);
-        } catch (URISyntaxException | JsonProcessingException ex) {
+        } catch (URISyntaxException | JacksonException ex) {
             throw new ServiceFailureException(ex);
         }
 

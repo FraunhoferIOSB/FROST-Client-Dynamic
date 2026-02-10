@@ -23,9 +23,6 @@
 package de.fraunhofer.iosb.ilt.frostclient.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.MomentDeserializer;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.TimeInstantDeserializer;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.TimeIntervalDeserializer;
@@ -37,6 +34,12 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import net.time4j.Moment;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.datatype.jsonp.JSONPModule;
 
 /**
  * A mapper handler for simple json serialisations.
@@ -63,10 +66,15 @@ public class SimpleJsonMapper {
                     .addDeserializer(TimeInstant.class, new TimeInstantDeserializer())
                     .addDeserializer(TimeInterval.class, new TimeIntervalDeserializer())
                     .addDeserializer(TimeValue.class, new TimeValueDeserializer());
-            simpleObjectMapper = new ObjectMapper()
-                    .setSerializationInclusion(JsonInclude.Include.ALWAYS)
+            simpleObjectMapper = JsonMapper.builder()
+                    .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.ALWAYS))
+                    .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.ALWAYS))
+                    .disable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                    .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
                     .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-                    .registerModule(module);
+                    .addModule(module)
+                    .addModule(new JSONPModule())
+                    .build();
         }
         return simpleObjectMapper;
     }

@@ -22,8 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -51,6 +49,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * A TokenManager for JsonWebTokens used in OpenID Connect authentication.
@@ -176,10 +177,10 @@ public class TokenManagerOpenIDConnect implements TokenManager<TokenManagerOpenI
                     if (node == null) {
                         throw new IllegalStateException("Did not receive an access_token. Received: " + json);
                     }
-                    accessToken = node.textValue();
+                    accessToken = node.stringValue();
                     validateToken(accessToken);
 
-                    refreshToken = tree.get("refresh_token").textValue();
+                    refreshToken = tree.get("refresh_token").stringValue();
                     validateToken(refreshToken);
 
                     node = tree.get("expires_in");
@@ -202,7 +203,7 @@ public class TokenManagerOpenIDConnect implements TokenManager<TokenManagerOpenI
                 LOGGER.debug("RefreshToken: {}", refreshToken);
 
                 return accessToken;
-            } catch (IOException ex) {
+            } catch (JacksonException ex) {
                 LOGGER.error("Failed to parse response.", ex);
                 return null;
             }

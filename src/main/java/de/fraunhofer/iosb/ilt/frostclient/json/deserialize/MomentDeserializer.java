@@ -22,15 +22,15 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
-import java.io.IOException;
 import java.text.ParseException;
 import net.time4j.Moment;
 import net.time4j.format.expert.Iso8601Format;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * Helper for deserialization of TimeInstant objects from JSON.
@@ -42,7 +42,7 @@ public class MomentDeserializer extends StdDeserializer<Moment> {
     }
 
     @Override
-    public Moment deserialize(JsonParser jp, DeserializationContext dc) throws IOException {
+    public Moment deserialize(JsonParser jp, DeserializationContext dc) throws JacksonException {
         final String valueAsString = jp.getValueAsString();
         if (valueAsString == null) {
             return null;

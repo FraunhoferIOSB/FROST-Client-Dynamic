@@ -22,7 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Top-level abstract class for all SWE classes.

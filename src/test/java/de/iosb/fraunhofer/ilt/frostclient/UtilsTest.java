@@ -24,7 +24,12 @@ package de.iosb.fraunhofer.ilt.frostclient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
+import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
+import jakarta.json.Json;
+import jakarta.json.JsonPatch;
+import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
 
 public class UtilsTest {
@@ -45,4 +50,14 @@ public class UtilsTest {
         assertEquals("http%3A%2F%2Fexample.org%2FThings%5Bxyz%27xyz%5D", StringHelper.urlEncode("http://example.org/Things[xyz'xyz]", false));
     }
 
+    @Test
+    public void testJsonPatch() {
+        JsonPatch patch = Json.createPatchBuilder()
+                .add("/test1", JsonValue.FALSE)
+                .add("/sub/test2", 2)
+                .build();
+        String json = JsonWriter.writeObject(patch);
+        JsonPatch patch2 = SimpleJsonMapper.getSimpleObjectMapper().readValue(json, JsonPatch.class);
+        assertEquals(patch, patch2);
+    }
 }

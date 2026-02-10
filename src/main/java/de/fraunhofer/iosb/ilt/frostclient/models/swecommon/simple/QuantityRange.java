@@ -22,13 +22,13 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedValues;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * SWE Class QuantityRange.

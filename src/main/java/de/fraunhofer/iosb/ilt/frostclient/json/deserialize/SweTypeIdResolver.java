@@ -23,18 +23,18 @@
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.DatabindContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractSWEIdentifiable;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AbstractConstraint;
-import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindContext;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.jsontype.TypeIdResolver;
 
 /**
  * Resolves Swe types based on their "type" property.
@@ -70,7 +70,7 @@ public class SweTypeIdResolver implements TypeIdResolver {
     }
 
     @Override
-    public String idFromValue(Object value) {
+    public String idFromValue(DatabindContext context, Object value) {
         return idFromClass(value.getClass());
     }
 
@@ -87,7 +87,7 @@ public class SweTypeIdResolver implements TypeIdResolver {
     }
 
     @Override
-    public String idFromValueAndType(Object value, Class<?> suggestedType) {
+    public String idFromValueAndType(DatabindContext context, Object value, Class<?> suggestedType) {
         return idFromClass(value.getClass());
     }
 
@@ -97,7 +97,7 @@ public class SweTypeIdResolver implements TypeIdResolver {
     }
 
     @Override
-    public JavaType typeFromId(DatabindContext context, String id) throws IOException {
+    public JavaType typeFromId(DatabindContext context, String id) throws JacksonException {
         if (!annnotatedClasses.containsKey(id)) {
             throw new RuntimeException(String.format("unkown type '%s'", id));
         }
@@ -105,7 +105,7 @@ public class SweTypeIdResolver implements TypeIdResolver {
     }
 
     @Override
-    public String idFromBaseType() {
+    public String idFromBaseType(DatabindContext ctxt) {
         return idFromClass(superType.getRawClass());
     }
 

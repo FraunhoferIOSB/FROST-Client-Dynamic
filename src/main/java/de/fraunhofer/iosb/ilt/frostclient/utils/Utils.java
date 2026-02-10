@@ -26,7 +26,6 @@ import static de.fraunhofer.iosb.ilt.frostclient.SensorThingsService.NULL_URL_V1
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_CREATE;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONFORMANCE_STA_11_MQTT_READ;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.exception.NotAuthorizedException;
@@ -62,6 +61,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Various utilities.
@@ -163,8 +163,8 @@ public class Utils {
                 // SensorThings 1.1 or 1.0
                 JsonNode serverSettings = tree.get(NAME_SERVER_SETTINGS);
                 JsonNode conformance = serverSettings.get(NAME_CONFORMANCE);
-                for (var entries = conformance.elements(); entries.hasNext();) {
-                    String confClass = entries.next().textValue();
+                for (var entries = conformance.iterator(); entries.hasNext();) {
+                    String confClass = entries.next().stringValue();
                     if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel")) {
                         foundModels.add(KnownModels.STA_SENSING);
                     } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/multi-datastream")) {
@@ -190,8 +190,8 @@ public class Utils {
                 findMqttEndpoint(serverSettings, serverInfo);
             } else if (tree.has(NAME_VALUE)) {
                 JsonNode entities = tree.get(NAME_VALUE);
-                for (var it = entities.elements(); it.hasNext();) {
-                    String entityName = it.next().get(NAME_NAME).textValue();
+                for (var it = entities.iterator(); it.hasNext();) {
+                    String entityName = it.next().get(NAME_NAME).stringValue();
                     switch (entityName) {
                         case "Things":
                             foundModels.add(KnownModels.STA_SENSING);
@@ -280,7 +280,7 @@ public class Utils {
         }
         String best = null;
         for (var endpoint : endpoints) {
-            String url = endpoint.asText();
+            String url = endpoint.asString();
             LOGGER.info("MQTT Url detected: {}", url);
             if (best == null || url.startsWith("ws")) {
                 // We prefer WebSocket URLs.

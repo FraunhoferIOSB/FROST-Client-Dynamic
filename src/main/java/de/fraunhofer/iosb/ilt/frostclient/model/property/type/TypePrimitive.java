@@ -33,9 +33,6 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_TIMEINSTANT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UUID;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
@@ -46,6 +43,9 @@ import java.util.Map;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
 
 /**
  * The various Primitive types defined by OData.
@@ -162,11 +162,11 @@ public class TypePrimitive extends PropertyType {
         super(name, description, ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
     }
 
-    public TypePrimitive(String name, String description, JsonDeserializer jd) {
+    public TypePrimitive(String name, String description, ValueDeserializer jd) {
         super(name, description, jd);
     }
 
-    public TypePrimitive(String name, String description, JsonDeserializer jd, JsonSerializer js) {
+    public TypePrimitive(String name, String description, ValueDeserializer jd, ValueSerializer js) {
         super(name, description, jd, js);
     }
 

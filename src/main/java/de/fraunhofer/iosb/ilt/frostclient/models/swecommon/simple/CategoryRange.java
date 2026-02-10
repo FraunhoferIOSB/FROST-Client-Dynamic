@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * SWE Class CategoryRange.
@@ -93,7 +93,7 @@ public class CategoryRange extends AbstractRange<CategoryRange, String> {
                 LOGGER.debug("Non-text item {} in array", item);
                 return false;
             }
-            if (!constraint.isValid(item.asText())) {
+            if (!constraint.isValid(item.asString())) {
                 LOGGER.error("Item '{}' does not fit the constraint", item);
                 return false;
             }

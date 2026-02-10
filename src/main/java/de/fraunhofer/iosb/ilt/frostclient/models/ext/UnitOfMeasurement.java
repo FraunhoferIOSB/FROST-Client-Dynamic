@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
@@ -30,6 +29,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import java.util.Objects;
+import tools.jackson.core.JacksonException;
 
 /**
  * Model class for UnitOfMeasurement. This is a complex property in STA.
@@ -146,7 +146,7 @@ public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
     public String toString() {
         try {
             return SimpleJsonMapper.getSimpleObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException ex) {
+        } catch (JacksonException ex) {
             return super.toString();
         }
     }

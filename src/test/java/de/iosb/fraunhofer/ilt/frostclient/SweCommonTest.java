@@ -22,14 +22,14 @@
  */
 package de.iosb.fraunhofer.ilt.frostclient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import de.fraunhofer.iosb.ilt.frostclient.utils.CollectionsHelper;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 public class SweCommonTest {
 
@@ -69,7 +69,7 @@ public class SweCommonTest {
             }""";
 
     @Test
-    public void testDataRecord() throws JsonProcessingException {
+    public void testDataRecord() throws JacksonException {
         ObjectMapper om = SimpleJsonMapper.getSimpleObjectMapper();
         DataRecord dr = om.readValue(DATA_RECORD, DataRecord.class);
         Map<String, Object> value = CollectionsHelper.propertiesBuilder()

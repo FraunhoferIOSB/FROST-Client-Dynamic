@@ -25,7 +25,6 @@ package de.fraunhofer.iosb.ilt.frostclient.models;
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
@@ -41,6 +40,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.complex.DataRecord;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.Map;
+import tools.jackson.core.type.TypeReference;
 
 /**
  * The Data Model implements the SensorThings Tasking extension.

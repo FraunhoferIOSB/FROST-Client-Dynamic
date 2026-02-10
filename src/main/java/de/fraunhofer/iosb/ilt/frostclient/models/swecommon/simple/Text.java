@@ -25,12 +25,12 @@ package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TYPE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_TYPE_STRING;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTokens;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * SWE Text class.
@@ -132,7 +132,7 @@ public class Text extends AbstractSimpleComponent<Text, String> {
             LOGGER.debug("Non-Text value {} for Text.", input);
             return false;
         }
-        return validate(input.asText());
+        return validate(input.asString());
     }
 
     public boolean validate(String input) {

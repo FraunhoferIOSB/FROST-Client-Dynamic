@@ -26,11 +26,11 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchem
 import static de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.JsonSchema.JSON_SCHEMA_KEY_TITLE;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iosb.ilt.frostclient.json.deserialize.SweTypeIdResolver;
 import java.util.Objects;
+import tools.jackson.databind.annotation.JsonTypeIdResolver;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * SWE abstract Class AbstractSWEIdentifiable.

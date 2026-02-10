@@ -22,8 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
 
 /**
  * A simple Type.
@@ -37,7 +37,7 @@ public class TypeSimple extends TypePrimitive {
         this.underlyingType = underlyingType;
     }
 
-    public TypeSimple(String name, String description, TypePrimitive underlyingType, JsonDeserializer jd, JsonSerializer js) {
+    public TypeSimple(String name, String description, TypePrimitive underlyingType, ValueDeserializer jd, ValueSerializer js) {
         super(name, description, jd, js);
         this.underlyingType = underlyingType;
     }

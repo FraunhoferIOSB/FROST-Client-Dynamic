@@ -22,11 +22,11 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Abstract superclass for ranges.

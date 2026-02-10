@@ -23,17 +23,19 @@
 package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeObject;
 import java.io.IOException;
 import java.io.Writer;
 import net.time4j.Moment;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.EnumFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.datatype.jsonp.JSONPModule;
 
 /**
  * Enables serialization of entities as JSON.
@@ -56,18 +58,22 @@ public class JsonWriter {
     }
 
     private static ObjectMapper createObjectMapper() {
+        SimpleModule module = new SimpleModule()
+                .addSerializer(Entity.class, new EntitySerializer())
+                .addSerializer(TimeObject.class, new TimeObjectSerializer())
+                .addSerializer(Moment.class, new MomentSerializer());
         ObjectMapper mapper = JsonMapper.builder()
-                .serializationInclusion(JsonInclude.Include.NON_EMPTY)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_EMPTY))
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_EMPTY))
+                .disable(EnumFeature.READ_ENUMS_USING_TO_STRING)
+                .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+                .addModule(module)
+                .addModules(new JSONPModule())
                 .build();
 
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Entity.class, new EntitySerializer());
-        module.addSerializer(TimeObject.class, new TimeObjectSerializer());
-        module.addSerializer(Moment.class, new MomentSerializer());
-        mapper.registerModule(module);
         return mapper;
     }
 
@@ -78,19 +84,19 @@ public class JsonWriter {
         getObjectMapper().writeValue(writer, entity);
     }
 
-    public static String writeEntity(Entity entity) throws JsonProcessingException {
+    public static String writeEntity(Entity entity) throws JacksonException {
         return getObjectMapper().writeValueAsString(entity);
     }
 
-    public static byte[] writeBytes(Entity entity) throws JsonProcessingException {
+    public static byte[] writeBytes(Entity entity) throws JacksonException {
         return getObjectMapper().writeValueAsBytes(entity);
     }
 
-    public static void writeObject(Writer writer, Object object) throws IOException {
+    public static void writeObject(Writer writer, Object object) throws JacksonException {
         getObjectMapper().writeValue(writer, object);
     }
 
-    public static String writeObject(Object object) throws JsonProcessingException {
+    public static String writeObject(Object object) throws JacksonException {
         return getObjectMapper().writeValueAsString(object);
     }
 }

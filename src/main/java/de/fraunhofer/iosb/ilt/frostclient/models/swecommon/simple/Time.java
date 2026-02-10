@@ -22,12 +22,12 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.constraint.AllowedTimes;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.databind.JsonNode;
 
 /**
  * SWE Time class.
@@ -161,7 +161,7 @@ public class Time extends AbstractSimpleComponent<Time, String> {
             LOGGER.debug("Non-Text value {} for Text.", input);
             return false;
         }
-        return validate(input.asText());
+        return validate(input.asString());
     }
 
     public boolean validate(String input) {

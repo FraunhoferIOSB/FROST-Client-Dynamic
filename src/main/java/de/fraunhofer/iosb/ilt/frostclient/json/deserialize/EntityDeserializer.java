@@ -22,13 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.deserialize;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
@@ -38,15 +31,22 @@ import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 /**
  * Handles deserialization of Entity objects.
  */
-public class EntityDeserializer extends JsonDeserializer<Entity> {
+public class EntityDeserializer extends ValueDeserializer<Entity> {
 
     private static final Map<ModelRegistry, Map<EntityType, EntityDeserializer>> instancePerModelAndType = new HashMap<>();
 
@@ -96,9 +96,9 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
      * @param parser The parser to fetch tokens from.
      * @param ctxt The context to fetch settings from.
      * @return The deserialised Entity.
-     * @throws IOException If deserialisation fails.
+     * @throws JacksonException If deserialisation fails.
      */
-    public Entity deserializeFull(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    public Entity deserializeFull(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
         parser.nextToken();
         Entity result = deserialize(parser, ctxt);
         parser.nextToken();
@@ -106,13 +106,13 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
     }
 
     @Override
-    public Entity deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    public Entity deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
         Entity result = new Entity(entityType);
 
         boolean failOnUnknown = ctxt.isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         JsonToken currentToken = parser.nextToken();
-        while (currentToken == JsonToken.FIELD_NAME) {
+        while (currentToken == JsonToken.PROPERTY_NAME) {
             String fieldName = parser.currentName();
             parser.nextValue();
             if (fieldName.endsWith("@iot.count")) {
@@ -124,7 +124,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
                 if (propertyData == null) {
                     if (failOnUnknown) {
                         final String message = "Unknown field: " + fieldName + " on " + entityType.entityName + " expected one of: " + propertyByName.keySet();
-                        throw new UnrecognizedPropertyException(parser, message, parser.getCurrentLocation(), Entity.class, fieldName, null);
+                        throw new UnrecognizedPropertyException(parser, message, parser.currentLocation(), Entity.class, fieldName, null);
                     } else {
                         parser.readValueAsTree();
                     }
@@ -138,7 +138,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         return result;
     }
 
-    private void deserializeProperty(JsonParser parser, DeserializationContext ctxt, Entity result, PropertyData propertyData) throws IOException {
+    private void deserializeProperty(JsonParser parser, DeserializationContext ctxt, Entity result, PropertyData propertyData) throws JacksonException {
         if (propertyData.property instanceof EntityPropertyMain) {
             deserializeEntityProperty(parser, ctxt, propertyData, result);
         } else if (propertyData.property instanceof NavigationProperty) {
@@ -146,7 +146,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         }
     }
 
-    private void deserializeNavigationProperty(PropertyData propertyData, Entity result, JsonParser parser, DeserializationContext ctxt) throws IOException {
+    private void deserializeNavigationProperty(PropertyData propertyData, Entity result, JsonParser parser, DeserializationContext ctxt) throws JacksonException {
         NavigationProperty navPropertyMain = (NavigationProperty) propertyData.property;
         if (propertyData.isEntitySet) {
             deserialiseEntitySet(parser, ctxt, (NavigationPropertyEntitySet) navPropertyMain, result);
@@ -158,7 +158,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         }
     }
 
-    private void deserializeEntityProperty(JsonParser parser, DeserializationContext ctxt, PropertyData propertyData, Entity result) throws IOException {
+    private void deserializeEntityProperty(JsonParser parser, DeserializationContext ctxt, PropertyData propertyData, Entity result) throws JacksonException {
         EntityPropertyMain entityPropertyMain = (EntityPropertyMain) propertyData.property;
         if (propertyData.deserializer == null) {
             Object value = parser.readValueAs(Object.class);
@@ -169,7 +169,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         }
     }
 
-    private void deserialiseEntitySetCount(JsonParser parser, String fieldName, Entity result) throws IOException {
+    private void deserialiseEntitySetCount(JsonParser parser, String fieldName, Entity result) throws JacksonException {
         PropertyData propertyData = propertyByName.get(fieldName.substring(0, fieldName.indexOf('@')));
         if (propertyData == null) {
             return;
@@ -184,7 +184,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         }
     }
 
-    private void deserialiseEntitySetNextLink(JsonParser parser, String fieldName, Entity result) throws IOException {
+    private void deserialiseEntitySetNextLink(JsonParser parser, String fieldName, Entity result) throws JacksonException {
         PropertyData propertyData = propertyByName.get(fieldName.substring(0, fieldName.indexOf('@')));
         if (propertyData == null) {
             return;
@@ -199,7 +199,7 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
         }
     }
 
-    private void deserialiseEntitySet(JsonParser parser, DeserializationContext ctxt, NavigationPropertyEntitySet navProperty, Entity result) throws IOException {
+    private void deserialiseEntitySet(JsonParser parser, DeserializationContext ctxt, NavigationPropertyEntitySet navProperty, Entity result) throws JacksonException {
         final EntityType setType = navProperty.getEntityType();
         EntitySet entitySet = result.getProperty(navProperty);
         if (entitySet == null) {
@@ -218,14 +218,14 @@ public class EntityDeserializer extends JsonDeserializer<Entity> {
 
         final Property property;
         final boolean isEntitySet;
-        final JsonDeserializer deserializer;
-        final JsonSerializer serializer;
+        final ValueDeserializer deserializer;
+        final ValueSerializer serializer;
 
         public PropertyData(Property property, boolean isEntitySet) {
             this(property, isEntitySet, null, null);
         }
 
-        public PropertyData(Property property, boolean isEntitySet, JsonDeserializer deserializer, JsonSerializer serializer) {
+        public PropertyData(Property property, boolean isEntitySet, ValueDeserializer deserializer, ValueSerializer serializer) {
             this.property = property;
             this.isEntitySet = isEntitySet;
             this.deserializer = deserializer;

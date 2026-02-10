@@ -22,7 +22,6 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
@@ -43,6 +42,7 @@ import java.util.UUID;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.geojson.GeoJsonObject;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.type.TypeReference;
 
 /**
  * Various re-usable TypeReference definitions.

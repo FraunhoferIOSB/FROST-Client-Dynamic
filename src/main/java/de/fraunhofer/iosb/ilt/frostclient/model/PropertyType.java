@@ -22,30 +22,30 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.util.ArrayList;
 import java.util.List;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
 
 public abstract class PropertyType implements Annotatable {
 
     private final String name;
     private final String description;
-    private JsonDeserializer deserializer;
-    private JsonSerializer serializer;
+    private ValueDeserializer deserializer;
+    private ValueSerializer serializer;
     protected List<Annotation> annotations = new ArrayList<>();
 
-    protected PropertyType(String name, String description, JsonDeserializer deserializer, JsonSerializer serializer) {
+    protected PropertyType(String name, String description, ValueDeserializer deserializer, ValueSerializer serializer) {
         this.name = name;
         this.description = description;
         this.deserializer = deserializer;
         this.serializer = serializer;
     }
 
-    protected PropertyType(String name, String description, JsonDeserializer deserializer) {
+    protected PropertyType(String name, String description, ValueDeserializer deserializer) {
         this(name, description, deserializer, ParserUtils.getDefaultSerializer());
     }
 
@@ -57,20 +57,20 @@ public abstract class PropertyType implements Annotatable {
         return description;
     }
 
-    public JsonDeserializer getDeserializer() {
+    public ValueDeserializer getDeserializer() {
         return deserializer;
     }
 
-    public PropertyType setDeserializer(JsonDeserializer deserializer) {
+    public PropertyType setDeserializer(ValueDeserializer deserializer) {
         this.deserializer = deserializer;
         return this;
     }
 
-    public JsonSerializer getSerializer() {
+    public ValueSerializer getSerializer() {
         return serializer;
     }
 
-    public PropertyType setSerializer(JsonSerializer serializer) {
+    public PropertyType setSerializer(ValueSerializer serializer) {
         this.serializer = serializer;
         return this;
     }

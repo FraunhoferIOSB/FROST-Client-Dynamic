@@ -24,9 +24,6 @@ package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_DATETIMEOFFSET;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValueImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
@@ -49,6 +46,9 @@ import java.util.Set;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
 
 /**
  * The PropertyType of Complex Properties.
@@ -76,7 +76,7 @@ public class TypeComplex extends PropertyType {
             .registerProperty(EP_START_TIME)
             .registerProperty(EP_END_TIME);
 
-    public static final JsonDeserializer<AbstractDataComponent> temp = ParserUtils.getDefaultDeserializer(TypeReferencesHelper.TYPE_REFERENCE_ABSTRACTDATACOMPONENT);
+    public static final ValueDeserializer<AbstractDataComponent> temp = ParserUtils.getDefaultDeserializer(TypeReferencesHelper.TYPE_REFERENCE_ABSTRACTDATACOMPONENT);
     public static final TypeComplex STA_ABSTRACT_DATA_COMPONENT = new TypeComplex("AbstractDataComponent", "An SWE-Common AbstractDataComponent", true)
             .setSerializer(ParserUtils.getDefaultSerializer())
             .setDeserializer(ParserUtils.getDefaultDeserializer(TypeReferencesHelper.TYPE_REFERENCE_ABSTRACTDATACOMPONENT));
@@ -134,7 +134,7 @@ public class TypeComplex extends PropertyType {
         this.instantiator = instantiator;
     }
 
-    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, JsonDeserializer jd, JsonSerializer js) {
+    public TypeComplex(String name, String description, boolean openType, Instantiator instantiator, ValueDeserializer jd, ValueSerializer js) {
         super(name, description, jd, js);
         this.openType = openType;
         this.instantiator = instantiator;
@@ -172,13 +172,13 @@ public class TypeComplex extends PropertyType {
     }
 
     @Override
-    public TypeComplex setSerializer(JsonSerializer serializer) {
+    public TypeComplex setSerializer(ValueSerializer serializer) {
         super.setSerializer(serializer);
         return this;
     }
 
     @Override
-    public TypeComplex setDeserializer(JsonDeserializer deserializer) {
+    public TypeComplex setDeserializer(ValueDeserializer deserializer) {
         super.setDeserializer(deserializer);
         return this;
     }

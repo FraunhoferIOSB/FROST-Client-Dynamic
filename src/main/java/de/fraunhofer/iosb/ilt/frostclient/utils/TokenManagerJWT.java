@@ -22,8 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import java.io.IOException;
 import java.util.Calendar;
 import org.apache.http.Consts;
@@ -35,6 +34,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * A TokenManager for stateless JsonWebToken authentication as implemented by
@@ -108,14 +110,14 @@ public class TokenManagerJWT implements TokenManager<TokenManagerJWT> {
             accessToken = "";
             String json = fetchToken();
             try {
-                ObjectMapper objectMapper = new ObjectMapper();
+                ObjectMapper objectMapper = SimpleJsonMapper.getSimpleObjectMapper();
                 JsonNode tree = objectMapper.readTree(json);
                 if (tree.isObject()) {
                     JsonNode node = tree.get("token");
                     if (node == null) {
                         throw new IllegalStateException("Did not receive an access_token. Received: " + json);
                     }
-                    accessToken = node.textValue();
+                    accessToken = node.stringValue();
                     validateToken(accessToken);
 
                     expireTime = Calendar.getInstance();
@@ -127,7 +129,7 @@ public class TokenManagerJWT implements TokenManager<TokenManagerJWT> {
                 LOGGER.debug("Token: {}", accessToken);
 
                 return accessToken;
-            } catch (IOException ex) {
+            } catch (JacksonException ex) {
                 LOGGER.error("Failed to parse response.", ex);
                 return null;
             }

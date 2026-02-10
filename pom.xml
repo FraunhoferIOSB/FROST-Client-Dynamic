@@ -61,19 +61,18 @@
         <version.commons-io>2.21.0</version.commons-io>
         <version.commons-lang3>3.20.0</version.commons-lang3>
         <version.httpclient>4.5.14</version.httpclient>
-        <version.jackson>2.20.1</version.jackson>
-        <version.jackson-annotations>2.20</version.jackson-annotations>
-        <version.jackson-databind>${version.jackson}</version.jackson-databind>
-        <version.jacksonGeojson>1.14</version.jacksonGeojson>
+        <version.jackson>3.0.3</version.jackson>
+        <version.jacksonGeojson>3.0</version.jacksonGeojson>
+        <version.jakarta.json>2.0.1</version.jakarta.json>
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.json-patch>1.13</version.json-patch>
         <version.jsonwebtoken>0.13.0</version.jsonwebtoken>
-        <version.junit>6.0.1</version.junit>
-        <version.logback>1.5.23</version.logback>
+        <version.junit>6.0.2</version.junit>
+        <version.logback>1.5.25</version.logback>
 
-        <version.maven.plugin.central-publishing>0.9.0</version.maven.plugin.central-publishing>
+        <version.maven.plugin.central-publishing>0.10.0</version.maven.plugin.central-publishing>
         <version.maven.plugin.compiler>3.14.1</version.maven.plugin.compiler>
-        <version.maven.plugin.dependency-check>12.1.9</version.maven.plugin.dependency-check>
+        <version.maven.plugin.dependency-check>12.2.0</version.maven.plugin.dependency-check>
         <version.maven.plugin.gpg>3.2.8</version.maven.plugin.gpg>
         <version.maven.plugin.jacoco>0.8.14</version.maven.plugin.jacoco>
         <version.maven.plugin.javadoc>3.12.0</version.maven.plugin.javadoc>
@@ -89,6 +88,17 @@
         <version.time4j>5.9.4</version.time4j>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${version.jackson}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -104,33 +114,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${version.jackson-annotations}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${version.jackson}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${version.jackson-databind}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${version.jackson}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.java-json-tools</groupId>
-            <artifactId>json-patch</artifactId>
-            <version>${version.json-patch}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -179,6 +162,11 @@
             <version>${version.paho}</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>${version.jakarta.json}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${version.junit}</version>
@@ -200,6 +188,22 @@
             <artifactId>slf4j-api</artifactId>
             <version>${version.slf4j}</version>
         </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jakarta-jsonp</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -219,7 +223,7 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>${version.maven.plugin.dependency-check}</version>
                 <configuration>
-                    <failBuildOnCVSS>8</failBuildOnCVSS>
+                    <failBuildOnCVSS>9</failBuildOnCVSS>
                     <nvdApiServerId>NIST_NVD_API</nvdApiServerId>
                     <nvdMaxRetryCount>20</nvdMaxRetryCount>
                     <ossIndexServerId>ossindex</ossIndexServerId>

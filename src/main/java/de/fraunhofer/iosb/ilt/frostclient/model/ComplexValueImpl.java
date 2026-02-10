@@ -25,11 +25,11 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import tools.jackson.core.type.TypeReference;
 
 public class ComplexValueImpl implements ComplexValue<ComplexValueImpl> {
 

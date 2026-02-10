@@ -24,7 +24,6 @@ package de.fraunhofer.iosb.ilt.frostclient;
 
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
-import com.github.fge.jsonpatch.JsonPatchOperation;
 import de.fraunhofer.iosb.ilt.frostclient.auth.AuthMethod;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
@@ -44,6 +43,7 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.ServerInfo;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import de.fraunhofer.iosb.ilt.settings.Settings;
+import jakarta.json.JsonPatch;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -466,7 +466,7 @@ public class SensorThingsService {
      * @param patch The patch to apply to the entity.
      * @throws ServiceFailureException in case the server rejects the PATCH.
      */
-    public void patch(Entity entity, List<JsonPatchOperation> patch) throws ServiceFailureException {
+    public void patch(Entity entity, JsonPatch patch) throws ServiceFailureException {
         new BaseDao(this, entity.getEntityType()).patch(entity, patch);
     }
 

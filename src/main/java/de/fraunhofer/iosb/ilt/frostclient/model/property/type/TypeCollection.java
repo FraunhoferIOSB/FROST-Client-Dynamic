@@ -22,9 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model.property.type;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
+import tools.jackson.core.type.TypeReference;
 
 /**
  * The type of a property that points to a Collection.
