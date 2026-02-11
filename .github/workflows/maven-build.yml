@@ -59,6 +59,7 @@ jobs:
 
     - name: Build with Maven
       env:
+        NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY }}
         OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
         OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
       run: mvn -B install --file pom.xml -DautoUpdate=false --settings scripts/maven-ci-settings.xml

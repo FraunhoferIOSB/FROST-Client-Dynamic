@@ -75,9 +75,10 @@ jobs:
       env:
         GPG_EXECUTABLE: gpg
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        NIST_NVD_API_KEY: ${{ secrets.NIST_NVD_API_KEY }}
+        OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
+        OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        OWASP_OSS_INDEX_USERNAME: ${{ secrets.OWASP_OSS_INDEX_USERNAME }}
-        OWASP_OSS_INDEX_APIKEY: ${{ secrets.OWASP_OSS_INDEX_APIKEY }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
       run: mvn -B deploy -P release -DautoUpdate=false --settings scripts/maven-ci-settings.xml
 
