@@ -29,7 +29,7 @@ Add the dependency:
 <dependency>
     <groupId>de.fraunhofer.iosb.ilt</groupId>
     <artifactId>FROST-Client-Dynamic</artifactId>
-    <version>2.33</version>
+    <version>2.34</version>
 </dependency>
 
 ```
@@ -38,7 +38,7 @@ Add the dependency:
 
 Add the dependency:
 ```gradle
-compile 'de.fraunhofer.iosb.ilt:FROST-Client-Dynamic:2.33'
+compile 'de.fraunhofer.iosb.ilt:FROST-Client-Dynamic:2.34'
 ```
 
 ## API

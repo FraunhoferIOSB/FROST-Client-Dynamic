@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.34-SNAPSHOT
+## Version 2.34
 
 **Updates**
+* Bumped Dependencies.
 * Updated Jackson to 3.x
 * Updated V2 model:
   * Changed Datastream -> UltimateFeaturesOfInterest to many-to-many.
