@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 
+import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
@@ -40,9 +41,14 @@ import tools.jackson.databind.ValueSerializer;
 /**
  * Handles serialization of Entity objects.
  */
-public class EntitySerializer extends ValueSerializer<Entity> {
+public class EntitySerializerSta extends ValueSerializer<Entity> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EntitySerializer.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntitySerializerSta.class.getName());
+    private final Version version;
+
+    public EntitySerializerSta(Version version) {
+        this.version = version;
+    }
 
     @Override
     public void serialize(Entity entity, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
@@ -77,7 +83,7 @@ public class EntitySerializer extends ValueSerializer<Entity> {
         }
         final Object value = entity.getProperty(ep, false);
         if (value != null || (entity.isSetProperty(ep))) {
-            final String name = ep.getName();
+            final String name = version.chooseAliasFor(ep);
             gen.writePOJOProperty(name, value);
         }
     }
@@ -87,11 +93,27 @@ public class EntitySerializer extends ValueSerializer<Entity> {
         if (entityOrSet instanceof EntitySet entitySet) {
             writeEntitySet(np, entitySet, gen);
         } else if (entityOrSet instanceof Entity expandedEntity) {
-            if (expandedEntity.hasService()) {
-                gen.writePOJOProperty(np.getJsonName(), expandedEntity.withOnlyPk());
-            } else {
-                gen.writePOJOProperty(np.getJsonName(), expandedEntity);
-            }
+            gen.writeName(np.getJsonName());
+            writeExpandedEntity(gen, expandedEntity);
+        }
+    }
+
+    private void writeExpandedEntity(JsonGenerator gen, Entity expandedEntity) throws JacksonException {
+        if (expandedEntity.hasService()) {
+            Entity ref = version.getReferenceFor(expandedEntity);
+            writeEntityReference(gen, ref);
+        } else {
+            gen.writePOJO(expandedEntity);
+        }
+    }
+
+    private void writeEntityReference(JsonGenerator gen, Entity entity) {
+        if (entity.primaryKeyFullySet()) {
+            gen.writePOJO(entity);
+        } else {
+            gen.writeStartObject();
+            gen.writeStringProperty(version.getSelfLinkName(), entity.getSelfLink());
+            gen.writeEndObject();
         }
     }
 
@@ -101,8 +123,8 @@ public class EntitySerializer extends ValueSerializer<Entity> {
         }
         String jsonName = np.getJsonName();
         gen.writeArrayPropertyStart(jsonName);
-        for (Object child : entitySet) {
-            gen.writePOJO(child);
+        for (Entity child : entitySet) {
+            writeExpandedEntity(gen, child);
         }
         gen.writeEndArray();
     }

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,14 +38,21 @@ import java.util.Set;
  */
 public class MapValue implements ComplexValue<MapValue> {
 
+    private final TypeComplex type;
     private final Map<String, Object> content;
 
-    public MapValue() {
-        this.content = new LinkedHashMap<>();
+    public MapValue(TypeComplex type) {
+        this(type, new LinkedHashMap<>());
     }
 
-    public MapValue(Map<String, Object> content) {
+    public MapValue(TypeComplex type, Map<String, Object> content) {
+        this.type = type;
         this.content = content;
+    }
+
+    @Override
+    public TypeComplex getType() {
+        return type;
     }
 
     @JsonIgnore
@@ -53,6 +61,7 @@ public class MapValue implements ComplexValue<MapValue> {
     }
 
     @JsonAnyGetter
+    @Override
     public Map<String, Object> getContent() {
         return content;
     }

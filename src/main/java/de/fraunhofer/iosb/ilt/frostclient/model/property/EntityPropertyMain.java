@@ -40,6 +40,7 @@ public class EntityPropertyMain<P> extends PropertyAbstract<P> implements Entity
     public final boolean serialiseNull;
 
     private final Collection<String> aliases;
+    private boolean hasAliases;
 
     public EntityPropertyMain(String name, PropertyType type) {
         this(name, type, false);
@@ -57,11 +58,16 @@ public class EntityPropertyMain<P> extends PropertyAbstract<P> implements Entity
         return aliases;
     }
 
+    public boolean hasAliases() {
+        return hasAliases;
+    }
+
     public EntityPropertyMain<P> setAliases(String... aliases) {
         if (this.aliases.size() != 1) {
             throw new IllegalStateException("Aliases already set for " + getName());
         }
         this.aliases.addAll(Arrays.asList(aliases));
+        hasAliases = this.aliases.size() > 1;
         return this;
     }
 

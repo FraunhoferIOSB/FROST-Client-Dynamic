@@ -34,19 +34,28 @@ public abstract class PropertyType implements Annotatable {
 
     private final String name;
     private final String description;
+    private CreatorDeserializer creatorDeserializer;
     private ValueDeserializer deserializer;
+    private CreatorSerializer creatorSerializer;
     private ValueSerializer serializer;
     protected List<Annotation> annotations = new ArrayList<>();
+
+    protected PropertyType(String name, String description, CreatorDeserializer cd, CreatorSerializer cs) {
+        this.name = name;
+        this.description = description;
+        this.creatorDeserializer = cd;
+        this.creatorSerializer = cs;
+    }
+
+    protected PropertyType(String name, String description, ValueDeserializer deserializer) {
+        this(name, description, deserializer, ParserUtils.getDefaultSerializer());
+    }
 
     protected PropertyType(String name, String description, ValueDeserializer deserializer, ValueSerializer serializer) {
         this.name = name;
         this.description = description;
         this.deserializer = deserializer;
         this.serializer = serializer;
-    }
-
-    protected PropertyType(String name, String description, ValueDeserializer deserializer) {
-        this(name, description, deserializer, ParserUtils.getDefaultSerializer());
     }
 
     public String getName() {
@@ -58,21 +67,17 @@ public abstract class PropertyType implements Annotatable {
     }
 
     public ValueDeserializer getDeserializer() {
+        if (deserializer == null && creatorDeserializer != null) {
+            deserializer = creatorDeserializer.create(this);
+        }
         return deserializer;
     }
 
-    public PropertyType setDeserializer(ValueDeserializer deserializer) {
-        this.deserializer = deserializer;
-        return this;
-    }
-
     public ValueSerializer getSerializer() {
+        if (serializer == null && creatorSerializer != null) {
+            serializer = creatorSerializer.create(this);
+        }
         return serializer;
-    }
-
-    public PropertyType setSerializer(ValueSerializer serializer) {
-        this.serializer = serializer;
-        return this;
     }
 
     public boolean isCollection() {
@@ -92,6 +97,16 @@ public abstract class PropertyType implements Annotatable {
     public PropertyType addAnnotation(Annotation annotation) {
         annotations.add(annotation);
         return this;
+    }
+
+    public static interface CreatorDeserializer {
+
+        public ValueDeserializer create(PropertyType type);
+    }
+
+    public static interface CreatorSerializer {
+
+        public ValueSerializer create(PropertyType type);
     }
 
 }

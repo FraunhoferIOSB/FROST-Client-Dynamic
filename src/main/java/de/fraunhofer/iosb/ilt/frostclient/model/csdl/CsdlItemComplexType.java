@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValueImpl;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
@@ -66,7 +67,7 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
     public CsdlItemComplexType fillFrom(CsdlDocument doc, String nameSpace, TypeComplex tc) {
         description = tc.getDescription();
         openType = tc.isOpenType();
-        for (Property property : tc.getProperties()) {
+        for (Property property : tc.getEntityProperties()) {
             final String name = property.getName();
             final PropertyType type = property.getType();
             final boolean nullable = property.isNullable();
@@ -76,9 +77,10 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
     }
 
     public void applyTo(ModelRegistry mr, String name) {
-        TypeComplex type = new TypeComplex(name, description, openType);
-        type.setDeserializer(ParserUtils.getComplexTypeDeserializer(type));
-        type.setSerializer(ParserUtils.getDefaultSerializer());
+        TypeComplex type = new TypeComplex(name, description, openType,
+                t -> new ComplexValueImpl(t),
+                pt -> ParserUtils.getComplexTypeDeserializer((TypeComplex) pt),
+                pt -> ParserUtils.getDefaultSerializer());
         for (var propEntry : properties.entrySet()) {
             String propName = propEntry.getKey();
             CsdlProperty property = propEntry.getValue();

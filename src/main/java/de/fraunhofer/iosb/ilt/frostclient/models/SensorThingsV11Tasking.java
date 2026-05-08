@@ -64,8 +64,8 @@ public class SensorThingsV11Tasking implements DataModel {
     };
     public static final TypeComplex PT_DATA_RECORD = new TypeComplex("DataRecord", "A DataRecord", true,
             null,
-            ParserUtils.getDataRecordDeserializer(),
-            ParserUtils.getDefaultSerializer());
+            pt -> ParserUtils.getDataRecordDeserializer(),
+            pt -> ParserUtils.getDefaultSerializer());
     public static final EntityPropertyMain<DataRecord> EP_TASKINGPARAMETERS_TC = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, PT_DATA_RECORD);
     public static final EntityPropertyMain<MapValue> EP_TASKINGPARAMETERS_T = new EntityPropertyMain<>(NAME_EP_TASKINGPARAMETERS, TypeComplex.STA_MAP);
 
@@ -151,7 +151,7 @@ public class SensorThingsV11Tasking implements DataModel {
     }
 
     public Entity newTaskingCapability(String name, String description, Map<String, Object> properties) {
-        return newTaskingCapability(name, description, new MapValue(properties));
+        return newTaskingCapability(name, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newTaskingCapability(String name, String description, MapValue properties) {

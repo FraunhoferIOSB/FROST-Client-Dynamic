@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public class CollectionsHelper {
         }
 
         public MapValue build() {
-            return new MapValue(properties);
+            return new MapValue(TypeComplex.STA_MAP, properties);
         }
 
         public Map<String, Object> buildMap() {

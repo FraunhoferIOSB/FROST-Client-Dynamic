@@ -22,6 +22,7 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
@@ -58,8 +59,9 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
         this.interval = timeInterval;
     }
 
-    public static TimeValue create(TimeInstant instant) {
-        return new TimeValue(instant);
+    @Override
+    public TypeComplex getType() {
+        return TypeComplex.STA_TIMEVALUE;
     }
 
     public static TimeValue create(TimeInterval timeInterval) {
@@ -112,6 +114,7 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
     }
 
     @Override
+    @JsonIgnore
     public boolean isEmpty() {
         if (instant != null) {
             return instant.isEmpty();
@@ -155,8 +158,10 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
         }
         if (isInterval()) {
             return interval.getProperty(property);
-        } else {
+        } else if (property == EP_START_TIME) {
             return (P) instant;
+        } else {
+            return null;
         }
     }
 

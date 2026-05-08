@@ -176,7 +176,7 @@ public class MxGraphGenerator {
             globalY += rowHeight + DISTANCE;
             rowHeight = DISTANCE;
         }
-        var properties = tc.getProperties();
+        var properties = tc.getEntityProperties();
         int boxHeight = BOX_HEIGHT_BASE + properties.size() * BOX_HEIGHT_ITEM;
         if (boxHeight > rowHeight) {
             rowHeight = boxHeight;

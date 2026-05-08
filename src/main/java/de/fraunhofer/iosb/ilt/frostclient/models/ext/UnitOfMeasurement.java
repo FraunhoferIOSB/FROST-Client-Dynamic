@@ -24,6 +24,7 @@ package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.ContainerType;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties;
@@ -54,6 +55,11 @@ public class UnitOfMeasurement implements ComplexValue<UnitOfMeasurement> {
         this.name = name;
         this.symbol = symbol;
         this.definition = definition;
+    }
+
+    @Override
+    public ContainerType getType() {
+        return SensorThingsV11Sensing.EPT_UOM;
     }
 
     /**

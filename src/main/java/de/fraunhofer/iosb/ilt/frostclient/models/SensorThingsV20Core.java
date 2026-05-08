@@ -279,7 +279,7 @@ public class SensorThingsV20Core implements DataModel {
     }
 
     public Entity newThing(String name, String description, Map<String, Object> properties) {
-        return newThing(name, description, new MapValue(properties));
+        return newThing(name, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newThing(String name, String description, MapValue properties) {

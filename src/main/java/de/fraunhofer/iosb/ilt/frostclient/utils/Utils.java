@@ -38,6 +38,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11MultiDatastream;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Projects;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV20Core;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -83,6 +84,7 @@ public class Utils {
         STA_MULTIDATASTREAM,
         STA_TASKING,
         STA_PLUS,
+        STA_V2_CORE,
         PROJECTS
     }
 
@@ -160,13 +162,15 @@ public class Utils {
             }
             Set<KnownModels> foundModels = new HashSet<>();
             if (tree.has(NAME_SERVER_SETTINGS)) {
-                // SensorThings 1.1 or 1.0
+                // SensorThings 2.0, 1.1, 1.0
                 JsonNode serverSettings = tree.get(NAME_SERVER_SETTINGS);
                 JsonNode conformance = serverSettings.get(NAME_CONFORMANCE);
                 for (var entries = conformance.iterator(); entries.hasNext();) {
                     String confClass = entries.next().stringValue();
                     if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel")) {
                         foundModels.add(KnownModels.STA_SENSING);
+                    } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings/2.0/req-class/datamodel/core")) {
+                        foundModels.add(KnownModels.STA_V2_CORE);
                     } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/multi-datastream")) {
                         foundModels.add(KnownModels.STA_MULTIDATASTREAM);
                     } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/actuator")) {
@@ -216,6 +220,10 @@ public class Utils {
                 }
             }
             if (!modelsPreSet) {
+                if (foundModels.contains(KnownModels.STA_V2_CORE)) {
+                    LOGGER.info("Detected STA V2 Core.");
+                    serverInfo.addModel(new SensorThingsV20Core());
+                }
                 if (foundModels.contains(KnownModels.STA_SENSING)) {
                     LOGGER.info("Detected STA Sensing.");
                     serverInfo.addModel(new SensorThingsV11Sensing());

@@ -22,6 +22,10 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * Interface that values of complex properties should implement to make it
  * easier to access sub-properties.
@@ -68,4 +72,16 @@ public interface ComplexValue<S extends ComplexValue<S>> {
      */
     public S setProperty(String name, Object value);
 
+    /**
+     * Get the extra (open) content of the type. This excludes the defined
+     * properties of the type.
+     *
+     * @return The extra content.
+     */
+    public default Map<String, Object> getContent() {
+        return Collections.emptyMap();
+    }
+
+    @JsonIgnore
+    public ContainerType<?> getType();
 }

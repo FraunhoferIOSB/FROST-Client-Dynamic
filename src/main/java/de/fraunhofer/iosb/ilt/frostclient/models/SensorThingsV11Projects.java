@@ -42,6 +42,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import java.util.Map;
@@ -204,7 +205,7 @@ public class SensorThingsV11Projects implements DataModel {
     }
 
     public Entity newRole(String rolename, String description, Map<String, Object> properties) {
-        return newRole(rolename, description, new MapValue(properties));
+        return newRole(rolename, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newProject() {
@@ -223,7 +224,7 @@ public class SensorThingsV11Projects implements DataModel {
     }
 
     public Entity newProject(String rolename, String description, Map<String, Object> properties) {
-        return newProject(rolename, description, new MapValue(properties));
+        return newProject(rolename, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newUserProjectRole() {

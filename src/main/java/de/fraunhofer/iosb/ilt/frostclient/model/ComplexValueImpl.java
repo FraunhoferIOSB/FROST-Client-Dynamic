@@ -85,7 +85,7 @@ public class ComplexValueImpl implements ComplexValue<ComplexValueImpl> {
     }
 
     public static TypeComplex.Instantiator createFor(TypeComplex type) {
-        return () -> new ComplexValueImpl(type);
+        return (t) -> new ComplexValueImpl(t);
     }
 
 }

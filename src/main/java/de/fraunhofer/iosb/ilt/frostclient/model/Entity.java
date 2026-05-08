@@ -127,7 +127,11 @@ public class Entity implements ComplexValue<Entity> {
     }
 
     public String getSelfLink() {
-        return getSelfLink(true);
+        if (selfLink == null) {
+            return getSelfLink(true);
+        } else {
+            return selfLink;
+        }
     }
 
     public String getSelfLink(boolean absolute) {
@@ -150,8 +154,18 @@ public class Entity implements ComplexValue<Entity> {
         return this;
     }
 
+    /**
+     * @return The EntityType of this Entity.
+     * @deprecated Use getType() instead.
+     */
+    @Deprecated
     public EntityType getEntityType() {
         return entityType;
+    }
+
+    @Override
+    public ContainerType getType() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public Entity setEntityType(EntityType entityType) {
@@ -320,8 +334,9 @@ public class Entity implements ComplexValue<Entity> {
         return service;
     }
 
-    public void setService(SensorThingsService service) {
+    public Entity setService(SensorThingsService service) {
         this.service = service;
+        return this;
     }
 
     public void ensureService() throws IllegalArgumentException {
@@ -357,6 +372,19 @@ public class Entity implements ComplexValue<Entity> {
         for (EntityPropertyMain pkProp : pkProps) {
             copy.setProperty(pkProp, getProperty(pkProp));
         }
+        copy.setService(service);
+        return copy;
+    }
+
+    /**
+     * Creates a copy of the entity, with only the SelfLink set. Useful when
+     * creating a new entity that links to this entity.
+     *
+     * @return a copy with only the SelfLink field set.
+     */
+    public Entity withOnlySelfLink() {
+        Entity copy = new Entity(entityType);
+        copy.setSelfLink(getSelfLink(false));
         copy.setService(service);
         return copy;
     }

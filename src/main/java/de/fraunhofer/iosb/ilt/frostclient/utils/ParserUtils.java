@@ -160,8 +160,8 @@ public class ParserUtils {
         return new ComplexTypeDeserializer(type);
     }
 
-    public static ValueSerializer<Object> getDefaultSerializer() {
-        return new ValueSerializer<Object>() {
+    public static <V> ValueSerializer<V> getDefaultSerializer() {
+        return new ValueSerializer<V>() {
             @Override
             public void serialize(Object t, JsonGenerator jg, SerializationContext ctx) throws JacksonException {
                 jg.writePOJO(t);
@@ -169,17 +169,20 @@ public class ParserUtils {
         };
     }
 
-    private static class ComplexTypeDeserializer extends ValueDeserializer<ComplexValue> {
+    public static class ComplexTypeDeserializer<V extends ComplexValue<V>> extends ValueDeserializer<V> {
 
         private final TypeComplex type;
 
         public ComplexTypeDeserializer(TypeComplex type) {
+            if (type == null) {
+                throw new IllegalArgumentException("Type must be non-null");
+            }
             this.type = type;
         }
 
         @Override
-        public ComplexValue deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
-            ComplexValue result = type.instantiate();
+        public V deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
+            V result = (V) type.instantiate();
             JsonToken currentToken = parser.currentToken();
             if (currentToken == JsonToken.VALUE_NULL) {
                 return null;
@@ -188,7 +191,7 @@ public class ParserUtils {
             while (currentToken == JsonToken.PROPERTY_NAME) {
                 String fieldName = parser.currentName();
                 parser.nextValue();
-                Property property = type.getProperty(fieldName);
+                Property property = type.getEntityProperty(fieldName);
                 if (property == null) {
                     if (!type.isOpenType()) {
                         final String message = "Unknown field: " + fieldName + " on " + type.getName() + " expected one of: " + type.getPropertiesByName().keySet();

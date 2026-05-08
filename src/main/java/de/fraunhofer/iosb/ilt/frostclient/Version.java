@@ -23,27 +23,66 @@
 package de.fraunhofer.iosb.ilt.frostclient;
 
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_COUNT;
+import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_COUNT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_NAVIGATION_LINK;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_NEXT_LINK;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_SELF_LINK;
+import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_NAVIGATION_LINK;
+import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_NEXT_LINK;
 
+import de.fraunhofer.iosb.ilt.frostclient.json.serialize.ObjectMapperOdata;
+import de.fraunhofer.iosb.ilt.frostclient.json.serialize.ObjectMapperSta;
+import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import java.util.HashMap;
 import java.util.Map;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * The versions that FROST-Client supports.
  */
 public class Version {
 
+    private static final ReferenceGenerator refGen1x = (e) -> e.withOnlyPk();
+    private static final ReferenceGenerator refGenOdata = (e) -> e.withOnlySelfLink();
+    private static final PropertyNameChooser pnc1x = (p) -> {
+        if (p.hasAliases()) {
+            for (String alias : p.getAliases()) {
+                if (alias.startsWith("@")) {
+                    return alias;
+                }
+            }
+        }
+        return p.getJsonName();
+    };
+    private static final PropertyNameChooser pncOdata = (p) -> {
+        if (p.hasAliases()) {
+            for (String alias : p.getAliases()) {
+                if (!alias.startsWith("@")) {
+                    return alias;
+                }
+            }
+        }
+        return p.getJsonName();
+    };
+    private static final ObjectMapperFetcher omf1x = v -> ObjectMapperSta.getObjectMapper(v);
+    private static final ObjectMapperFetcher omfOdata = v -> ObjectMapperOdata.getObjectMapper(v);
+
     public static final String VERSION_STA_V10_NAME = "v1.0";
     public static final String VERSION_STA_V11_NAME = "v1.1";
     public static final String VERSION_STA_V20_NAME = "v2.0";
     public static final Version V_1_0 = new Version(VERSION_STA_V10_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
     public static final Version V_1_1 = new Version(VERSION_STA_V11_NAME, AT_IOT_COUNT, AT_IOT_ID, AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
-    public static final Version V_2_0 = new Version(VERSION_STA_V20_NAME, AT_COUNT, "id", AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
-    public static final Version V_ODATA_4_01 = new Version("", AT_COUNT, "id", AT_IOT_SELF_LINK, AT_IOT_NEXT_LINK, AT_IOT_NAVIGATION_LINK);
+    public static final Version V_2_0 = new Version(VERSION_STA_V20_NAME, AT_COUNT, "id", AT_ID, AT_NEXT_LINK, AT_NAVIGATION_LINK)
+            .setReferenceGenerator(refGenOdata)
+            .setPropertyNameChooser(pncOdata)
+            .setObjectMapperFetcher(omfOdata);
+    public static final Version V_ODATA_4_01 = new Version("", AT_COUNT, "id", AT_ID, AT_NEXT_LINK, AT_NAVIGATION_LINK)
+            .setReferenceGenerator(refGenOdata)
+            .setPropertyNameChooser(pncOdata)
+            .setObjectMapperFetcher(omfOdata);
 
     public final String urlPart;
     public final String countName;
@@ -51,6 +90,9 @@ public class Version {
     public final String navLinkName;
     public final String nextLinkName;
     public final String selfLinkName;
+    private ReferenceGenerator refGen = refGen1x;
+    private PropertyNameChooser pnc = pnc1x;
+    private ObjectMapperFetcher omf = omf1x;
 
     public static final Map<String, Version> VERSIONS = new HashMap<>();
 
@@ -74,6 +116,21 @@ public class Version {
         this.selfLinkName = selfLinkName;
         this.nextLinkName = nextLinkName;
         this.navLinkName = navLinkName;
+    }
+
+    public Version setPropertyNameChooser(PropertyNameChooser pnc) {
+        this.pnc = pnc;
+        return this;
+    }
+
+    public Version setReferenceGenerator(ReferenceGenerator refGen) {
+        this.refGen = refGen;
+        return this;
+    }
+
+    public Version setObjectMapperFetcher(ObjectMapperFetcher omf) {
+        this.omf = omf;
+        return this;
     }
 
     @Override
@@ -105,4 +162,42 @@ public class Version {
         return urlPart;
     }
 
+    public Entity getReferenceFor(Entity source) {
+        return refGen.generateReference(source);
+    }
+
+    public String chooseAliasFor(EntityPropertyMain<?> p) {
+        return pnc.chooseNameFor(p);
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return omf.fetch(this);
+    }
+
+    /**
+     * An interface for generating references to an Entity. Used when creating
+     * CREATE/POST request of entities with NavigationProperties.
+     *
+     * Version 1.x of the SensorThings API uses the primary key to identify the
+     * targets of links, while OData and Sta 2.x use the @id property.
+     */
+    public static interface ReferenceGenerator {
+
+        public Entity generateReference(Entity source);
+
+    }
+
+    /**
+     * An interface for picking the correct alias for serialising a Property to
+     * JSON.
+     */
+    public static interface PropertyNameChooser {
+
+        public String chooseNameFor(EntityPropertyMain<?> p);
+    }
+
+    public static interface ObjectMapperFetcher {
+
+        public ObjectMapper fetch(Version v);
+    }
 }

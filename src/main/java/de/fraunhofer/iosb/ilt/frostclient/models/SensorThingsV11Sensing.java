@@ -65,7 +65,6 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
-import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import org.geojson.GeoJsonObject;
@@ -112,11 +111,11 @@ public class SensorThingsV11Sensing implements DataModel {
     public static final EntityPropertyMain<TimeInstant> EP_TIME = new EntityPropertyMain<>(NAME_EP_TIME, EDM_DATETIMEOFFSET);
     public static final EntityPropertyMain<TimeInterval> EP_VALIDTIME = new EntityPropertyMain<>(NAME_EP_VALIDTIME, TypeComplex.STA_TIMEINTERVAL);
 
-    public static final TypeComplex ept_Uom = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", false, UnitOfMeasurement::new, ParserUtils.getDefaultDeserializer(TYPE_REFERENCE_UOM), ParserUtils.getDefaultSerializer())
+    public static final TypeComplex EPT_UOM = new TypeComplex("UnitOfMeasurement", "The Unit Of Measurement Type", false, t -> new UnitOfMeasurement(), TYPE_REFERENCE_UOM)
             .registerProperty(EP_NAME)
             .registerProperty(EP_SYMBOL)
             .registerProperty(EP_DEFINITION);
-    public static final EntityPropertyMain<UnitOfMeasurement> EP_UNITOFMEASUREMENT = new EntityPropertyMain<>(NAME_EP_UNITOFMEASUREMENT, ept_Uom);
+    public static final EntityPropertyMain<UnitOfMeasurement> EP_UNITOFMEASUREMENT = new EntityPropertyMain<>(NAME_EP_UNITOFMEASUREMENT, EPT_UOM);
 
     public final NavigationPropertyEntity npObservationDatastream = new NavigationPropertyEntity(NAME_DATASTREAM);
     public final NavigationPropertyEntity npObservationFeatureofinterest = new NavigationPropertyEntity(NAME_FEATUREOFINTEREST);
@@ -165,7 +164,7 @@ public class SensorThingsV11Sensing implements DataModel {
         this.mr = modelRegistry;
         mr.addDataModel(this);
 
-        mr.registerPropertyType(ept_Uom)
+        mr.registerPropertyType(EPT_UOM)
                 .registerPropertyType(TypeComplex.STA_OBJECT)
                 .registerPropertyType(TypeComplex.STA_MAP)
                 .registerPropertyType(TypeComplex.STA_TIMEINTERVAL)
@@ -283,7 +282,7 @@ public class SensorThingsV11Sensing implements DataModel {
     }
 
     public Entity newThing(String name, String description, Map<String, Object> properties) {
-        return newThing(name, description, new MapValue(properties));
+        return newThing(name, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newThing(String name, String description, MapValue properties) {

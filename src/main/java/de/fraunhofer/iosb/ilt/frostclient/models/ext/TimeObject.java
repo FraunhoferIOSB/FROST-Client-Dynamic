@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Interface for TimeInstants, TimeIntervals and TimeValues
  */
@@ -29,6 +31,7 @@ public interface TimeObject {
 
     public String asISO8601();
 
+    @JsonIgnore
     public boolean isEmpty();
 
 }

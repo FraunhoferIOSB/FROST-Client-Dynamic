@@ -34,11 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
+import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV20Core;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
@@ -71,15 +73,21 @@ public class EntityFormatterTest {
 
     private SensorThingsV11Sensing modelSensing;
     private SensorThingsV11Tasking modelTasking;
+    private SensorThingsV20Core modelV2Core;
     private SensorThingsService service;
+    private SensorThingsService serviceV2;
 
     @BeforeEach
     public void setUp() {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
+        modelV2Core = new SensorThingsV20Core();
         try {
             service = new SensorThingsService(modelSensing, modelTasking)
                     .setBaseUrl(SensorThingsService.NULL_URL_V11)
+                    .init();
+            serviceV2 = new SensorThingsService(modelV2Core)
+                    .setBaseUrl(SensorThingsService.NULL_URL_V20)
                     .init();
         } catch (MalformedURLException ex) {
             LOGGER.error("Failed to set up.", ex);
@@ -88,9 +96,19 @@ public class EntityFormatterTest {
 
     @Test
     public void writeThing_Basic_Success() throws IOException {
-        String expResult = """
+        String expResultV1 = """
                 {
                   "@iot.id": 1,
+                  "name": "This thing is an oven.",
+                  "description": "This thing is an oven.",
+                  "properties": {
+                    "owner": "John Doe",
+                    "color": "Silver"
+                  }
+                }""";
+        String expResultV2 = """
+                {
+                  "id": 1,
                   "name": "This thing is an oven.",
                   "description": "This thing is an oven.",
                   "properties": {
@@ -110,15 +128,27 @@ public class EntityFormatterTest {
                 .build();
         entity.setProperty(EP_PROPERTIES, properties);
 
-        String json = JsonWriter.writeEntity(entity);
-        assertTrue(jsonEqual(expResult, json));
+        String json1 = JsonWriter.writeEntity(Version.V_1_1, entity);
+        assertTrue(jsonEqual(expResultV1, json1));
+        String json2 = JsonWriter.writeEntity(Version.V_2_0, entity);
+        assertTrue(jsonEqual(expResultV2, json2));
     }
 
     @Test
     public void writeThing_Basic_StringId_Success() throws IOException {
-        String expResult = """
+        String expResultV1 = """
                 {
                   "@iot.id": "aStringAsId",
+                  "name": "This thing is an oven.",
+                  "description": "This thing is an oven.",
+                  "properties": {
+                    "owner": "John Doe",
+                    "color": "Silver"
+                  }
+                }""";
+        String expResultV2 = """
+                {
+                  "id": "aStringAsId",
                   "name": "This thing is an oven.",
                   "description": "This thing is an oven.",
                   "properties": {
@@ -134,21 +164,23 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newThing("This thing is an oven.", "This thing is an oven.", properties);
         entity.setProperty(EP_ID, "aStringAsId");
 
-        String json = JsonWriter.writeEntity(entity);
-        assertTrue(jsonEqual(expResult, json));
+        String json1 = JsonWriter.writeEntity(Version.V_1_1, entity);
+        assertTrue(jsonEqual(expResultV1, json1));
+        String json2 = JsonWriter.writeEntity(Version.V_2_0, entity);
+        assertTrue(jsonEqual(expResultV2, json2));
     }
 
     @Test
     public void writeThing_CompletelyEmpty_Success() throws IOException {
         String expResult = "{}";
         Entity entity = new Entity(modelSensing.etThing);
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assert (jsonEqual(expResult, json));
     }
 
     @Test
     public void writeThingWithLocation() throws IOException {
-        String expResult = """
+        String expResultV1 = """
                 {
                   "@iot.id": 1,
                   "name": "This thing is an oven.",
@@ -158,15 +190,28 @@ public class EntityFormatterTest {
                     { "@iot.id": 1 }
                   ]
                 }""";
+        String expResultV2 = """
+                {
+                  "id": 1,
+                  "name": "This thing is an oven.",
+                  "description": "This thing is an oven.",
+                  "properties": {},
+                  "Locations": [
+                    { "@id": "Locations(1)" }
+                  ]
+                }""";
         Entity entity = modelSensing.newThing("This thing is an oven.", "This thing is an oven.", new HashMap<>());
         entity.setProperty(EP_ID, 1L);
 
         Entity location = new Entity(modelSensing.etLocation)
-                .setPrimaryKeyValues(PkValue.of(1L));
+                .setPrimaryKeyValues(PkValue.of(1L))
+                .setService(service);
         entity.getProperty(modelSensing.npThingLocations).add(location);
 
-        String json = JsonWriter.writeEntity(entity);
-        assertTrue(jsonEqual(expResult, json));
+        String json1 = JsonWriter.writeEntity(Version.V_1_1, entity);
+        assertTrue(jsonEqual(expResultV1, json1));
+        String json2 = JsonWriter.writeEntity(Version.V_2_0, entity);
+        assertTrue(jsonEqual(expResultV2, json2));
     }
 
     @Test
@@ -193,7 +238,7 @@ public class EntityFormatterTest {
         Entity location = modelSensing.newLocation("TestLocation", "The location of the TestThing", "application/vnd.geo+json", new Point(8.8, 49.9));
         entity.getProperty(modelSensing.npThingLocations).add(location);
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
     }
 
@@ -213,7 +258,7 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newLocation("OvenLocation", "The location of an oven.", new Point(-114.05, 51.05))
                 .setProperty(EP_ID, 1L);
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etLocation, expResult);
@@ -233,7 +278,7 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newLocation("OvenLocation", "The location of an oven.", "text/plain", "Third house on the left.")
                 .setProperty(EP_ID, 1L);
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etLocation, expResult);
@@ -325,6 +370,89 @@ public class EntityFormatterTest {
                         }
                     ]
                 }""";
+        String expResult2 = """
+                {
+                    "description": "thing 1",
+                    "name": "thing name 1",
+                    "properties": {
+                        "reference": "first"
+                    },
+                    "Locations": [
+                        {
+                            "description": "location 1",
+                            "name": "location name 1",
+                            "location": {
+                                "type": "Point",
+                                "coordinates": [-117.05, 51.05]
+                            },
+                            "encodingType": "application/geo+json"
+                        }
+                    ],
+                    "Datastreams": [
+                        {
+                            "unitOfMeasurement": {
+                                "name": "Lumen",
+                                "symbol": "lm",
+                                "definition": "http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html/Lumen"
+                            },
+                            "description": "datastream 1",
+                            "name": "datastream name 1",
+                            "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+                            "ObservedProperty": {
+                                "name": "Luminous Flux",
+                                "definition": "http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html/LuminousFlux",
+                                "description": "observedProperty 1"
+                            },
+                            "Sensor": {
+                                "description": "sensor 1",
+                                "name": "sensor name 1",
+                                "encodingType": "application/text",
+                                "metadata": "Light flux sensor"
+                            },
+                            "Observations": [
+                                {
+                                    "phenomenonTime": {"start": "2015-03-03T00:00:00Z"},
+                                    "result": 3
+                                },
+                                {
+                                    "phenomenonTime": {"start": "2015-03-04T00:00:00Z"},
+                                    "result": 4
+                                }
+                            ]
+                        },
+                        {
+                            "unitOfMeasurement": {
+                                "name": "Centigrade",
+                                "symbol": "C",
+                                "definition": "http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html/Lumen"
+                            },
+                            "description": "datastream 2",
+                            "name": "datastream name 2",
+                            "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+                            "ObservedProperty": {
+                                "name": "Tempretaure",
+                                "definition": "http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html/Tempreture",
+                                "description": "observedProperty 2"
+                            },
+                            "Sensor": {
+                                "description": "sensor 2",
+                                "name": "sensor name 2",
+                                "encodingType": "application/text",
+                                "metadata": "Tempreture sensor"
+                            },
+                            "Observations": [
+                                {
+                                    "phenomenonTime": {"start": "2015-03-05T00:00:00Z"},
+                                    "result": 5
+                                },
+                                {
+                                    "phenomenonTime": {"start": "2015-03-06T00:00:00Z"},
+                                    "result": 6
+                                }
+                            ]
+                        }
+                    ]
+                }""";
         Entity thing = modelSensing.newThing("thing name 1", "thing 1");
         MapValue properties = CollectionsHelper.propertiesBuilder()
                 .addItem("reference", "first")
@@ -350,8 +478,11 @@ public class EntityFormatterTest {
         ds2.getProperty(modelSensing.npDatastreamObservations).add(modelSensing.newObservation(6L, ZonedDateTime.parse("2015-03-06T00:00:00Z")));
         thing.getProperty(modelSensing.npThingDatastreams).add(ds2);
 
-        String json = JsonWriter.writeEntity(thing);
+        String json = JsonWriter.writeEntity(Version.V_1_1, thing);
         assertTrue(jsonEqual(expResult, json));
+
+        json = JsonWriter.writeEntity(Version.V_2_0, thing);
+        assertTrue(jsonEqual(expResult2, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etThing, expResult);
         assertEquals(thing, parsed);
@@ -368,34 +499,45 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newObservation(new BigDecimal("70.40"), ZonedDateTime.parse("2014-12-31T11:59:59Z"))
                 .setProperty(EP_ID, 1L);
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResult);
         assertEquals(entity, parsed);
 
-        String json2 = JsonWriter.writeEntity(parsed);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
         assertTrue(jsonEqual(expResult, json2));
     }
 
     @Test
     public void writeObservationInterval() throws IOException {
-        String expResult = """
+        String expResultV1 = """
                 {
                     "@iot.id": 1,
                     "phenomenonTime": "2014-12-31T11:59:59Z/2014-12-31T12:01:01Z",
                     "result": 70.40
                 }""";
+        String expResultV2 = """
+                {
+                    "id": 1,
+                    "phenomenonTime": {"start": "2014-12-31T11:59:59Z", "end":"2014-12-31T12:01:01Z"},
+                    "result": 70.40
+                }""";
         Entity entity = modelSensing.newObservation(new BigDecimal("70.40"), TimeInterval.parse("2014-12-31T11:59:59Z/2014-12-31T12:01:01Z"))
                 .setProperty(EP_ID, 1L)
                 .setSelfLink("http://example.org/Observations/1");
+        Entity entity2 = modelV2Core.newObservation(new BigDecimal("70.40"), TimeInterval.parse("2014-12-31T11:59:59Z/2014-12-31T12:01:01Z"))
+                .setProperty(EP_ID, 1L)
+                .setSelfLink("http://example.org/Observations/1");
 
-        String json = JsonWriter.writeEntity(entity);
-        assertTrue(jsonEqual(expResult, json));
+        String json1 = JsonWriter.writeEntity(Version.V_1_1, entity);
+        assertTrue(jsonEqual(expResultV1, json1));
+        String json3 = JsonWriter.writeEntity(Version.V_2_0, entity2);
+        assertTrue(jsonEqual(expResultV2, json3));
 
-        Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResult);
-        String json2 = JsonWriter.writeEntity(parsed);
-        assertTrue(jsonEqual(expResult, json2));
+        Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResultV1);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
+        assertTrue(jsonEqual(expResultV1, json2));
     }
 
     @Test
@@ -411,11 +553,11 @@ public class EntityFormatterTest {
                 .setProperty(EP_RESULT, null)
                 .setProperty(EP_PHENOMENONTIME, TimeValue.create(ZonedDateTime.parse("2014-12-31T11:59:59Z")));
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResult);
-        String json2 = JsonWriter.writeEntity(parsed);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
         assertTrue(jsonEqual(expResult, json2));
     }
 
@@ -428,11 +570,11 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newObservation()
                 .setProperty(EP_PHENOMENONTIME, TimeValue.create(ZonedDateTime.parse("2014-12-31T11:59:59Z")));
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResult);
-        String json2 = JsonWriter.writeEntity(parsed);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
         assertTrue(jsonEqual(expResult, json2));
     }
 
@@ -445,13 +587,13 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newObservation()
                 .setProperty(EP_RESULT, new BigDecimal("0.0"));
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelSensing.etObservation, expResult);
         assertEquals(entity.getProperty(EP_RESULT), parsed.getProperty(EP_RESULT));
 
-        String json2 = JsonWriter.writeEntity(parsed);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
         assertTrue(jsonEqual(expResult, json2));
     }
 
@@ -521,13 +663,13 @@ public class EntityFormatterTest {
                                         .setConstraint(new AllowedTokens("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")))
                         .build());
 
-        String json = JsonWriter.writeEntity(entity);
+        String json = JsonWriter.writeEntity(Version.V_1_1, entity);
         assertTrue(jsonEqual(expResult, json));
 
         Entity parsed = service.getJsonReader().parseEntity(modelTasking.etTaskingCapability, expResult);
         assertEquals(entity, parsed);
 
-        String json2 = JsonWriter.writeEntity(parsed);
+        String json2 = JsonWriter.writeEntity(Version.V_1_1, parsed);
         assertTrue(jsonEqual(expResult, json2));
     }
 

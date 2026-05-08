@@ -219,24 +219,6 @@
                 <version>${version.maven.plugin.surefire}</version>
             </plugin>
             <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>${version.maven.plugin.dependency-check}</version>
-                <configuration>
-                    <failBuildOnCVSS>9</failBuildOnCVSS>
-                    <nvdApiServerId>NIST_NVD_API</nvdApiServerId>
-                    <nvdMaxRetryCount>20</nvdMaxRetryCount>
-                    <ossIndexServerId>ossindex</ossIndexServerId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${version.maven.plugin.jacoco}</version>

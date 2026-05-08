@@ -113,7 +113,7 @@ public class BaseDao implements Dao {
         HttpPost httpPost;
         try {
             uriBuilder = new URIBuilder(getSetPath().toURI());
-            json = JsonWriter.writeEntity(entity);
+            json = JsonWriter.writeEntity(service.getVersion(), entity);
             httpPost = new HttpPost(uriBuilder.build());
         } catch (URISyntaxException | JacksonException ex) {
             throw new ServiceFailureException("Failed to create entity.", ex);
@@ -187,7 +187,7 @@ public class BaseDao implements Dao {
         String json;
         try {
             final URI uri = buildUri(entity.getPrimaryKeyValues());
-            json = JsonWriter.writeEntity(entity);
+            json = JsonWriter.writeEntity(service.getVersion(), entity);
             httpPatch = new HttpPatch(uri);
         } catch (JacksonException | URISyntaxException ex) {
             throw new ServiceFailureException(ex);
@@ -210,7 +210,7 @@ public class BaseDao implements Dao {
         String json;
         try {
             final URI uri = buildUri(entity.getPrimaryKeyValues());
-            json = JsonWriter.writeObject(patch);
+            json = JsonWriter.writeObject(service.getVersion(), patch);
             httpPatch = new HttpPatch(uri);
         } catch (URISyntaxException | JacksonException ex) {
             throw new ServiceFailureException(ex);

@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The types of entities.
  */
-public class EntityType implements Comparable<EntityType>, Annotatable {
+public class EntityType implements Comparable<EntityType>, ContainerType<EntityType>, Annotatable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityType.class.getName());
 
@@ -126,6 +126,11 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         this.mainSet = container;
     }
 
+    @Override
+    public boolean isOpenType() {
+        return false;
+    }
+
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
@@ -146,6 +151,7 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return this;
     }
 
+    @Override
     public EntityType registerProperty(Property property) {
         properties.add(property);
         propertiesByName.put(property.getName(), property);
@@ -218,6 +224,7 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return propertiesByName.get(name);
     }
 
+    @Override
     public EntityPropertyMain getEntityProperty(String name) {
         Property property = propertiesByName.get(name);
         if (property instanceof EntityPropertyMain entityPropertyMain) {
@@ -259,11 +266,17 @@ public class EntityType implements Comparable<EntityType>, Annotatable {
         return properties;
     }
 
+    @Override
+    public Map<String, Property> getPropertiesByName() {
+        return propertiesByName;
+    }
+
     /**
      * Get the set of Entity properties.
      *
      * @return The set of Entity properties.
      */
+    @Override
     public Set<EntityPropertyMain> getEntityProperties() {
         return entityProperties;
     }

@@ -194,7 +194,7 @@ public class SensorThingsV20Tasking implements DataModel {
     }
 
     public Entity newTaskingCapability(String name, String description, Map<String, Object> properties) {
-        return newTaskingCapability(name, description, new MapValue(properties));
+        return newTaskingCapability(name, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
     public Entity newTaskingCapability(String name, String description, MapValue properties) {

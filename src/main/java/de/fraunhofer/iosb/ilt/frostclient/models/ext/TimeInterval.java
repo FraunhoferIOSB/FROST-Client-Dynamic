@@ -22,7 +22,9 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.fraunhofer.iosb.ilt.frostclient.model.ComplexValue;
+import de.fraunhofer.iosb.ilt.frostclient.model.ContainerType;
 import de.fraunhofer.iosb.ilt.frostclient.model.Property;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
@@ -50,6 +52,11 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
 
     public TimeInterval(MomentInterval interval) {
         this.interval = interval;
+    }
+
+    @Override
+    public ContainerType getType() {
+        return TypeComplex.STA_TIMEINTERVAL;
     }
 
     @Override
@@ -97,6 +104,7 @@ public class TimeInterval implements TimeObject, ComplexValue<TimeInterval> {
     }
 
     @Override
+    @JsonIgnore
     public boolean isEmpty() {
         return interval == null;
     }

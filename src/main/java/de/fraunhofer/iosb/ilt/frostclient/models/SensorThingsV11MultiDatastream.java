@@ -70,7 +70,7 @@ public class SensorThingsV11MultiDatastream implements DataModel {
     public static final String NAME_MULTIOBSERVATIONDATATYPES = "multiObservationDataTypes";
 
     public static final EntityPropertyMain<List<String>> EP_MULTIOBSERVATIONDATATYPES = new EntityPropertyMain<>(NAME_MULTIOBSERVATIONDATATYPES, new TypeCollection(EDM_STRING, TYPE_REFERENCE_LIST_STRING));
-    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeCollection(SensorThingsV11Sensing.ept_Uom, TYPE_REFERENCE_LIST_UOM));
+    public static final EntityPropertyMain<List<UnitOfMeasurement>> EP_UNITOFMEASUREMENTS = new EntityPropertyMain<>("unitOfMeasurements", new TypeCollection(SensorThingsV11Sensing.EPT_UOM, TYPE_REFERENCE_LIST_UOM));
 
     public final NavigationPropertyEntity npObservationMultidatastream = new NavigationPropertyEntity(NAME_MULTI_DATASTREAM);
     public final NavigationPropertyEntitySet npMultidatastreamObservations = new NavigationPropertyEntitySet(NAME_OBSERVATIONS, npObservationMultidatastream);

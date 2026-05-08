@@ -24,6 +24,7 @@ package de.iosb.fraunhofer.ilt.frostclient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
@@ -56,7 +57,7 @@ public class UtilsTest {
                 .add("/test1", JsonValue.FALSE)
                 .add("/sub/test2", 2)
                 .build();
-        String json = JsonWriter.writeObject(patch);
+        String json = JsonWriter.writeObject(Version.V_1_1, patch);
         JsonPatch patch2 = SimpleJsonMapper.getSimpleObjectMapper().readValue(json, JsonPatch.class);
         assertEquals(patch, patch2);
     }
