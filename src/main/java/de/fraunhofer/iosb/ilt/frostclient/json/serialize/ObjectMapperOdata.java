@@ -59,7 +59,7 @@ public class ObjectMapperOdata {
 
     private static ObjectMapper createObjectMapper(Version version) {
         SimpleModule module = new SimpleModule()
-                .addSerializer(Entity.class, new EntitySerializerSta(version))
+                .addSerializer(Entity.class, new EntitySerializerOdata(version))
                 .addSerializer(ComplexValue.class, new ComplexValueSerializer())
                 .addSerializer(TimeInstant.class, new TimeObjectSerializer())
                 .addSerializer(Moment.class, new MomentSerializer());

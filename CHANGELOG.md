@@ -3,6 +3,8 @@
 ## Version 2.35-SNAPSHOT
 
 **Updates**
+* Added support for adding and removing to many-to-many relations.
+* Added initial Sta V2 API support.
 
 
 ## Version 2.34

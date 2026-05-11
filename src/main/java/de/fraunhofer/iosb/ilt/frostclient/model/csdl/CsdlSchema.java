@@ -30,8 +30,10 @@ import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimple;
+import de.fraunhofer.iosb.ilt.frostclient.utils.UnknownPropertyTypeException;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -138,8 +140,28 @@ public class CsdlSchema {
         for (var entry : typeDefs.entrySet()) {
             entry.getValue().applyTo(mr, prefix + entry.getKey());
         }
+        Map<String, CsdlItemComplexType> retry = new LinkedHashMap<>();
         for (var entry : complexTypes.entrySet()) {
-            entry.getValue().applyTo(mr, prefix + entry.getKey());
+            String name = entry.getKey();
+            CsdlItemComplexType type = entry.getValue();
+            try {
+                type.applyTo(mr, prefix + name);
+            } catch (UnknownPropertyTypeException ex) {
+                retry.put(name, type);
+            }
+        }
+        while (!retry.isEmpty()) {
+            Iterator<Entry<String, CsdlItemComplexType>> it;
+            for (it = retry.entrySet().iterator(); it.hasNext();) {
+                Entry<String, CsdlItemComplexType> entry = it.next();
+                String name = entry.getKey();
+                CsdlItemComplexType type = entry.getValue();
+                try {
+                    type.applyTo(mr, prefix + name);
+                    it.remove();
+                } catch (UnknownPropertyTypeException ex) {
+                }
+            }
         }
         for (var entry : entityTypes.entrySet()) {
             final CsdlItemEntityType ciEt = entry.getValue();
