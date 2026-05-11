@@ -24,6 +24,7 @@ package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 
 import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
@@ -64,8 +65,8 @@ public class EntitySerializerSta extends ValueSerializer<Entity> {
     }
 
     public void writeContent(Entity entity, JsonGenerator gen) throws IOException {
-        Set<EntityPropertyMain> entityProps = entity.getEntityType().getEntityProperties();
-        Set<NavigationProperty> navigationProps = entity.getEntityType().getNavigationProperties();
+        Set<EntityPropertyMain> entityProps = entity.getType().getEntityProperties();
+        Set<NavigationProperty> navigationProps = entity.getType().getNavigationProperties();
         for (EntityPropertyMain ep : entityProps) {
             writeEntityProp(ep, entity, gen);
         }
@@ -99,7 +100,9 @@ public class EntitySerializerSta extends ValueSerializer<Entity> {
     }
 
     private void writeExpandedEntity(JsonGenerator gen, Entity expandedEntity) throws JacksonException {
-        if (expandedEntity.hasService()) {
+        if (expandedEntity instanceof EntityReference) {
+            writeEntityReference(gen, expandedEntity);
+        } else if (expandedEntity.hasService()) {
             Entity ref = version.getReferenceFor(expandedEntity);
             writeEntityReference(gen, ref);
         } else {
@@ -111,9 +114,7 @@ public class EntitySerializerSta extends ValueSerializer<Entity> {
         if (entity.primaryKeyFullySet()) {
             gen.writePOJO(entity);
         } else {
-            gen.writeStartObject();
-            gen.writeStringProperty(version.getSelfLinkName(), entity.getSelfLink());
-            gen.writeEndObject();
+            LOGGER.error("Can't write a reference for entity, primary key not fully set.");
         }
     }
 

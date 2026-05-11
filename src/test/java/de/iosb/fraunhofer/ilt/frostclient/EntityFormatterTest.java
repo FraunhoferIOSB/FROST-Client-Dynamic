@@ -37,6 +37,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Sensing;
 import de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV11Tasking;
@@ -203,7 +204,7 @@ public class EntityFormatterTest {
         Entity entity = modelSensing.newThing("This thing is an oven.", "This thing is an oven.", new HashMap<>());
         entity.setProperty(EP_ID, 1L);
 
-        Entity location = new Entity(modelSensing.etLocation)
+        Entity location = new EntityReference(modelSensing.etLocation)
                 .setPrimaryKeyValues(PkValue.of(1L))
                 .setService(service);
         entity.getProperty(modelSensing.npThingLocations).add(location);
@@ -673,4 +674,14 @@ public class EntityFormatterTest {
         assertTrue(jsonEqual(expResult, json2));
     }
 
+    @Test
+    public void writeReference() {
+        String expResult = """
+                {
+                    "@id": "Things(1)"
+                }""";
+        EntityReference entity = modelV2Core.newThing(1).asReference();
+        String json = JsonWriter.writeEntity(Version.V_2_0, entity);
+        assertTrue(jsonEqual(expResult, json));
+    }
 }

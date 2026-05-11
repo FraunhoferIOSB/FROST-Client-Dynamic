@@ -161,7 +161,7 @@ public class EntitySet implements Iterable<Entity> {
         httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
         LOGGER.debug("Fetching: {}", httpGet.getURI());
         try (CloseableHttpResponse response = service.execute(httpGet)) {
-            Utils.throwIfNotOk(httpGet, response);
+            Utils.throwIfNotOkOrNoContent(httpGet, response);
             String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             JsonReader reader = new JsonReader(service.getModelRegistry());
             EntitySet nextSet = reader.parseEntitySet(type, json)
@@ -309,7 +309,7 @@ public class EntitySet implements Iterable<Entity> {
             httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
             LOGGER.debug("Fetching: {}", httpGet.getURI());
             try (CloseableHttpResponse response = parent.service.execute(httpGet)) {
-                Utils.throwIfNotOk(httpGet, response);
+                Utils.throwIfNotOkOrNoContent(httpGet, response);
                 String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
                 JsonReader reader = new JsonReader(parent.service.getModelRegistry());
                 EntitySet nextSet = reader.parseEntitySet(parent.type, json)

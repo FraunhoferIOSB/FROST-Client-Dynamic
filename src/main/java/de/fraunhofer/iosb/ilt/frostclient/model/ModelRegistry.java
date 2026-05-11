@@ -30,6 +30,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import de.fraunhofer.iosb.ilt.frostclient.models.DataModel;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
+import de.fraunhofer.iosb.ilt.frostclient.utils.UnknownPropertyTypeException;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -147,7 +148,7 @@ public class ModelRegistry {
         if (type != null) {
             return type;
         }
-        throw new IllegalArgumentException("unknown property type: " + name);
+        throw new UnknownPropertyTypeException("unknown property type: " + name);
     }
 
     public Map<String, PropertyType> getPropertyTypes() {

@@ -26,6 +26,7 @@ import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.Consts;
 import org.apache.http.Header;
@@ -89,7 +91,7 @@ public class BaseDao implements Dao {
         this.entityType = navigationLink.getEntityType();
         this.parent = parent;
         this.navigationLink = navigationLink;
-        if (!parent.getEntityType().getNavigationSets().contains(navigationLink)) {
+        if (!parent.getType().getNavigationSets().contains(navigationLink)) {
             throw new IllegalArgumentException("Entities of type " + entityType + " don't have a navigationProperty " + navigationLink);
         }
     }
@@ -123,7 +125,7 @@ public class BaseDao implements Dao {
         httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         try (CloseableHttpResponse response = service.execute(httpPost)) {
-            Utils.throwIfNotOk(httpPost, response);
+            Utils.throwIfNotOkOrNoContent(httpPost, response);
             Header locationHeader = response.getLastHeader("location");
             EntityUtils.consumeQuietly(response.getEntity());
             if (locationHeader == null) {
@@ -154,7 +156,7 @@ public class BaseDao implements Dao {
 
     @Override
     public Entity find(Entity parent, NavigationPropertyEntity npe) throws ServiceFailureException {
-        if (!parent.getEntityType().getNavigationEntities().contains(npe)) {
+        if (!parent.getType().getNavigationEntities().contains(npe)) {
             throw new IllegalArgumentException("Entities of type " + parent + " don't have nav prop " + npe);
         }
         try {
@@ -171,7 +173,7 @@ public class BaseDao implements Dao {
         httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
 
         try (CloseableHttpResponse response = service.execute(httpGet)) {
-            Utils.throwIfNotOk(httpGet, response);
+            Utils.throwIfNotOkOrNoContent(httpGet, response);
             String returnContent = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             Entity entity = service.getJsonReader().parseEntity(entityType, returnContent);
             entity.setService(service);
@@ -197,7 +199,7 @@ public class BaseDao implements Dao {
         httpPatch.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         try (CloseableHttpResponse response = service.execute(httpPatch)) {
-            Utils.throwIfNotOk(httpPatch, response);
+            Utils.throwIfNotOkOrNoContent(httpPatch, response);
             EntityUtils.consumeQuietly(response.getEntity());
         } catch (IOException ex) {
             throw new ServiceFailureException(ex);
@@ -220,7 +222,7 @@ public class BaseDao implements Dao {
         httpPatch.setEntity(new StringEntity(json, APPLICATION_JSON_PATCH));
 
         try (CloseableHttpResponse response = service.execute(httpPatch)) {
-            Utils.throwIfNotOk(httpPatch, response);
+            Utils.throwIfNotOkOrNoContent(httpPatch, response);
             EntityUtils.consumeQuietly(response.getEntity());
         } catch (IOException ex) {
             throw new ServiceFailureException(ex);
@@ -239,10 +241,61 @@ public class BaseDao implements Dao {
         LOGGER.debug("Deleting: {}", httpDelete.getURI());
 
         try (CloseableHttpResponse response = service.execute(httpDelete)) {
+            Utils.throwIfNotOkOrNoContent(httpDelete, response);
+            EntityUtils.consumeQuietly(response.getEntity());
+        } catch (IOException ex) {
+            throw new ServiceFailureException(ex);
+        }
+    }
+
+    @Override
+    public void linkEntity(EntityReference ref) throws ServiceFailureException {
+        linkEntities(ref);
+    }
+
+    @Override
+    public void linkEntities(List<EntityReference> references) throws ServiceFailureException {
+        if (navigationLink == null) {
+            throw new IllegalArgumentException("Trying to link to a set that is not a navigation link.");
+        }
+        String urlString = service.getFullPathString(parent, navigationLink) + "/$ref";
+        for (var ref : references) {
+            String json = JsonWriter.writeEntity(service.getVersion(), ref);
+            HttpPost httpPost = new HttpPost(urlString);
+            LOGGER.info("Sending POST to {}", urlString);
+            httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+            try (CloseableHttpResponse response = service.execute(httpPost)) {
+                Utils.throwIfNotOk(httpPost, response);
+                EntityUtils.consumeQuietly(response.getEntity());
+            } catch (IOException ex) {
+                throw new ServiceFailureException(ex);
+            }
+        }
+    }
+
+    @Override
+    public void unlinkEntity(EntityReference ref) throws ServiceFailureException {
+        if (navigationLink == null) {
+            throw new IllegalArgumentException("Trying to unlink from a set that is not a navigation link.");
+        }
+        String urlString = service.getFullPathString(parent, navigationLink) + "/$ref?$id=../../" + ref.getSelfLink(false);
+        LOGGER.info("Sending DELETE to {}", urlString);
+        HttpDelete httpDelete = new HttpDelete(urlString);
+        try (CloseableHttpResponse response = service.execute(httpDelete)) {
             Utils.throwIfNotOk(httpDelete, response);
             EntityUtils.consumeQuietly(response.getEntity());
         } catch (IOException ex) {
             throw new ServiceFailureException(ex);
+        }
+    }
+
+    @Override
+    public void unlinkEntities(List<EntityReference> references) throws ServiceFailureException {
+        if (navigationLink == null) {
+            throw new IllegalArgumentException("Trying to unlink from a set that is not a navigation link.");
+        }
+        for (var ref : references) {
+            unlinkEntity(ref);
         }
     }
 

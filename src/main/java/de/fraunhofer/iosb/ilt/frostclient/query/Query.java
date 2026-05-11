@@ -84,7 +84,7 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
     public Query(SensorThingsService service, Entity parent, NavigationPropertyEntitySet navigationLink) {
         this.service = service;
         this.entityType = navigationLink.getEntityType();
-        if (!parent.getEntityType().getNavigationSets().contains(navigationLink)) {
+        if (!parent.getType().getNavigationSets().contains(navigationLink)) {
             throw new IllegalArgumentException("Entity " + parent + " has no navigationProperty " + navigationLink);
         }
         this.navigationLink = navigationLink;
@@ -93,6 +93,14 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
 
     public EntityType getEntityType() {
         return entityType;
+    }
+
+    public Entity getParent() {
+        return parent;
+    }
+
+    public NavigationPropertyEntitySet getNavigationLink() {
+        return navigationLink;
     }
 
     public SensorThingsService getService() {
@@ -229,7 +237,7 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
         httpGet.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
 
         try (CloseableHttpResponse response = service.execute(httpGet)) {
-            Utils.throwIfNotOk(httpGet, response);
+            Utils.throwIfNotOkOrNoContent(httpGet, response);
             String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             list = service.getJsonReader().parseEntitySet(entityType, json);
             list.setInitialLink(httpGet.getURI().toString());
@@ -308,11 +316,12 @@ public class Query implements QueryRequest<Query>, QueryParameter<Query> {
         httpDelete.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
 
         try (CloseableHttpResponse response = service.execute(httpDelete)) {
-            Utils.throwIfNotOk(httpDelete, response);
+            Utils.throwIfNotOkOrNoContent(httpDelete, response);
             EntityUtils.consumeQuietly(response.getEntity());
         } catch (IOException ex) {
             throw new ServiceFailureException("Failed to delete from query.", ex);
         }
 
     }
+
 }

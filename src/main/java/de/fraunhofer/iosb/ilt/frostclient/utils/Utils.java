@@ -90,7 +90,23 @@ public class Utils {
 
     /**
      * Throws a StatusCodeException if the given response did not have status
-     * code 2xx
+     * code 2xx or if it has status code 204 (NoContent)
+     *
+     * @param request The request that generated the response.
+     * @param response The response to check the status code of.
+     * @throws StatusCodeException If the response was not 2xx.
+     */
+    public static void throwIfNotOkOrNoContent(HttpRequestBase request, CloseableHttpResponse response) throws StatusCodeException {
+        final int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == 204) {
+            throw new StatusCodeException(request.getURI().toString(), statusCode, response.getStatusLine().getReasonPhrase(), "");
+        }
+        throwIfNotOk(request, response);
+    }
+
+    /**
+     * Throws a StatusCodeException if the given response did not have status
+     * code 2xx or if it has status code 204 (NoContent)
      *
      * @param request The request that generated the response.
      * @param response The response to check the status code of.
@@ -98,10 +114,7 @@ public class Utils {
      */
     public static void throwIfNotOk(HttpRequestBase request, CloseableHttpResponse response) throws StatusCodeException {
         final int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 204) {
-            throw new StatusCodeException(request.getURI().toString(), statusCode, response.getStatusLine().getReasonPhrase(), "");
-        }
-        if (statusCode < 200 || statusCode >= 300 || statusCode == 204) {
+        if (statusCode < 200 || statusCode >= 300) {
             String returnContent = null;
             try {
                 returnContent = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
@@ -146,7 +159,7 @@ public class Utils {
             return serverInfo;
         }
         try (CloseableHttpResponse response = service.execute(httpGet)) {
-            Utils.throwIfNotOk(httpGet, response);
+            Utils.throwIfNotOkOrNoContent(httpGet, response);
             String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             JsonNode tree = SimpleJsonMapper.getSimpleObjectMapper().readTree(json);
             Header[] odataVersion = response.getHeaders(NAME_HEADER_ODATA_VERSION);

@@ -173,8 +173,8 @@ public class SensorThingsV11MultiDatastream implements DataModel {
     }
 
     public Entity newObservation(Object result, Entity datastream) {
-        if (!etMultiDatastream.equals(datastream.getEntityType())) {
-            throw new IllegalArgumentException("Datastream must have entityType Datastream, not " + datastream.getEntityType());
+        if (!etMultiDatastream.equals(datastream.getType())) {
+            throw new IllegalArgumentException("Datastream must have entityType Datastream, not " + datastream.getType());
         }
         return newObservation()
                 .setProperty(EP_RESULT, result)

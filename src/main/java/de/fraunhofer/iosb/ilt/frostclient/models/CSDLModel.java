@@ -75,7 +75,7 @@ public class CSDLModel implements DataModel, AnnotatedConfigurable<Object, Objec
         }
 
         try (CloseableHttpResponse response = service.execute(httpGet)) {
-            Utils.throwIfNotOk(httpGet, response);
+            Utils.throwIfNotOkOrNoContent(httpGet, response);
             String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
             CsdlDocument csdlDocument = SimpleJsonMapper.getSimpleObjectMapper().readValue(json, CsdlDocument.class);
             csdlDocument.applyTo(mr);

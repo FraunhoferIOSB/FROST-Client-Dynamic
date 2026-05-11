@@ -46,7 +46,7 @@ import tools.jackson.databind.ObjectMapper;
 public class Version {
 
     private static final ReferenceGenerator refGen1x = (e) -> e.withOnlyPk();
-    private static final ReferenceGenerator refGenOdata = (e) -> e.withOnlySelfLink();
+    private static final ReferenceGenerator refGenOdata = (e) -> e.asReference();
     private static final PropertyNameChooser pnc1x = (p) -> {
         if (p.hasAliases()) {
             for (String alias : p.getAliases()) {

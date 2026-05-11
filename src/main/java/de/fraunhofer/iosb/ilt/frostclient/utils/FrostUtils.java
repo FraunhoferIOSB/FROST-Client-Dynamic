@@ -128,7 +128,7 @@ public final class FrostUtils {
         if (cachedEntity == null) {
             create(newEntity);
             cache.put(newEntity);
-            LOGGER.info("{}Created {}: {}", logPrefix, newEntity.getEntityType(), cache.localIdFor(newEntity));
+            LOGGER.info("{}Created {}: {}", logPrefix, newEntity.getType(), cache.localIdFor(newEntity));
             return newEntity;
         }
 

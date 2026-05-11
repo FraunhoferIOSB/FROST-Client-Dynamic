@@ -158,14 +158,14 @@ public class Entity implements ComplexValue<Entity> {
      * @return The EntityType of this Entity.
      * @deprecated Use getType() instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public EntityType getEntityType() {
         return entityType;
     }
 
     @Override
-    public ContainerType getType() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public EntityType getType() {
+        return entityType;
     }
 
     public Entity setEntityType(EntityType entityType) {
@@ -367,12 +367,9 @@ public class Entity implements ComplexValue<Entity> {
      * @return a copy with only the Primary Key fields set.
      */
     public Entity withOnlyPk() {
-        Entity copy = new Entity(entityType);
-        List<EntityPropertyMain> pkProps = getPrimaryKey().getKeyProperties();
-        for (EntityPropertyMain pkProp : pkProps) {
-            copy.setProperty(pkProp, getProperty(pkProp));
-        }
-        copy.setService(service);
+        Entity copy = new Entity(entityType)
+                .setPrimaryKeyValues(getPrimaryKeyValues())
+                .setService(service);
         return copy;
     }
 
@@ -382,10 +379,11 @@ public class Entity implements ComplexValue<Entity> {
      *
      * @return a copy with only the SelfLink field set.
      */
-    public Entity withOnlySelfLink() {
-        Entity copy = new Entity(entityType);
-        copy.setSelfLink(getSelfLink(false));
-        copy.setService(service);
+    public EntityReference asReference() {
+        EntityReference copy = new EntityReference(entityType);
+        copy.setSelfLink(getSelfLink(false))
+                .setPrimaryKeyValues(getPrimaryKeyValues())
+                .setService(service);
         return copy;
     }
 

@@ -24,17 +24,16 @@ package de.fraunhofer.iosb.ilt.frostclient.json.serialize;
 
 import de.fraunhofer.iosb.ilt.frostclient.Version;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
-import java.io.IOException;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
-import tools.jackson.core.exc.StreamWriteException;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
@@ -51,21 +50,23 @@ public class EntitySerializerOdata extends ValueSerializer<Entity> {
     }
 
     @Override
-    public void serialize(Entity entity, JsonGenerator gen, SerializationContext serializers) throws JacksonException {
-        gen.writeStartObject();
-        try {
-            writeContent(entity, gen);
-        } catch (IOException | RuntimeException exc) {
-            LOGGER.error("Failed to serialise entity.", exc);
-            throw new StreamWriteException(gen, "could not serialize Entity");
-        } finally {
-            gen.writeEndObject();
+    public void serialize(Entity entity, JsonGenerator gen, SerializationContext serializers) {
+        if (entity instanceof EntityReference) {
+            writeEntityReference(gen, entity);
+        } else {
+            writeEntity(gen, entity);
         }
     }
 
-    public void writeContent(Entity entity, JsonGenerator gen) throws IOException {
-        Set<EntityPropertyMain> entityProps = entity.getEntityType().getEntityProperties();
-        Set<NavigationProperty> navigationProps = entity.getEntityType().getNavigationProperties();
+    private void writeEntity(JsonGenerator gen, Entity entity) throws JacksonException {
+        gen.writeStartObject();
+        writeContent(entity, gen);
+        gen.writeEndObject();
+    }
+
+    public void writeContent(Entity entity, JsonGenerator gen) {
+        Set<EntityPropertyMain> entityProps = entity.getType().getEntityProperties();
+        Set<NavigationProperty> navigationProps = entity.getType().getNavigationProperties();
         for (EntityPropertyMain ep : entityProps) {
             writeEntityProp(ep, entity, gen);
         }
@@ -74,7 +75,7 @@ public class EntitySerializerOdata extends ValueSerializer<Entity> {
         }
     }
 
-    private void writeEntityProp(EntityPropertyMain ep, Entity entity, JsonGenerator gen) throws JacksonException {
+    private void writeEntityProp(EntityPropertyMain ep, Entity entity, JsonGenerator gen) {
         if (ep.isReadOnly() && !ep.isKeyPart()) {
             return;
         }
@@ -88,7 +89,7 @@ public class EntitySerializerOdata extends ValueSerializer<Entity> {
         }
     }
 
-    private void writeNavProp(Entity entity, NavigationProperty np, JsonGenerator gen) throws JacksonException {
+    private void writeNavProp(Entity entity, NavigationProperty np, JsonGenerator gen) {
         Object entityOrSet = entity.getProperty(np, false);
         if (entityOrSet instanceof EntitySet entitySet) {
             writeEntitySet(np, entitySet, gen);
@@ -98,7 +99,7 @@ public class EntitySerializerOdata extends ValueSerializer<Entity> {
         }
     }
 
-    private void writeExpandedEntity(JsonGenerator gen, Entity expandedEntity) throws JacksonException {
+    private void writeExpandedEntity(JsonGenerator gen, Entity expandedEntity) {
         if (expandedEntity.hasService()) {
             Entity ref = version.getReferenceFor(expandedEntity);
             writeEntityReference(gen, ref);
@@ -108,16 +109,12 @@ public class EntitySerializerOdata extends ValueSerializer<Entity> {
     }
 
     private void writeEntityReference(JsonGenerator gen, Entity entity) {
-        if (entity.primaryKeyFullySet()) {
-            gen.writePOJO(entity);
-        } else {
-            gen.writeStartObject();
-            gen.writeStringProperty(version.getSelfLinkName(), entity.getSelfLink());
-            gen.writeEndObject();
-        }
+        gen.writeStartObject();
+        gen.writeStringProperty(version.getSelfLinkName(), entity.getSelfLink());
+        gen.writeEndObject();
     }
 
-    private void writeEntitySet(NavigationProperty np, EntitySet entitySet, JsonGenerator gen) throws JacksonException {
+    private void writeEntitySet(NavigationProperty np, EntitySet entitySet, JsonGenerator gen) {
         if (entitySet == null || entitySet.isEmpty()) {
             return;
         }

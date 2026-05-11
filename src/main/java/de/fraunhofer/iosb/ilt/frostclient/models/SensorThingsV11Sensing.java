@@ -375,8 +375,8 @@ public class SensorThingsV11Sensing implements DataModel {
     }
 
     public Entity newObservation(Object result, Entity datastream) {
-        if (!etDatastream.equals(datastream.getEntityType())) {
-            throw new IllegalArgumentException("Datastream Entity must have entityType Datastream, not " + datastream.getEntityType());
+        if (!etDatastream.equals(datastream.getType())) {
+            throw new IllegalArgumentException("Datastream Entity must have entityType Datastream, not " + datastream.getType());
         }
         return newObservation()
                 .setProperty(EP_RESULT, result)

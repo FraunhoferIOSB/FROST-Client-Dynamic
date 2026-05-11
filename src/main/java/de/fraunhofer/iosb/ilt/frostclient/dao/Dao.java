@@ -25,12 +25,15 @@ package de.fraunhofer.iosb.ilt.frostclient.dao;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntityReference;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import jakarta.json.JsonPatch;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * CRUD operations for Entity Types.
@@ -107,6 +110,22 @@ public interface Dao {
      * @throws ServiceFailureException the operation failed
      */
     void delete(Entity entity) throws ServiceFailureException;
+
+    public default void linkEntities(EntityReference... references) throws ServiceFailureException {
+        linkEntities(Arrays.asList(references));
+    }
+
+    public void linkEntity(EntityReference reference) throws ServiceFailureException;
+
+    public void linkEntities(List<EntityReference> references) throws ServiceFailureException;
+
+    public void unlinkEntity(EntityReference reference) throws ServiceFailureException;
+
+    public default void unlinkEntities(EntityReference... references) throws ServiceFailureException {
+        unlinkEntities(Arrays.asList(references));
+    }
+
+    public void unlinkEntities(List<EntityReference> references) throws ServiceFailureException;
 
     /**
      * Start a query to find an entity collection.

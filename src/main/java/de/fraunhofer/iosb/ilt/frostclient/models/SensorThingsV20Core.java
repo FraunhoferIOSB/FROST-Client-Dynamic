@@ -133,7 +133,7 @@ public class SensorThingsV20Core implements DataModel {
     public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS);
     public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES);
     public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS)
-            .setToStringMethod(e -> e.getEntityType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT));
+            .setToStringMethod(e -> e.getType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT));
     public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS);
     public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS);
 
@@ -371,8 +371,8 @@ public class SensorThingsV20Core implements DataModel {
     }
 
     public Entity newObservation(Object result, Entity datastream) {
-        if (!etDatastream.equals(datastream.getEntityType())) {
-            throw new IllegalArgumentException("Datastream Entity must have entityType Datastream, not " + datastream.getEntityType());
+        if (!etDatastream.equals(datastream.getType())) {
+            throw new IllegalArgumentException("Datastream Entity must have entityType Datastream, not " + datastream.getType());
         }
         return newObservation()
                 .setProperty(EP_RESULT, result)

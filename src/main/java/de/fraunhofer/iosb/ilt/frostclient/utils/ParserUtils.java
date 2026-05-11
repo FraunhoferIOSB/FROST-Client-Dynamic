@@ -76,12 +76,12 @@ public class ParserUtils {
         if (parent == null) {
             throw new IllegalArgumentException("Can't generate path for null entity.");
         }
-        if (!parent.getEntityType().getNavigationProperties().contains(relation)) {
-            throw new IllegalArgumentException("Entity of type " + parent.getEntityType() + " has no relation of type " + relation + ".");
+        if (!parent.getType().getNavigationProperties().contains(relation)) {
+            throw new IllegalArgumentException("Entity of type " + parent.getType() + " has no relation of type " + relation + ".");
         }
 
         return String.format("%s(%s)/%s",
-                parent.getEntityType().mainSet,
+                parent.getType().mainSet,
                 StringHelper.formatKeyValuesForUrl(parent),
                 relation.getName());
     }

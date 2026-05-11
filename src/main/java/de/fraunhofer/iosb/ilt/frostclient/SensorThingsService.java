@@ -449,7 +449,7 @@ public class SensorThingsService {
      * @throws ServiceFailureException in case the server rejects the POST.
      */
     public Entity create(Entity entity) throws ServiceFailureException {
-        return new BaseDao(this, entity.getEntityType()).create(entity);
+        return new BaseDao(this, entity.getType()).create(entity);
     }
 
     /**
@@ -459,7 +459,7 @@ public class SensorThingsService {
      * @throws ServiceFailureException in case the server rejects the PATCH.
      */
     public void update(Entity entity) throws ServiceFailureException {
-        new BaseDao(this, entity.getEntityType()).update(entity);
+        new BaseDao(this, entity.getType()).update(entity);
     }
 
     /**
@@ -471,7 +471,7 @@ public class SensorThingsService {
      * @throws ServiceFailureException in case the server rejects the PATCH.
      */
     public void patch(Entity entity, JsonPatch patch) throws ServiceFailureException {
-        new BaseDao(this, entity.getEntityType()).patch(entity, patch);
+        new BaseDao(this, entity.getType()).patch(entity, patch);
     }
 
     /**
@@ -481,7 +481,7 @@ public class SensorThingsService {
      * @throws ServiceFailureException in case the server rejects the DELETE.
      */
     public void delete(Entity entity) throws ServiceFailureException {
-        new BaseDao(this, entity.getEntityType()).delete(entity);
+        new BaseDao(this, entity.getType()).delete(entity);
     }
 
     /**
