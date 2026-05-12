@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.35-SNAPSHOT
+## Version 2.35
 
 **Updates**
+* Bumped Dependencies.
 * Added support for adding and removing to many-to-many relations.
 * Added initial Sta V2 API support.
 
