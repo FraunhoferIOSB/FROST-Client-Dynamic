@@ -83,7 +83,7 @@
         <version.parsson>1.1.7</version.parsson>
         <version.reflections>0.10.2</version.reflections>
         <version.settings>1.2</version.settings>
-        <version.slf4j>2.0.17</version.slf4j>
+        <version.slf4j>2.0.18</version.slf4j>
         <version.time4j>5.9.4</version.time4j>
     </properties>
 
