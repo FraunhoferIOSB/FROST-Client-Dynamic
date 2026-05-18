@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.36-SNAPSHOT
+## Version 2.36
 
 **Updates**
+* Bumped Dependencies.
 * Added support for namespaces and multi-namespace models.
 * Fixed Sta V2 time interval and time value deserialisation.
 
