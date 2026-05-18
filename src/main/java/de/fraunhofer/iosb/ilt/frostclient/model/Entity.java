@@ -170,7 +170,7 @@ public class Entity implements ComplexValue<Entity> {
 
     public Entity setEntityType(EntityType entityType) {
         if (this.entityType != null) {
-            throw new IllegalArgumentException("the type of this entity is alread yet to " + this.entityType.entityName);
+            throw new IllegalArgumentException("the type of this entity is alread yet to " + this.entityType.name);
         }
         this.entityType = entityType;
         return this;
@@ -221,7 +221,7 @@ public class Entity implements ComplexValue<Entity> {
             return (P) getSelfLink();
         }
         if (!entityType.hasProperty(property)) {
-            throw new IllegalArgumentException(entityType.entityName + " has no property " + property.getName());
+            throw new IllegalArgumentException(entityType.name + " has no property " + property.getName());
         }
         if (property instanceof EntityPropertyMain epm) {
             return (P) entityProperties.get(epm);
@@ -271,7 +271,7 @@ public class Entity implements ComplexValue<Entity> {
             return this;
         }
         if (!entityType.hasProperty(property)) {
-            throw new IllegalArgumentException(entityType.entityName + " has no property " + property.getName());
+            throw new IllegalArgumentException(entityType.name + " has no property " + property.getName());
         }
         if (property instanceof EntityPropertyMain epm) {
             entityProperties.put(epm, value);

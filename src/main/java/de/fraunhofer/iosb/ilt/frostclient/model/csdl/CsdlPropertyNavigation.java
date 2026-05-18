@@ -26,8 +26,10 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
+import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyAbstract;
@@ -41,8 +43,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CsdlPropertyNavigation extends CsdlProperty {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlPropertyNavigation.class.getName());
 
     public static final String NAME_KIND_NAVIGATIONPROPERTY = "NavigationProperty";
 
@@ -70,7 +76,9 @@ public class CsdlPropertyNavigation extends CsdlProperty {
     }
 
     public CsdlPropertyNavigation fillFrom(CsdlDocument doc, String nameSpace, EntityType et, NavigationProperty np) {
-        type = np.getType().getName();
+        final PropertyType npType = np.getType();
+        type = ModelRegistry.fullName(npType.getNamespace(), npType.getName());
+        npType.getName();
         final NavigationProperty inverse = np.getInverse();
         if (inverse != null) {
             partner = inverse.getName();
@@ -87,8 +95,13 @@ public class CsdlPropertyNavigation extends CsdlProperty {
 
     @Override
     public void applyTo(ModelRegistry mr, EntityType entityType, String name) {
-        NavigationPropertyAbstract np = createProperty(mr, name);
-        entityType.registerProperty(np);
+        NavigationPropertyAbstract existingProp = entityType.getNavigationProperty(name);
+        if (existingProp == null) {
+            NavigationPropertyAbstract np = createProperty(mr, name);
+            entityType.registerProperty(np);
+        } else {
+            LOGGER.debug("      EntityType {} already has property {}", entityType, name);
+        }
     }
 
     @Override
@@ -99,6 +112,7 @@ public class CsdlPropertyNavigation extends CsdlProperty {
 
     private NavigationPropertyAbstract createProperty(ModelRegistry mr, String name) {
         var targetType = mr.getEntityTypeForName(type);
+        Exceptions.illegalArgumentIf(targetType == null, "No EntityType found with name {}", type);
         NavigationPropertyAbstract np;
         if (collection) {
             var npc = new NavigationPropertyEntitySet(name);

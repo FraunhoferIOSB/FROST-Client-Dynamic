@@ -38,12 +38,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OData CSDL Document.
  */
 public class CsdlDocument {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlDocument.class.getName());
     public static final String VERSION_ODATA_40 = "4.0";
     public static final String VERSION_ODATA_401 = "4.01";
 
@@ -181,7 +184,32 @@ public class CsdlDocument {
 
     public void applyTo(ModelRegistry mr) {
         for (CsdlSchema schema : nameSpaces.values()) {
-            schema.applyTo(mr);
+            mr.maybeAddNamespace(schema.getNamespace());
+            schema.parse();
+        }
+        for (CsdlSchema schema : nameSpaces.values()) {
+            schema.applyTypeDefsTo(mr);
+        }
+        int retries = 0;
+        boolean done;
+        do {
+            done = true;
+            for (CsdlSchema schema : nameSpaces.values()) {
+                done = schema.applyComplexTypesTo(mr) && done;
+            }
+            retries++;
+        } while (!done && retries < 10);
+        if (retries >= 10) {
+            LOGGER.error("Failed to load complex types after {} tries", retries);
+        }
+        for (CsdlSchema schema : nameSpaces.values()) {
+            schema.applyEntityTypesTo(mr);
+        }
+        for (CsdlSchema schema : nameSpaces.values()) {
+            schema.applyEntityPropertiesTo(mr);
+        }
+        for (CsdlSchema schema : nameSpaces.values()) {
+            schema.applyContainersTo(mr);
         }
         mr.initFinalise();
     }

@@ -22,6 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.model;
 
+import static de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry.DEFAULT_NAMESPACE;
+
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotatable;
 import de.fraunhofer.iosb.ilt.frostclient.model.csdl.annotation.Annotation;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
@@ -34,6 +36,7 @@ public abstract class PropertyType implements Annotatable {
 
     private final String name;
     private final String description;
+    private String namespace = DEFAULT_NAMESPACE;
     private CreatorDeserializer creatorDeserializer;
     private ValueDeserializer deserializer;
     private CreatorSerializer creatorSerializer;
@@ -52,6 +55,10 @@ public abstract class PropertyType implements Annotatable {
     }
 
     protected PropertyType(String name, String description, ValueDeserializer deserializer, ValueSerializer serializer) {
+        if (name.startsWith("Edm.")) {
+            namespace = "Edm";
+            name = name.substring(4);
+        }
         this.name = name;
         this.description = description;
         this.deserializer = deserializer;
@@ -60,6 +67,19 @@ public abstract class PropertyType implements Annotatable {
 
     public String getName() {
         return name;
+    }
+
+    public String getFullName() {
+        return ModelRegistry.fullName(namespace, name);
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public PropertyType setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
     }
 
     public String getDescription() {
@@ -107,6 +127,11 @@ public abstract class PropertyType implements Annotatable {
     public static interface CreatorSerializer {
 
         public ValueSerializer create(PropertyType type);
+    }
+
+    @Override
+    public String toString() {
+        return getFullName();
     }
 
 }

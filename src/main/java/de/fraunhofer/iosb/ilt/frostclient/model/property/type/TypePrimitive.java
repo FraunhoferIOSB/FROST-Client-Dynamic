@@ -33,6 +33,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_TIMEINSTANT;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_UUID;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
@@ -141,8 +142,10 @@ public class TypePrimitive extends PropertyType {
             }
             try {
                 final TypePrimitive primitive = (TypePrimitive) FieldUtils.readStaticField(field, false);
+                final String namespace = primitive.getNamespace();
                 final String name = primitive.getName();
-                TYPES.put(name, primitive);
+                final String fullName = ModelRegistry.fullName(namespace, name);
+                TYPES.put(fullName, primitive);
                 LOGGER.debug("Registered type: {}", name);
             } catch (IllegalArgumentException ex) {
                 LOGGER.error("Failed to initialise: {}", field, ex);

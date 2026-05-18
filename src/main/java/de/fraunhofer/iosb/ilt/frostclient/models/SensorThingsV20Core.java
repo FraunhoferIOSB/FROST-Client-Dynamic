@@ -75,6 +75,8 @@ import org.geojson.GeoJsonObject;
  */
 public class SensorThingsV20Core implements DataModel {
 
+    public static final String NAMESPACE = "org.OGC.STA";
+
     public static final String MQTT_BASE_PATH = "v2.0/";
 
     public static final String NAME_EP_RESULTTYPE = "resultType";
@@ -126,16 +128,17 @@ public class SensorThingsV20Core implements DataModel {
     public final NavigationPropertyEntitySet npHistlocLocations = new NavigationPropertyEntitySet(NAME_LOCATIONS, npLocationHistoricallocations);
     public final NavigationPropertyEntity npHistlocThing = new NavigationPropertyEntity(NAME_THING, npThingHistoricallocations);
 
-    public final EntityType etDatastream = new EntityType(NAME_DATASTREAM, NAME_DATASTREAMS);
-    public final EntityType etFeature = new EntityType(NAME_FEATURE, NAME_FEATURES);
-    public final EntityType etFeatureType = new EntityType(NAME_FEATURE_TYPE, NAME_FEATURE_TYPES);
-    public final EntityType etHistoricalLocation = new EntityType(NAME_HISTORICALLOCATION, NAME_HISTORICALLOCATIONS);
-    public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS);
-    public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES);
+    public final EntityType etDatastream = new EntityType(NAME_DATASTREAM, NAME_DATASTREAMS).setNamespace(NAMESPACE);
+    public final EntityType etFeature = new EntityType(NAME_FEATURE, NAME_FEATURES).setNamespace(NAMESPACE);
+    public final EntityType etFeatureType = new EntityType(NAME_FEATURE_TYPE, NAME_FEATURE_TYPES).setNamespace(NAMESPACE);
+    public final EntityType etHistoricalLocation = new EntityType(NAME_HISTORICALLOCATION, NAME_HISTORICALLOCATIONS).setNamespace(NAMESPACE);
+    public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS).setNamespace(NAMESPACE);
+    public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES).setNamespace(NAMESPACE);
     public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS)
-            .setToStringMethod(e -> e.getType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT));
-    public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS);
-    public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS);
+            .setToStringMethod(e -> e.getType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT))
+            .setNamespace(NAMESPACE);
+    public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS).setNamespace(NAMESPACE);
+    public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS).setNamespace(NAMESPACE);
 
     private ModelRegistry mr;
 

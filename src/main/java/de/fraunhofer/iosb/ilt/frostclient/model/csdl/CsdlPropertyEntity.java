@@ -40,11 +40,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The CSDL representation of an EntityProperty.
  */
 public class CsdlPropertyEntity extends CsdlProperty {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlPropertyEntity.class.getName());
 
     public static final String NAME_KIND_ENTITYPROPERTY = "Property";
 
@@ -69,9 +73,9 @@ public class CsdlPropertyEntity extends CsdlProperty {
     }
 
     public CsdlPropertyEntity fillFrom(CsdlDocument doc, String nameSpace, EntityType et, EntityPropertyMain<?> ep) {
-        final PropertyType propertyType = ep.getType();
-        type = propertyType.getName();
-        collection = propertyType.isCollection();
+        final PropertyType pt = ep.getType();
+        type = ModelRegistry.fullName(pt.getNamespace(), pt.getName());
+        collection = pt.isCollection();
         if (et.getPrimaryKey() != ep) {
             nullable = ep.isNullable();
         }
@@ -81,11 +85,11 @@ public class CsdlPropertyEntity extends CsdlProperty {
         return this;
     }
 
-    public CsdlPropertyEntity fillFrom(CsdlDocument doc, String nameSpace, PropertyType propertyType, boolean nullable) {
-        type = propertyType.getName();
+    public CsdlPropertyEntity fillFrom(CsdlDocument doc, String nameSpace, PropertyType pt, boolean nullable) {
+        type = ModelRegistry.fullName(pt.getNamespace(), pt.getName());
         this.nullable = nullable;
-        collection = propertyType.isCollection();
-        for (Annotation an : propertyType.getAnnotations()) {
+        collection = pt.isCollection();
+        for (Annotation an : pt.getAnnotations()) {
             annotations.add(CsdlAnnotation.of(doc, an));
         }
         return this;
@@ -93,8 +97,13 @@ public class CsdlPropertyEntity extends CsdlProperty {
 
     @Override
     public void applyTo(ModelRegistry mr, EntityType entityType, String name) {
-        EntityPropertyMain ep = createProperty(mr, name);
-        entityType.registerProperty(ep);
+        EntityPropertyMain existingProp = entityType.getEntityProperty(name);
+        if (existingProp == null) {
+            EntityPropertyMain ep = createProperty(mr, name);
+            entityType.registerProperty(ep);
+        } else {
+            LOGGER.debug("      EntityType {} already has property {}", entityType, name);
+        }
     }
 
     @Override

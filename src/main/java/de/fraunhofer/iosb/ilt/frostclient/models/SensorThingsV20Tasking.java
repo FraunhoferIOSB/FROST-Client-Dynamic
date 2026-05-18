@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.models;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATUREOFINTEREST;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTY;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
+import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV20Core.NAMESPACE;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
@@ -109,9 +110,9 @@ public class SensorThingsV20Tasking implements DataModel {
     public final NavigationPropertyEntitySet npObspropTaskingcaps = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapActuatableProperties);
     public final NavigationPropertyEntitySet npThingTaskingcapabilities = new NavigationPropertyEntitySet(NAME_TASKING_CAPABILITIES, npTaskingcapThing);
 
-    public final EntityType etActuator = new EntityType(NAME_ACTUATOR, NAME_ACTUATORS);
-    public final EntityType etTask = new EntityType(NAME_TASK, NAME_TASKS);
-    public final EntityType etTaskingCapability = new EntityType(NAME_TASKING_CAPABILITY, NAME_TASKING_CAPABILITIES);
+    public final EntityType etActuator = new EntityType(NAME_ACTUATOR, NAME_ACTUATORS).setNamespace(NAMESPACE);
+    public final EntityType etTask = new EntityType(NAME_TASK, NAME_TASKS).setNamespace(NAMESPACE);
+    public final EntityType etTaskingCapability = new EntityType(NAME_TASKING_CAPABILITY, NAME_TASKING_CAPABILITIES).setNamespace(NAMESPACE);
 
     private ModelRegistry mr;
 
@@ -124,11 +125,11 @@ public class SensorThingsV20Tasking implements DataModel {
             throw new IllegalArgumentException("Already initialised.");
         }
         this.mr = modelRegistry;
-        mr.addDataModel(this);
-
-        mr.registerEntityType(etActuator);
-        mr.registerEntityType(etTask);
-        mr.registerEntityType(etTaskingCapability);
+        mr.addDataModel(this)
+                .registerPropertyType(PT_STATUS.setNamespace(NAMESPACE))
+                .registerEntityType(etActuator)
+                .registerEntityType(etTask)
+                .registerEntityType(etTaskingCapability);
 
         etActuator
                 .registerProperty(CommonProperties.EP_ID)

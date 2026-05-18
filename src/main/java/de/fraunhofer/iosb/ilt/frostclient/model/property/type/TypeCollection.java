@@ -34,7 +34,7 @@ public class TypeCollection extends PropertyType {
     private final PropertyType containtedType;
 
     public TypeCollection(TypePrimitive containedType, TypeReference tr) {
-        super(containedType.getName(), "Collection of " + containedType.getName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
+        super(containedType.getFullName(), "Collection of " + containedType.getFullName(), ParserUtils.getDefaultDeserializer(tr), ParserUtils.getDefaultSerializer());
         this.containtedType = containedType;
     }
 

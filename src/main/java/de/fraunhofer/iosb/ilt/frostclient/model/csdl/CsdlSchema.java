@@ -33,7 +33,6 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimple;
 import de.fraunhofer.iosb.ilt.frostclient.utils.UnknownPropertyTypeException;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -54,6 +53,15 @@ public class CsdlSchema {
 
     @JsonAnyGetter
     public Map<String, CsdlSchemaItem> schemaItems = new LinkedHashMap<>();
+
+    @JsonIgnore
+    private Map<String, CsdlItemEntityType> entityTypes;
+    @JsonIgnore
+    private Map<String, CsdlItemTypeDefinition> typeDefs;
+    @JsonIgnore
+    private Map<String, CsdlItemComplexType> complexTypes;
+    @JsonIgnore
+    private Map<String, CsdlItemEntityContainer> itemContainers;
 
     @JsonIgnore
     public String getNamespace() {
@@ -91,7 +99,7 @@ public class CsdlSchema {
         this.namespace = namespace;
         this.entityContainer = entityContainer;
         for (EntityType entityType : mr.getEntityTypes()) {
-            final String fullName = entityType.entityName;
+            final String fullName = entityType.name;
             final String shortName = removeNamespace(fullName);
             schemaItems.put(shortName, CsdlItemEntityType.of(doc, namespace, entityType));
         }
@@ -118,11 +126,11 @@ public class CsdlSchema {
         return name;
     }
 
-    public void applyTo(ModelRegistry mr) {
-        Map<String, CsdlItemEntityType> entityTypes = new LinkedHashMap<>();
-        Map<String, CsdlItemTypeDefinition> typeDefs = new LinkedHashMap<>();
-        Map<String, CsdlItemComplexType> complexTypes = new LinkedHashMap<>();
-        Map<String, CsdlItemEntityContainer> itemContainers = new LinkedHashMap<>();
+    public void parse() {
+        entityTypes = new LinkedHashMap<>();
+        typeDefs = new LinkedHashMap<>();
+        complexTypes = new LinkedHashMap<>();
+        itemContainers = new LinkedHashMap<>();
         for (var entry : schemaItems.entrySet()) {
             String name = entry.getKey();
             CsdlSchemaItem item = entry.getValue();
@@ -136,41 +144,51 @@ public class CsdlSchema {
                 itemContainers.put(name, ec);
             }
         }
-        final String prefix = getNamespace() + '.';
+    }
+
+    public void applyTypeDefsTo(ModelRegistry mr) {
+        LOGGER.debug("  TypeDefs for {}", namespace);
         for (var entry : typeDefs.entrySet()) {
-            entry.getValue().applyTo(mr, prefix + entry.getKey());
+            entry.getValue().applyTo(mr, namespace, entry.getKey());
         }
-        Map<String, CsdlItemComplexType> retry = new LinkedHashMap<>();
-        for (var entry : complexTypes.entrySet()) {
+    }
+
+    public boolean applyComplexTypesTo(ModelRegistry mr) {
+        LOGGER.debug("  ComplexTypes for {}", namespace);
+        for (var it = complexTypes.entrySet().iterator(); it.hasNext();) {
+            var entry = it.next();
             String name = entry.getKey();
             CsdlItemComplexType type = entry.getValue();
             try {
-                type.applyTo(mr, prefix + name);
+                type.applyTo(mr, namespace, name);
+                it.remove();
             } catch (UnknownPropertyTypeException ex) {
-                retry.put(name, type);
+                LOGGER.debug("    Failed {}.{}", namespace, name);
             }
         }
-        while (!retry.isEmpty()) {
-            Iterator<Entry<String, CsdlItemComplexType>> it;
-            for (it = retry.entrySet().iterator(); it.hasNext();) {
-                Entry<String, CsdlItemComplexType> entry = it.next();
-                String name = entry.getKey();
-                CsdlItemComplexType type = entry.getValue();
-                try {
-                    type.applyTo(mr, prefix + name);
-                    it.remove();
-                } catch (UnknownPropertyTypeException ex) {
-                }
-            }
-        }
+        return complexTypes.isEmpty();
+    }
+
+    public void applyEntityTypesTo(ModelRegistry mr) {
+        LOGGER.debug("  EntityTypes for {}", namespace);
         for (var entry : entityTypes.entrySet()) {
             final CsdlItemEntityType ciEt = entry.getValue();
             ciEt.setNamespace(namespace);
-            ciEt.applyTo(mr, prefix + entry.getKey());
+            ciEt.applyTo(mr, entry.getKey());
         }
+    }
+
+    public void applyEntityPropertiesTo(ModelRegistry mr) {
+        LOGGER.debug("  EntityProperties for {}", namespace);
+        final String prefix = getNamespace() + '.';
         for (var entry : entityTypes.entrySet()) {
-            entry.getValue().applyPropertiesTo(mr, prefix + entry.getKey());
+            entry.getValue().applyPropertiesTo(mr, entry.getKey());
         }
+    }
+
+    public void applyContainersTo(ModelRegistry mr) {
+        LOGGER.debug("  Containers for {}", namespace);
+        final String prefix = getNamespace() + '.';
         for (var entry : itemContainers.entrySet()) {
             entry.getValue().applyTo(mr, prefix + entry.getKey());
         }

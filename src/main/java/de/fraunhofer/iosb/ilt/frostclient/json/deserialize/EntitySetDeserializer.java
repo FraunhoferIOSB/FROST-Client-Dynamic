@@ -93,7 +93,7 @@ public class EntitySetDeserializer extends ValueDeserializer<EntitySet> {
             } else if ("value".equals(fieldName)) {
                 deserialiseEntitySet(parser, ctxt, result);
             } else if (failOnUnknown) {
-                final String message = "Unknown field: " + fieldName + " on " + entityType.entityName + " set.";
+                final String message = "Unknown field: " + fieldName + " on " + entityType.name + " set.";
                 throw new UnrecognizedPropertyException(parser, message, parser.currentLocation(), EntitySet.class, fieldName, null);
             }
             currentToken = parser.nextToken();

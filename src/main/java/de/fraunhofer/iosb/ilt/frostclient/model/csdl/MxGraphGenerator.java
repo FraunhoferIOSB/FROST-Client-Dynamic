@@ -145,7 +145,7 @@ public class MxGraphGenerator {
                 .setY(globalY);
         MxCell typeCell = new MxCell()
                 .setId(genIdFor(et))
-                .setValue(et.entityName)
+                .setValue(et.name)
                 .setStyle(STYLE_LIST)
                 .setParent(cellOne.getId())
                 .setVertex(1)
@@ -338,7 +338,7 @@ public class MxGraphGenerator {
     }
 
     private static String genIdFor(EntityType et) {
-        String data = "ET-" + et.entityName;
+        String data = "ET-" + et.name;
         return createHash(data);
     }
 
@@ -353,7 +353,7 @@ public class MxGraphGenerator {
     }
 
     private static String genIdForNpLabel(NavigationProperty np) {
-        String data = genNpString(np) + ":" + np.getEntityType().entityName + ":" + np.getName();
+        String data = genNpString(np) + ":" + np.getEntityType().name + ":" + np.getName();
         return createHash(data);
     }
 
@@ -362,14 +362,14 @@ public class MxGraphGenerator {
         String etName2;
         String npName1;
         String npName2;
-        if (np.getEntityType().entityName.compareTo(np.getInverse().getEntityType().entityName) > 0) {
-            etName1 = np.getEntityType().entityName;
-            etName2 = np.getInverse().getEntityType().entityName;
+        if (np.getEntityType().name.compareTo(np.getInverse().getEntityType().name) > 0) {
+            etName1 = np.getEntityType().name;
+            etName2 = np.getInverse().getEntityType().name;
             npName1 = np.getName();
             npName2 = np.getInverse().getName();
         } else {
-            etName1 = np.getInverse().getEntityType().entityName;
-            etName2 = np.getEntityType().entityName;
+            etName1 = np.getInverse().getEntityType().name;
+            etName2 = np.getEntityType().name;
             npName1 = np.getInverse().getName();
             npName2 = np.getName();
         }
@@ -378,7 +378,7 @@ public class MxGraphGenerator {
     }
 
     private static String genIdFor(EntityType et, EntityPropertyMain ep) {
-        String data = "ET-" + et.entityName + "-EP-" + ep.getName();
+        String data = "ET-" + et.name + "-EP-" + ep.getName();
         return createHash(data);
     }
 

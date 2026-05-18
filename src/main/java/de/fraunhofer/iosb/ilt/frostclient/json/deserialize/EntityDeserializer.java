@@ -115,15 +115,15 @@ public class EntityDeserializer extends ValueDeserializer<Entity> {
         while (currentToken == JsonToken.PROPERTY_NAME) {
             String fieldName = parser.currentName();
             parser.nextValue();
-            if (fieldName.endsWith("@iot.count")) {
+            if (fieldName.endsWith("@iot.count") || fieldName.endsWith("@count")) {
                 deserialiseEntitySetCount(parser, fieldName, result);
-            } else if (fieldName.endsWith("@iot.nextLink")) {
+            } else if (fieldName.endsWith("@iot.nextLink") || fieldName.endsWith("@nextLink")) {
                 deserialiseEntitySetNextLink(parser, fieldName, result);
             } else {
                 PropertyData propertyData = propertyByName.get(fieldName);
                 if (propertyData == null) {
                     if (failOnUnknown) {
-                        final String message = "Unknown field: " + fieldName + " on " + entityType.entityName + " expected one of: " + propertyByName.keySet();
+                        final String message = "Unknown field: " + fieldName + " on " + entityType.name + " expected one of: " + propertyByName.keySet();
                         throw new UnrecognizedPropertyException(parser, message, parser.currentLocation(), Entity.class, fieldName, null);
                     } else {
                         parser.readValueAsTree();

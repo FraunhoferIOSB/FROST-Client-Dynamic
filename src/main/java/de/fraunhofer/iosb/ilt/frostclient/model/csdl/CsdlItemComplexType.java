@@ -37,8 +37,12 @@ import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlItemComplexType.class.getName());
 
     public static final String NAME_KIND_COMPLEXTYPE = "ComplexType";
 
@@ -76,17 +80,19 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
         return this;
     }
 
-    public void applyTo(ModelRegistry mr, String name) {
+    public void applyTo(ModelRegistry mr, String namespace, String name) {
         TypeComplex type = new TypeComplex(name, description, openType,
                 t -> new ComplexValueImpl(t),
                 pt -> ParserUtils.getComplexTypeDeserializer((TypeComplex) pt),
                 pt -> ParserUtils.getDefaultSerializer());
+        type.setNamespace(namespace);
         for (var propEntry : properties.entrySet()) {
             String propName = propEntry.getKey();
             CsdlProperty property = propEntry.getValue();
             property.applyTo(mr, type, propName);
         }
         mr.registerPropertyType(type);
+        LOGGER.debug("    Applied {}", name);
     }
 
     public CsdlItemComplexType setOpenType(boolean openType) {

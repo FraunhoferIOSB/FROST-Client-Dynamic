@@ -32,7 +32,7 @@ public class TypeEntity extends TypeComplex {
     private EntityType entityType;
 
     public TypeEntity(EntityType entityType) {
-        super(entityType.entityName, "Entity Type " + entityType.entityName, false, null, null, null);
+        super(entityType.name, "Entity Type " + entityType.name, false, null, null, null);
     }
 
     public EntityType getEntityType() {

@@ -122,10 +122,10 @@ public class EntityCacheDynamic<U> {
                     .toList();
             if (entities.size() > 1) {
                 if (duplicateRule == DuplicateRule.ERROR) {
-                    throw new IllegalStateException("More than one " + entityType.entityName + " matches filter " + filter);
+                    throw new IllegalStateException("More than one " + entityType.name + " matches filter " + filter);
                 }
                 if (duplicateRule == DuplicateRule.WARN) {
-                    LOGGER.warn("More than one {} matches filter {}", entityType.entityName, filter);
+                    LOGGER.warn("More than one {} matches filter {}", entityType.name, filter);
                 }
             }
             if (!entities.isEmpty()) {

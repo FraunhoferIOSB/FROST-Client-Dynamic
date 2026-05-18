@@ -23,14 +23,19 @@
 package de.fraunhofer.iosb.ilt.frostclient.model.csdl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PropertyType;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeSimple;
 import java.io.IOException;
 import java.io.Writer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CsdlItemTypeDefinition extends CsdlSchemaItemAbstract {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlItemTypeDefinition.class.getName());
 
     public static final String NAME_KIND_TYPEDEFINITION = "TypeDefinition";
 
@@ -45,21 +50,20 @@ public class CsdlItemTypeDefinition extends CsdlSchemaItemAbstract {
     }
 
     public CsdlItemTypeDefinition fillFrom(TypeSimple tc) {
-        underlyingType = tc.getUnderlyingType().getName();
+        underlyingType = tc.getUnderlyingType().getFullName();
         description = tc.getDescription();
         return this;
     }
 
-    public void applyTo(ModelRegistry mr, String name) {
+    public void applyTo(ModelRegistry mr, String namespace, String name) {
         final PropertyType ut = mr.getPropertyType(underlyingType);
-        if (ut == null) {
-            throw new IllegalArgumentException("UnderlyingType of TypeDefinition " + name + " not found: " + underlyingType);
-        }
+        Exceptions.illegalArgumentIf(ut == null, "UnderlyingType of TypeDefinition {} not found: {}", name, underlyingType);
         if (ut instanceof TypePrimitive pt) {
-            mr.registerPropertyType(new TypeSimple(name, description, pt));
+            mr.registerPropertyType(new TypeSimple(name, description, pt).setNamespace(namespace));
         } else {
             throw new IllegalArgumentException("UnderlyingType of TypeDefinition MUST be a PrimitiveType!");
         }
+        LOGGER.debug("    Applied {}", name);
     }
 
     @Override

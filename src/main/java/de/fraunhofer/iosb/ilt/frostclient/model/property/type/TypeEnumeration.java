@@ -52,4 +52,5 @@ public class TypeEnumeration<K extends Enum<K>> extends PropertyType {
         }
         return members;
     }
+
 }

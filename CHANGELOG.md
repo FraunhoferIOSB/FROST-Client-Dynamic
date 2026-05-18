@@ -3,6 +3,7 @@
 ## Version 2.36-SNAPSHOT
 
 **Updates**
+* Added support for namespaces and multi-namespace models.
 * Fixed Sta V2 time interval and time value deserialisation.
 
 

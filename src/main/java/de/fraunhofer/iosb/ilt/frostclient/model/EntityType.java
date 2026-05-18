@@ -50,9 +50,9 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityType.class.getName());
 
     /**
-     * The entityName of this entity type as used in URLs.
+     * The name of this entity type as used in URLs.
      */
-    public final String entityName;
+    public final String name;
 
     /**
      * The namespace of the Entity Type.
@@ -114,7 +114,7 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
     private ToString toStringMethod;
 
     public EntityType(String singular) {
-        this.entityName = singular;
+        this.name = singular;
         final int nameIdx = singular.lastIndexOf('.');
         if (nameIdx > 0) {
             namespace = singular.substring(0, nameIdx);
@@ -131,8 +131,13 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
         return false;
     }
 
-    public void setNamespace(String namespace) {
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public EntityType setNamespace(String namespace) {
         this.namespace = namespace;
+        return this;
     }
 
     public void setMainContainer(String entityContainer) {
@@ -142,7 +147,7 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
             if (this.mainSet.equals(entityContainer)) {
                 return;
             }
-            throw new IllegalStateException("Main EntityContainer for " + entityName + " already set to " + this.mainSet);
+            throw new IllegalStateException("Main EntityContainer for " + name + " already set to " + this.mainSet);
         }
     }
 
@@ -205,15 +210,24 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
         }
     }
 
-    public String getEntityName() {
-        return entityName;
+    /**
+     * Get the name of this entity type.
+     *
+     * @return the name of this entity type.
+     */
+    public String getName() {
+        return name;
     }
 
-    public String getShortName() {
-        if (namespace.isEmpty()) {
-            return entityName;
-        }
-        return entityName.substring(namespace.length() + 1);
+    /**
+     * Get the name of this entity type.
+     *
+     * @return the name of this entity type.
+     * @deprecated use @{@link #getName()} instead.
+     */
+    @Deprecated
+    public String getEntityName() {
+        return getName();
     }
 
     public String getMainSetName() {
@@ -339,7 +353,7 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
 
     @Override
     public String toString() {
-        return entityName;
+        return name;
     }
 
     /**
@@ -368,7 +382,7 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
 
     @Override
     public int compareTo(EntityType o) {
-        return entityName.compareTo(o.entityName);
+        return name.compareTo(o.name);
     }
 
     @Override
@@ -380,8 +394,8 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
             return false;
         }
         EntityType other = (EntityType) obj;
-        if (entityName.equals(other.entityName)) {
-            LOGGER.error("Found other instance of {}", entityName);
+        if (name.equals(other.name)) {
+            LOGGER.error("Found other instance of {}", name);
             return true;
         }
         return false;
@@ -390,7 +404,7 @@ public class EntityType implements Comparable<EntityType>, ContainerType<EntityT
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.entityName);
+        hash = 67 * hash + Objects.hashCode(this.name);
         return hash;
     }
 

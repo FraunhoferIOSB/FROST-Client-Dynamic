@@ -32,7 +32,7 @@ public class TypeEntitySet extends TypeComplex {
     private EntityType entityType;
 
     public TypeEntitySet(EntityType entityType) {
-        super(entityType.entityName, "Collection of " + entityType.entityName, false, null, null, null);
+        super(entityType.name, "Collection of " + entityType.name, false, null, null, null);
     }
 
     public EntityType getEntityType() {

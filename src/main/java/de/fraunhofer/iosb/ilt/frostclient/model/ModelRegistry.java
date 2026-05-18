@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_STRING;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_SELF_LINK;
 
+import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
@@ -46,13 +47,17 @@ public class ModelRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelRegistry.class.getName());
 
+    public static final String DEFAULT_NAMESPACE = "de.FROST";
+
+    private final Set<String> namespaces = new LinkedHashSet<>();
+
     /**
      * The global EntityProperty SelfLink.
      */
     public static final EntityPropertyMain<String> EP_SELFLINK = new EntityPropertyMain<String>(AT_IOT_SELF_LINK, EDM_STRING).setAliases("selfLink");
 
     /**
-     * All entity types, by their entityName (both singular and mainSet).
+     * All entity types, by their name (both singular and mainSet).
      */
     private final Map<String, EntityType> entityTypesByName = new TreeMap<>();
 
@@ -78,6 +83,40 @@ public class ModelRegistry {
 
     private boolean initialised;
 
+    private String ensureNamespace(PropertyType type) {
+        String namespace = type.getNamespace();
+        if (StringHelper.isNullOrEmpty(namespace)) {
+            namespace = maybeAddNamespace(namespace);
+            type.setNamespace(namespace);
+            return namespace;
+        }
+        return maybeAddNamespace(namespace);
+    }
+
+    private String ensureNamespace(EntityType type) {
+        String namespace = type.getNamespace();
+        if (StringHelper.isNullOrEmpty(namespace)) {
+            namespace = maybeAddNamespace(namespace);
+            type.setNamespace(namespace);
+            return namespace;
+        }
+        return maybeAddNamespace(namespace);
+    }
+
+    public String maybeAddNamespace(String namespace) {
+        if (StringHelper.isNullOrEmpty(namespace)) {
+            namespace = DEFAULT_NAMESPACE;
+        }
+        if (namespaces.add(namespace)) {
+            LOGGER.info("Registered namespace {}", namespace);
+        }
+        return namespace;
+    }
+
+    public Set<String> getNamespaces() {
+        return namespaces;
+    }
+
     /**
      * Register a new entity type. Registering the same type twice is a no-op,
      * registering a new entity type with a name that already exists causes an
@@ -87,16 +126,15 @@ public class ModelRegistry {
      * @return this ModelRegistry.
      */
     public final ModelRegistry registerEntityType(EntityType type) {
-        EntityType existing = entityTypesByName.get(type.entityName);
+        String namespace = ensureNamespace(type);
+        String fullName = ModelRegistry.fullName(namespace, type.getEntityName());
+        EntityType existing = entityTypesByName.get(fullName);
         if (existing == type) {
-            LOGGER.info("Entity type {} already registered.", type.entityName);
+            LOGGER.info("Entity type {} already registered.", fullName);
             return this;
         }
-        if (existing != null) {
-            LOGGER.error("Duplicate entity type name: {}", type.entityName);
-            throw new IllegalArgumentException("An entity type named " + type.entityName + " is already registered");
-        }
-        entityTypesByName.put(type.entityName, type);
+        Exceptions.illegalArgumentIf(existing != null, "Duplicate entity type name: {}", fullName);
+        entityTypesByName.put(fullName, type);
         entityTypes.add(type);
         type.setModelRegistry(this);
         return this;
@@ -107,6 +145,14 @@ public class ModelRegistry {
         return this;
     }
 
+    private boolean hasNamespace(String name) {
+        return name.contains(".");
+    }
+
+    public final EntityType getEntityTypeForName(String namespace, String typeName) {
+        return getEntityTypeForName(fullName(namespace, typeName));
+    }
+
     /**
      * Get the entity type with the given name.
      *
@@ -114,7 +160,23 @@ public class ModelRegistry {
      * @return the entity type with the given name, or null.
      */
     public final EntityType getEntityTypeForName(String typeName) {
-        final EntityType type = entityTypesByName.get(typeName);
+        EntityType type = entityTypesByName.get(typeName);
+        if (type != null) {
+            return type;
+        }
+        if (hasNamespace(typeName)) {
+            LOGGER.info("No entity type found for name {}", typeName);
+            return null;
+        }
+        for (String namespace : namespaces) {
+            final String fullName = namespace + '.' + typeName;
+            type = entityTypesByName.get(fullName);
+            if (type != null) {
+                LOGGER.info("Resolved entity type {} to {}", typeName, fullName);
+                return type;
+            }
+        }
+        LOGGER.info("No entity type found for name {}", typeName);
         return type;
     }
 
@@ -131,12 +193,27 @@ public class ModelRegistry {
     }
 
     public ModelRegistry registerPropertyType(PropertyType type) {
-        propertyTypes.put(type.getName(), type);
+        ensureNamespace(type);
+        String fullName = fullName(type.getNamespace(), type.getName());
+        propertyTypes.put(fullName, type);
         return this;
     }
 
+    private PropertyType findPropertyType(String name) {
+        if (name.contains(".")) {
+            return propertyTypes.get(name);
+        }
+        for (var namespace : namespaces) {
+            PropertyType type = propertyTypes.get(fullName(namespace, name));
+            if (type != null) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public final PropertyType getPropertyType(String name) {
-        PropertyType type = propertyTypes.get(name);
+        PropertyType type = findPropertyType(name);
         if (type != null) {
             return type;
         }
@@ -187,4 +264,7 @@ public class ModelRegistry {
         return initialised;
     }
 
+    public static final String fullName(String namespace, String name) {
+        return namespace == null ? name : namespace + '.' + name;
+    }
 }

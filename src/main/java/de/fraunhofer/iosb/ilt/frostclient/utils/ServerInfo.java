@@ -91,6 +91,15 @@ public class ServerInfo {
         return models;
     }
 
+    public boolean hasModel(final Class<? extends DataModel> modelClass) {
+        for (var model : models) {
+            if (modelClass.isAssignableFrom(model.getClass())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ServerInfo addModel(DataModel modelToAdd) {
         models.add(modelToAdd);
         if (StringHelper.isNullOrEmpty(mqttBasePath)) {

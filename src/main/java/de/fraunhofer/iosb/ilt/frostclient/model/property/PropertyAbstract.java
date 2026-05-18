@@ -76,7 +76,7 @@ public abstract class PropertyAbstract<P> implements Property<P> {
         return type;
     }
 
-    protected void setType(PropertyType type) {
+    public void setType(PropertyType type) {
         this.type = type;
     }
 

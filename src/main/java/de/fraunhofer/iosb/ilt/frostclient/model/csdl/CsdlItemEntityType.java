@@ -40,8 +40,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsdlItemEntityType.class.getName());
 
     public static final String NAME_KIND_ENTITYTYPE = "EntityType";
 
@@ -94,13 +98,19 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
     }
 
     public void applyTo(ModelRegistry mr, String name) {
-        final EntityType entityType = new EntityType(name);
-        entityType.setNamespace(namespace);
-        mr.registerEntityType(entityType);
+        EntityType entityType = mr.getEntityTypeForName(namespace, name);
+        if (entityType == null) {
+            entityType = new EntityType(name);
+            entityType.setNamespace(namespace);
+            mr.registerEntityType(entityType);
+        } else {
+            LOGGER.info("    EntityType {}.{} already registered.", namespace, name);
+        }
+        LOGGER.debug("    Applied {}", name);
     }
 
     public void applyPropertiesTo(ModelRegistry mr, String name) {
-        final EntityType entityType = mr.getEntityTypeForName(name);
+        final EntityType entityType = mr.getEntityTypeForName(namespace, name);
         for (var entry : properties.entrySet()) {
             entry.getValue().applyTo(mr, entityType, entry.getKey());
         }
@@ -112,6 +122,7 @@ public class CsdlItemEntityType extends CsdlSchemaItemAbstract {
         } else {
             throw new NotImplementedException("Multi-Keyed entity types are not supported yet.");
         }
+        LOGGER.debug("    Applied {}", name);
     }
 
     @JsonAnyGetter

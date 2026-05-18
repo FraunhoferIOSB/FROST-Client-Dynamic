@@ -36,7 +36,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
 public class CommonProperties {
 
     // Common-Common
-    public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>(AT_IOT_ID, EDM_UNTYPED).setAliases("id");
+    public static final EntityPropertyMain<Object> EP_ID = new EntityPropertyMain<>("id", EDM_UNTYPED).setAliases(AT_IOT_ID);
 
     // STA-Common
     public static final String NAME_DATASTREAM = "Datastream";

@@ -86,7 +86,7 @@ public class CsdlItemEntityContainer extends CsdlSchemaItemAbstract {
 
         public ContainerItem fillFrom(String nameSpace, EntityType et) {
             collection = true;
-            type = et.entityName;
+            type = ModelRegistry.fullName(et.getNamespace(), et.getName());
             for (NavigationProperty np : et.getNavigationProperties()) {
                 navPropBinding.put(np.getName(), np.getEntityType().mainSet);
             }

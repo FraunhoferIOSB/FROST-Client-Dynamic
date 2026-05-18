@@ -160,104 +160,7 @@ public class Utils {
         }
         try (CloseableHttpResponse response = service.execute(httpGet)) {
             Utils.throwIfNotOkOrNoContent(httpGet, response);
-            String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-            JsonNode tree = SimpleJsonMapper.getSimpleObjectMapper().readTree(json);
-            Header[] odataVersion = response.getHeaders(NAME_HEADER_ODATA_VERSION);
-            if (tree.has("@context") && odataVersion.length > 0) {
-                // Assume OData 4.01
-                LOGGER.info("Detected OData 4.01.");
-                serverInfo.setVersion(Version.V_ODATA_4_01);
-                if (!modelsPreSet) {
-                    serverInfo.addModel(new CSDLModel());
-                }
-                findMqttEndpoint(tree.get(NAME_SERVER_SETTINGS), serverInfo);
-                return serverInfo;
-            }
-            Set<KnownModels> foundModels = new HashSet<>();
-            if (tree.has(NAME_SERVER_SETTINGS)) {
-                // SensorThings 2.0, 1.1, 1.0
-                JsonNode serverSettings = tree.get(NAME_SERVER_SETTINGS);
-                JsonNode conformance = serverSettings.get(NAME_CONFORMANCE);
-                for (var entries = conformance.iterator(); entries.hasNext();) {
-                    String confClass = entries.next().stringValue();
-                    if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel")) {
-                        foundModels.add(KnownModels.STA_SENSING);
-                    } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings/2.0/req-class/datamodel/core")) {
-                        foundModels.add(KnownModels.STA_V2_CORE);
-                    } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/multi-datastream")) {
-                        foundModels.add(KnownModels.STA_MULTIDATASTREAM);
-                    } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/actuator")) {
-                        foundModels.add(KnownModels.STA_TASKING);
-                    } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings-staplus/1.0/conf/core")) {
-                        foundModels.add(KnownModels.STA_PLUS);
-                    } else if (confClass.startsWith("https://fraunhoferiosb.github.io/FROST-Server/extensions/DataModel-Projects.html")) {
-                        foundModels.add(KnownModels.PROJECTS);
-                    } else {
-                        switch (confClass) {
-                            case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttExpand.html":
-                                serverInfo.setMqttExpandAllowed(true);
-                                break;
-
-                            case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttFilter.html":
-                                serverInfo.setMqttFilterAllowed(true);
-                                break;
-                        }
-                    }
-                }
-                findMqttEndpoint(serverSettings, serverInfo);
-            } else if (tree.has(NAME_VALUE)) {
-                JsonNode entities = tree.get(NAME_VALUE);
-                for (var it = entities.iterator(); it.hasNext();) {
-                    String entityName = it.next().get(NAME_NAME).stringValue();
-                    switch (entityName) {
-                        case "Things":
-                            foundModels.add(KnownModels.STA_SENSING);
-                            break;
-
-                        case "MultiDatastreams":
-                            foundModels.add(KnownModels.STA_MULTIDATASTREAM);
-                            break;
-
-                        case "Tasks":
-                            foundModels.add(KnownModels.STA_TASKING);
-                            break;
-
-                        case "Parties":
-                            foundModels.add(KnownModels.STA_PLUS);
-                            break;
-
-                        case "Projects":
-                            foundModels.add(KnownModels.PROJECTS);
-                            break;
-                    }
-                }
-            }
-            if (!modelsPreSet) {
-                if (foundModels.contains(KnownModels.STA_V2_CORE)) {
-                    LOGGER.info("Detected STA V2 Core.");
-                    serverInfo.addModel(new SensorThingsV20Core());
-                }
-                if (foundModels.contains(KnownModels.STA_SENSING)) {
-                    LOGGER.info("Detected STA Sensing.");
-                    serverInfo.addModel(new SensorThingsV11Sensing());
-                }
-                if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
-                    LOGGER.info("Detected STA MultiDatastream.");
-                    serverInfo.addModel(new SensorThingsV11MultiDatastream());
-                }
-                if (foundModels.contains(KnownModels.STA_TASKING)) {
-                    LOGGER.info("Detected STA Tasking.");
-                    serverInfo.addModel(new SensorThingsV11Tasking());
-                }
-                if (foundModels.contains(KnownModels.STA_PLUS)) {
-                    LOGGER.info("Detected STAplus.");
-                    serverInfo.addModel(new SensorThingsPlus());
-                }
-                if (foundModels.contains(KnownModels.PROJECTS)) {
-                    LOGGER.info("Detected Projects.");
-                    serverInfo.addModel(new SensorThingsV11Projects());
-                }
-            }
+            parseLandingPage(response, serverInfo, modelsPreSet);
         } catch (IOException ex) {
             LOGGER.error("Failed to parse metadata", ex);
         } catch (StatusCodeException ex) {
@@ -265,6 +168,108 @@ public class Utils {
         }
 
         return serverInfo;
+    }
+
+    private static void parseLandingPage(final CloseableHttpResponse response, ServerInfo serverInfo, boolean modelsPreSet) throws IOException {
+        String json = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+        JsonNode tree = SimpleJsonMapper.getSimpleObjectMapper().readTree(json);
+        Header[] odataVersion = response.getHeaders(NAME_HEADER_ODATA_VERSION);
+        boolean hasCsdlDefinition = false;
+        if (tree.has("@context")) {
+            // Assume OData 4.01
+            LOGGER.info("Detected OData 4.01.");
+            serverInfo.setVersion(Version.V_ODATA_4_01);
+            hasCsdlDefinition = true;
+            findMqttEndpoint(tree.get(NAME_SERVER_SETTINGS), serverInfo);
+        }
+        Set<KnownModels> foundModels = new HashSet<>();
+        if (tree.has(NAME_SERVER_SETTINGS)) {
+            // SensorThings 2.0, 1.1, 1.0
+            JsonNode serverSettings = tree.get(NAME_SERVER_SETTINGS);
+            JsonNode conformance = serverSettings.get(NAME_CONFORMANCE);
+            for (var entries = conformance.iterator(); entries.hasNext();) {
+                String confClass = entries.next().stringValue();
+                if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/datamodel")) {
+                    foundModels.add(KnownModels.STA_SENSING);
+                } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings/2.0/req-class/datamodel/core")) {
+                    foundModels.add(KnownModels.STA_V2_CORE);
+                } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/multi-datastream")) {
+                    foundModels.add(KnownModels.STA_MULTIDATASTREAM);
+                } else if (confClass.startsWith("http://www.opengis.net/spec/iot_sensing/1.1/req/actuator")) {
+                    foundModels.add(KnownModels.STA_TASKING);
+                } else if (confClass.startsWith("http://www.opengis.net/spec/sensorthings-staplus/1.0/conf/core")) {
+                    foundModels.add(KnownModels.STA_PLUS);
+                } else if (confClass.startsWith("https://fraunhoferiosb.github.io/FROST-Server/extensions/DataModel-Projects.html")) {
+                    foundModels.add(KnownModels.PROJECTS);
+                } else {
+                    switch (confClass) {
+                        case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttExpand.html":
+                            serverInfo.setMqttExpandAllowed(true);
+                            break;
+
+                        case "https://fraunhoferiosb.github.io/FROST-Server/extensions/MqttFilter.html":
+                            serverInfo.setMqttFilterAllowed(true);
+                            break;
+                    }
+                }
+            }
+            findMqttEndpoint(serverSettings, serverInfo);
+        } else if (tree.has(NAME_VALUE)) {
+            JsonNode entities = tree.get(NAME_VALUE);
+            for (var it = entities.iterator(); it.hasNext();) {
+                String entityName = it.next().get(NAME_NAME).stringValue();
+                switch (entityName) {
+                    case "Things":
+                        foundModels.add(KnownModels.STA_SENSING);
+                        break;
+
+                    case "MultiDatastreams":
+                        foundModels.add(KnownModels.STA_MULTIDATASTREAM);
+                        break;
+
+                    case "Tasks":
+                        foundModels.add(KnownModels.STA_TASKING);
+                        break;
+
+                    case "Parties":
+                        foundModels.add(KnownModels.STA_PLUS);
+                        break;
+
+                    case "Projects":
+                        foundModels.add(KnownModels.PROJECTS);
+                        break;
+                }
+            }
+        }
+        if (!modelsPreSet) {
+            if (foundModels.contains(KnownModels.STA_V2_CORE)) {
+                LOGGER.info("Detected STA V2 Core.");
+                serverInfo.addModel(new SensorThingsV20Core());
+            }
+            if (foundModels.contains(KnownModels.STA_SENSING)) {
+                LOGGER.info("Detected STA Sensing.");
+                serverInfo.addModel(new SensorThingsV11Sensing());
+            }
+            if (foundModels.contains(KnownModels.STA_MULTIDATASTREAM)) {
+                LOGGER.info("Detected STA MultiDatastream.");
+                serverInfo.addModel(new SensorThingsV11MultiDatastream());
+            }
+            if (foundModels.contains(KnownModels.STA_TASKING)) {
+                LOGGER.info("Detected STA Tasking.");
+                serverInfo.addModel(new SensorThingsV11Tasking());
+            }
+            if (foundModels.contains(KnownModels.STA_PLUS)) {
+                LOGGER.info("Detected STAplus.");
+                serverInfo.addModel(new SensorThingsPlus());
+            }
+            if (foundModels.contains(KnownModels.PROJECTS)) {
+                LOGGER.info("Detected Projects.");
+                serverInfo.addModel(new SensorThingsV11Projects());
+            }
+        }
+        if (hasCsdlDefinition && !serverInfo.hasModel(CSDLModel.class)) {
+            serverInfo.addModel(new CSDLModel());
+        }
     }
 
     private static void detectVersion(ServerInfo serverInfo) throws IllegalArgumentException {
