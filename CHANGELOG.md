@@ -3,6 +3,7 @@
 ## Version 2.36-SNAPSHOT
 
 **Updates**
+* Fixed Sta V2 time interval and time value deserialisation.
 
 
 ## Version 2.35

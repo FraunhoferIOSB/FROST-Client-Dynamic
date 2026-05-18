@@ -89,6 +89,29 @@ public class EntityReaderTest {
     }
 
     @Test
+    public void readEntityV2() throws IOException {
+        String json = """
+                {
+                    "phenomenonTime": {"start": "2016-01-07T02:00:00.000Z"},
+                    "resultTime": null,
+                    "result": 0.15,
+                    "Datastream@iot.navigationLink": "https://server.de/SensorThingsService/v1.0/Observations(7179373)/Datastream",
+                    "FeatureOfInterest@iot.navigationLink": "https://server.de/SensorThingsService/v1.0/Observations(7179373)/FeatureOfInterest",
+                    "id": 7179373,
+                    "@id": "https://server.de/SensorThingsService/v1.0/Observations(7179373)"
+                }""";
+
+        Entity observation = service.getJsonReader().parseEntity(modelSensing.etObservation, json);
+
+        Entity expected = modelSensing.newObservation(BigDecimal.valueOf(0.15), ZonedDateTime.parse("2016-01-07T02:00:00.000Z"))
+                .setProperty(EP_ID, 7179373L)
+                .setProperty(EP_RESULTTIME, null)
+                .setSelfLink("https://server.de/SensorThingsService/v1.0/Observations(7179373)");
+
+        assertEquals(expected, observation);
+    }
+
+    @Test
     public void readEntityList() throws IOException {
         String json = """
                 {
