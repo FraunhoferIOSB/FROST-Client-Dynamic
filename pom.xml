@@ -65,7 +65,7 @@
         <version.jacksonGeojson>3.0</version.jacksonGeojson>
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.jsonwebtoken>0.13.0</version.jsonwebtoken>
-        <version.junit>6.0.3</version.junit>
+        <version.junit>6.1.0</version.junit>
         <version.logback>1.5.32</version.logback>
 
         <version.maven.plugin.central-publishing>0.10.0</version.maven.plugin.central-publishing>
@@ -75,12 +75,12 @@
         <version.maven.plugin.jacoco>0.8.14</version.maven.plugin.jacoco>
         <version.maven.plugin.javadoc>3.12.0</version.maven.plugin.javadoc>
         <version.maven.plugin.source>3.4.0</version.maven.plugin.source>
-        <version.maven.plugin.spotless>3.5.0</version.maven.plugin.spotless>
+        <version.maven.plugin.spotless>3.5.1</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.5.5</version.maven.plugin.surefire>
 
         <version.mockito>5.23.0</version.mockito>
         <version.paho>1.2.5</version.paho>
-        <version.parsson>1.1.7</version.parsson>
+        <version.parsson>1.1.9</version.parsson>
         <version.reflections>0.10.2</version.reflections>
         <version.settings>1.2</version.settings>
         <version.slf4j>2.0.18</version.slf4j>
