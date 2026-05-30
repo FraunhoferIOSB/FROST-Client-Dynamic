@@ -107,6 +107,7 @@ public class Version {
     static {
         registerVersion(V_1_0);
         registerVersion(V_1_1);
+        registerVersion(V_2_0);
     }
 
     public Version(String urlPart, String countName, String idName, String selfLinkName, String nextLinkName, String navLinkName) {

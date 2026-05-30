@@ -48,7 +48,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -273,7 +273,7 @@ public class Utils {
     }
 
     private static void detectVersion(ServerInfo serverInfo) throws IllegalArgumentException {
-        String url = StringUtils.removeEnd(serverInfo.getBaseUrl().toString(), "/");
+        String url = Strings.CS.removeEnd(serverInfo.getBaseUrl().toString(), "/");
         String lastSegment = url.substring(url.lastIndexOf('/') + 1);
         Version detectedVersion = Version.findVersion(lastSegment);
         if (detectedVersion != null) {
