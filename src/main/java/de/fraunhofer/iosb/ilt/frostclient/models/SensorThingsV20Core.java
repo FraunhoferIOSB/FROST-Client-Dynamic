@@ -135,7 +135,7 @@ public class SensorThingsV20Core implements DataModel {
     public final EntityType etLocation = new EntityType(NAME_LOCATION, NAME_LOCATIONS).setNamespace(NAMESPACE);
     public final EntityType etObservedProperty = new EntityType(NAME_OBSERVEDPROPERTY, NAME_OBSERVEDPROPERTIES).setNamespace(NAMESPACE);
     public final EntityType etObservation = new EntityType(NAME_OBSERVATION, NAME_OBSERVATIONS)
-            .setToStringMethod(e -> e.getType().toString() + ": " + e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT))
+            .setToStringMethod(e -> e.getPrimaryKeyValues() + " " + e.getProperty(EP_PHENOMENONTIME) + " " + e.getProperty(EP_RESULT))
             .setNamespace(NAMESPACE);
     public final EntityType etSensor = new EntityType(NAME_SENSOR, NAME_SENSORS).setNamespace(NAMESPACE);
     public final EntityType etThing = new EntityType(NAME_THING, NAME_THINGS).setNamespace(NAMESPACE);

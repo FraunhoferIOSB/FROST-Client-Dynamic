@@ -102,7 +102,14 @@ public class CsdlPropertyEntity extends CsdlProperty {
             EntityPropertyMain ep = createProperty(mr, name);
             entityType.registerProperty(ep);
         } else {
-            LOGGER.debug("      EntityType {} already has property {}", entityType, name);
+            final PropertyType newType = createPropertyType(mr);
+            final PropertyType oldType = existingProp.getType();
+            if (oldType.equals(newType)) {
+                LOGGER.debug("      EntityType {} already has property {}", entityType, name);
+            } else {
+                existingProp.setType(newType);
+                LOGGER.info("      Replaced type of {}/{} from {} to {}", entityType, existingProp, oldType, newType);
+            }
         }
     }
 
@@ -113,6 +120,13 @@ public class CsdlPropertyEntity extends CsdlProperty {
     }
 
     private EntityPropertyMain createProperty(ModelRegistry mr, String name) throws IllegalArgumentException {
+        PropertyType propertyType = createPropertyType(mr);
+        EntityPropertyMain ep = new EntityPropertyMain(name, propertyType);
+        ep.setNullable(nullable);
+        return ep;
+    }
+
+    public PropertyType createPropertyType(ModelRegistry mr) throws IllegalArgumentException {
         PropertyType propertyType = mr.getPropertyType(type);
         if (collection) {
             if (propertyType instanceof TypePrimitive ptp) {
@@ -123,9 +137,7 @@ public class CsdlPropertyEntity extends CsdlProperty {
                 throw new IllegalArgumentException("Can't create Type for Set of " + propertyType.getName());
             }
         }
-        EntityPropertyMain ep = new EntityPropertyMain(name, propertyType);
-        ep.setNullable(nullable);
-        return ep;
+        return propertyType;
     }
 
     @JsonAnyGetter

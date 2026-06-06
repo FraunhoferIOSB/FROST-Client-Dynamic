@@ -57,8 +57,8 @@ public class TypeComplex extends PropertyType implements ContainerType<TypeCompl
 
     public static final String STA_MAP_NAME = "Object";
     public static final String STA_OBJECT_NAME = "ANY";
-    public static final String STA_TIMEINTERVAL_NAME = "TimeInterval";
-    public static final String STA_TIMEVALUE_NAME = "TimeValue";
+    public static final String STA_TIMEINTERVAL_NAME = "TM_Period";
+    public static final String STA_TIMEVALUE_NAME = "TM_Object";
     public static final String NAME_INTERVAL_START = "start";
     public static final String NAME_INTERVAL_END = "end";
 
@@ -95,6 +95,7 @@ public class TypeComplex extends PropertyType implements ContainerType<TypeCompl
             }
             try {
                 final TypeComplex type = (TypeComplex) FieldUtils.readStaticField(field, false);
+                type.setNamespace("org.OGC.STA");
                 final String name = type.getName();
                 TYPES.put(name, type);
                 LOGGER.debug("Registered type: {}", name);
@@ -188,11 +189,6 @@ public class TypeComplex extends PropertyType implements ContainerType<TypeCompl
     public static interface Instantiator {
 
         public ComplexValue instantiate(TypeComplex type);
-    }
-
-    @Override
-    public String toString() {
-        return "TypeComplex: " + getName();
     }
 
 }
