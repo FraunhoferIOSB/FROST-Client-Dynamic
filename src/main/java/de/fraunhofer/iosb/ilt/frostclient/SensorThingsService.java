@@ -84,17 +84,19 @@ public class SensorThingsService {
      */
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SensorThingsService.class);
 
+    public static final String NULL_URL_BASE;
     public static final URL NULL_URL_V11;
     public static final URL NULL_URL_V20;
 
     // Static initialiser because all URL Constructors can throw.
     static {
+        NULL_URL_BASE = "http://example.org/";
         URL tempUrl11 = null;
         URL tempUrl20 = null;
         try {
-            tempUrl11 = new URL("http://example.org/v1.1/");
-            tempUrl20 = new URL("http://example.org/v2.0/");
-        } catch (MalformedURLException ex) {
+            tempUrl11 = new URI(NULL_URL_BASE + "v1.1/").toURL();
+            tempUrl20 = new URI(NULL_URL_BASE + "v2.0/").toURL();
+        } catch (URISyntaxException | MalformedURLException ex) {
         }
         NULL_URL_V11 = tempUrl11;
         NULL_URL_V20 = tempUrl20;
