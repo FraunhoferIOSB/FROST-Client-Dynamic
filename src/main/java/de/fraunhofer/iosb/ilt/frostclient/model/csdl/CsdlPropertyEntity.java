@@ -66,7 +66,7 @@ public class CsdlPropertyEntity extends CsdlProperty {
     public boolean collection;
 
     @JsonIgnore
-    private final List<CsdlAnnotation> annotations = new ArrayList<>();
+    private final List<CsdlAnnotation> _annotations = new ArrayList<>();
 
     public CsdlPropertyEntity() {
         super(NAME_KIND_ENTITYPROPERTY);
@@ -80,7 +80,7 @@ public class CsdlPropertyEntity extends CsdlProperty {
             nullable = ep.isNullable();
         }
         for (Annotation an : ep.getAnnotations()) {
-            annotations.add(CsdlAnnotation.of(doc, an));
+            _annotations.add(CsdlAnnotation.of(doc, an));
         }
         return this;
     }
@@ -90,7 +90,7 @@ public class CsdlPropertyEntity extends CsdlProperty {
         this.nullable = nullable;
         collection = pt.isCollection();
         for (Annotation an : pt.getAnnotations()) {
-            annotations.add(CsdlAnnotation.of(doc, an));
+            _annotations.add(CsdlAnnotation.of(doc, an));
         }
         return this;
     }
@@ -143,7 +143,7 @@ public class CsdlPropertyEntity extends CsdlProperty {
     @JsonAnyGetter
     public Map<String, Object> otherProperties() {
         Map<String, Object> result = new LinkedHashMap<>();
-        for (CsdlAnnotation annotation : annotations) {
+        for (CsdlAnnotation annotation : _annotations) {
             result.put('@' + annotation.getQualifiedName(), annotation.getValue());
         }
         return result;
@@ -157,11 +157,11 @@ public class CsdlPropertyEntity extends CsdlProperty {
         }
         String nullableString = (nullable) ? " Nullable=\"" + Boolean.toString(nullable) + "\"" : "";
         writer.write("<Property Name=\"" + name + "\" Type=\"" + typeString + "\"" + nullableString);
-        if (annotations.isEmpty()) {
+        if (_annotations.isEmpty()) {
             writer.write(" />");
         } else {
             writer.write(">");
-            for (CsdlAnnotation an : annotations) {
+            for (CsdlAnnotation an : _annotations) {
                 an.writeXml(writer);
             }
             writer.write("</Property>");

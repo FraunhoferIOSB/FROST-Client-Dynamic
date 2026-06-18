@@ -69,7 +69,7 @@ public class CsdlPropertyNavigation extends CsdlProperty {
     public boolean nullable;
 
     @JsonIgnore
-    private final List<CsdlAnnotation> annotations = new ArrayList<>();
+    private final List<CsdlAnnotation> _annotations = new ArrayList<>();
 
     public CsdlPropertyNavigation() {
         super(NAME_KIND_NAVIGATIONPROPERTY);
@@ -88,7 +88,7 @@ public class CsdlPropertyNavigation extends CsdlProperty {
         }
         nullable = np.isNullable();
         for (Annotation an : np.getAnnotations()) {
-            annotations.add(CsdlAnnotation.of(doc, an));
+            _annotations.add(CsdlAnnotation.of(doc, an));
         }
         return this;
     }
@@ -134,7 +134,7 @@ public class CsdlPropertyNavigation extends CsdlProperty {
     @JsonAnyGetter
     public Map<String, Object> otherProperties() {
         Map<String, Object> result = new LinkedHashMap<>();
-        for (CsdlAnnotation annotation : annotations) {
+        for (CsdlAnnotation annotation : _annotations) {
             result.put('@' + annotation.getQualifiedName(), annotation.getValue());
         }
         return result;
@@ -155,11 +155,11 @@ public class CsdlPropertyNavigation extends CsdlProperty {
             partnerString = " Partner=\"" + partner + "\"";
         }
         writer.write("<NavigationProperty Name=\"" + name + "\" Type=\"" + finalType + "\"" + nullableString + partnerString);
-        if (annotations.isEmpty()) {
+        if (_annotations.isEmpty()) {
             writer.write(" />");
         } else {
             writer.write(">");
-            for (CsdlAnnotation an : annotations) {
+            for (CsdlAnnotation an : _annotations) {
                 an.writeXml(writer);
             }
             writer.write("</NavigationProperty>");

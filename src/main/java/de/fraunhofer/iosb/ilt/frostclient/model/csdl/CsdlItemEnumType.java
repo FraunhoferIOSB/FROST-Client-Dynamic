@@ -40,7 +40,7 @@ public class CsdlItemEnumType extends CsdlSchemaItemAbstract {
 
     @JsonAnyGetter
     @JsonAnySetter
-    public Map<String, Number> values = new LinkedHashMap<>();
+    public Map<String, Number> _values = new LinkedHashMap<>();
 
     public CsdlItemEnumType() {
         super(NAME_KIND_ENUMTYPE);
@@ -51,7 +51,7 @@ public class CsdlItemEnumType extends CsdlSchemaItemAbstract {
         for (Map.Entry<String, Number> entry : te.getValues().entrySet()) {
             final String name = entry.getKey();
             final Number value = entry.getValue();
-            values.put(name, value);
+            _values.put(name, value);
         }
         return this;
     }
@@ -59,7 +59,7 @@ public class CsdlItemEnumType extends CsdlSchemaItemAbstract {
     @Override
     public void writeXml(String nameSpace, String name, Writer writer) throws IOException {
         writer.write("<EnumType Name=\"" + name + "\" UnderlyingType=\"Edm.Int32\">");
-        for (Map.Entry<String, Number> entry : values.entrySet()) {
+        for (Map.Entry<String, Number> entry : _values.entrySet()) {
             String memberName = entry.getKey();
             Number memberValue = entry.getValue();
             writer.write("<Member Name=\"" + memberName + "\"   Value=\"" + memberValue + "\" />");

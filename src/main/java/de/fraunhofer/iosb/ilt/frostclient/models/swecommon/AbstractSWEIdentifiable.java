@@ -37,7 +37,10 @@ import tools.jackson.databind.node.ObjectNode;
  *
  * @param <T> The type of the extending class.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CUSTOM,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
 @JsonTypeIdResolver(SweTypeIdResolver.class)
 public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<T>> extends AbstractSWE {
 
@@ -61,11 +64,6 @@ public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<
      * A longer description.
      */
     private String description;
-
-    /**
-     * The type of the component.
-     */
-    private String type;
 
     public String getDescription() {
         return description;
@@ -91,15 +89,6 @@ public abstract class AbstractSWEIdentifiable<T extends AbstractSWEIdentifiable<
 
     public T setLabel(String label) {
         this.label = label;
-        return self();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public T setType(String type) {
-        this.type = type;
         return self();
     }
 

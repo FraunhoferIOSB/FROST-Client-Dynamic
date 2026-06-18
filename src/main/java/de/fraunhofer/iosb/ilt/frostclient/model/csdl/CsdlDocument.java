@@ -60,9 +60,9 @@ public class CsdlDocument {
     public Map<String, CsdlSchema> nameSpaces = new LinkedHashMap<>();
 
     @JsonProperty("$Reference")
-    private final Map<String, ReferencedDoc> referencedDocs = new TreeMap<>();
+    public Map<String, ReferencedDoc> referencedDocs = new TreeMap<>();
 
-    private static class ReferencedDoc {
+    public static class ReferencedDoc {
 
         @JsonProperty("$Include")
         private final List<ReferencedNamespace> includes = new ArrayList<>();
@@ -118,7 +118,7 @@ public class CsdlDocument {
         }
     }
 
-    private static class ReferencedNamespace {
+    public static class ReferencedNamespace {
 
         @JsonProperty("$Namespace")
         private final String namespace;

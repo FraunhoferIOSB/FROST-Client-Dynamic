@@ -58,7 +58,7 @@ public class EntitySerializerSta extends ValueSerializer<Entity> {
             writeContent(entity, gen);
         } catch (IOException | RuntimeException exc) {
             LOGGER.error("Failed to serialise entity.", exc);
-            throw new StreamWriteException(gen, "could not serialize Entity");
+            throw new StreamWriteException(gen, "could not serialize Entity", exc);
         } finally {
             gen.writeEndObject();
         }

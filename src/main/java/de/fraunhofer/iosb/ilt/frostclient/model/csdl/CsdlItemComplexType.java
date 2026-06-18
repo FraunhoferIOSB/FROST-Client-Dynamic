@@ -62,7 +62,7 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
     public String description;
 
     @JsonAnyGetter
-    public Map<String, CsdlProperty> properties = new LinkedHashMap<>();
+    public Map<String, CsdlProperty> _properties = new LinkedHashMap<>();
 
     public CsdlItemComplexType() {
         super(NAME_KIND_COMPLEXTYPE);
@@ -75,7 +75,7 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
             final String name = property.getName();
             final PropertyType type = property.getType();
             final boolean nullable = property.isNullable();
-            properties.put(name, CsdlPropertyEntity.of(doc, nameSpace, type, nullable));
+            _properties.put(name, CsdlPropertyEntity.of(doc, nameSpace, type, nullable));
         }
         return this;
     }
@@ -86,7 +86,7 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
                 pt -> ParserUtils.getComplexTypeDeserializer((TypeComplex) pt),
                 pt -> ParserUtils.getDefaultSerializer());
         type.setNamespace(namespace);
-        for (var propEntry : properties.entrySet()) {
+        for (var propEntry : _properties.entrySet()) {
             String propName = propEntry.getKey();
             CsdlProperty property = propEntry.getValue();
             property.applyTo(mr, type, propName);
@@ -105,14 +105,14 @@ public class CsdlItemComplexType extends CsdlSchemaItemAbstract {
         if (name.startsWith("@")) {
 
         } else if (data instanceof Map map) {
-            properties.put(name, CsdlProperty.of(name, map));
+            _properties.put(name, CsdlProperty.of(name, map));
         }
     }
 
     @Override
     public void writeXml(String nameSpace, String name, Writer writer) throws IOException {
         writer.write("<ComplexType Name=\"" + name + "\" OpenType=\"" + Boolean.toString(openType) + "\">");
-        for (Entry<String, CsdlProperty> entry : properties.entrySet()) {
+        for (Entry<String, CsdlProperty> entry : _properties.entrySet()) {
             String propName = entry.getKey();
             CsdlProperty property = entry.getValue();
             property.writeXml(nameSpace, propName, writer);
