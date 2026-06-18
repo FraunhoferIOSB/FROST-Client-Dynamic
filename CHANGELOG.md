@@ -1,8 +1,12 @@
 # Changelog
 
-## Version 2.37-SNAPSHOT
+## Version 2.37
 
 **Updates**
+* Bumped Dependencies.
+* Fixed JSON (de)serialisation issues.
+* Allow property type overrides from CSDL.
+* Added missing version registration for v2.0.
 
 
 ## Version 2.36
