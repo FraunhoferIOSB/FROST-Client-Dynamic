@@ -22,10 +22,8 @@
  */
 package de.fraunhofer.iosb.ilt.frostclient.utils;
 
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import java.util.UUID;
-import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 /**
  * The MQTT Client settings.
@@ -33,9 +31,8 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 public class MqttConfig {
 
     private String clientId = this.getClass() + "-" + UUID.randomUUID();
-    private MqttClientPersistence persistence = new MqttDefaultFilePersistence();
-    private MqttConnectOptions options;
 
+    private int Qos = 2;
     private String username;
     private String password;
 
@@ -48,27 +45,6 @@ public class MqttConfig {
 
     public MqttConfig setClientId(String clientId) {
         this.clientId = clientId;
-        return this;
-    }
-
-    public MqttClientPersistence getPersistence() {
-        return persistence;
-    }
-
-    public MqttConfig setPersistence(MqttClientPersistence persistence) {
-        this.persistence = persistence;
-        return this;
-    }
-
-    public MqttConnectOptions getOptions() {
-        if (options == null) {
-            options = new MqttConnectOptions();
-        }
-        return options;
-    }
-
-    public MqttConfig setOptions(MqttConnectOptions options) {
-        this.options = options;
         return this;
     }
 
@@ -90,4 +66,19 @@ public class MqttConfig {
         return password;
     }
 
+    public int getQos() {
+        return Qos;
+    }
+
+    public void setQos(int Qos) {
+        this.Qos = Qos;
+    }
+
+    public MqttQos getMqttQos() {
+        MqttQos fromCode = MqttQos.fromCode(Qos);
+        if (fromCode == null) {
+            return MqttQos.EXACTLY_ONCE;
+        }
+        return fromCode;
+    }
 }

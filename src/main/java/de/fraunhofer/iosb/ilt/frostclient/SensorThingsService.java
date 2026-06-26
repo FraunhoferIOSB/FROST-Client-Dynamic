@@ -24,6 +24,18 @@ package de.fraunhofer.iosb.ilt.frostclient;
 
 import static de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper.isNullOrEmpty;
 
+import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.datatypes.MqttTopicFilter;
+import com.hivemq.client.mqtt.lifecycle.MqttClientConnectedContext;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientBuilder;
+import com.hivemq.client.mqtt.mqtt5.exceptions.Mqtt5SubAckException;
+import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
+import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscribe;
+import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscription;
 import de.fraunhofer.iosb.ilt.frostclient.auth.AuthMethod;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
@@ -49,6 +61,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,12 +79,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -110,34 +117,7 @@ public class SensorThingsService {
     private HttpClientBuilder clientBuilder;
     private CloseableHttpClient httpClient;
     private MqttConfig mqttConfig;
-    private MqttClient mqttClient;
-    private final MqttCallback mqttCallback = new MqttCallbackExtended() {
-        @Override
-        public void connectComplete(boolean reconnect, String serverURI) {
-            LOGGER.info("MQTT connection established");
-            try {
-                mqttResubscribe();
-            } catch (MqttException ex) {
-                LOGGER.error("Failed to resubscribe to topics after connect.", ex);
-            }
-        }
-
-        @Override
-        public void connectionLost(Throwable cause) {
-            LOGGER.warn("MQTT connection lost, details in debug");
-            LOGGER.debug("MQTT connection lost", cause);
-        }
-
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            handleMessage(topic, message);
-        }
-
-        @Override
-        public void deliveryComplete(IMqttDeliveryToken token) {
-            LOGGER.debug("Publish completed.");
-        }
-    };
+    private Mqtt5AsyncClient mqttClient;
 
     private final Map<String, Set<MqttSubscription>> mqttSubscriptions = new HashMap<>();
 
@@ -629,8 +609,12 @@ public class SensorThingsService {
             if (subSet.add(sub) && subSet.size() == 1) {
                 // First subscription for this topic.
                 try {
-                    mqttClient.subscribe(topic);
-                } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
+                    mqttClient.toBlocking()
+                            .subscribeWith()
+                            .topicFilter(topic)
+                            .qos(mqttConfig.getMqttQos())
+                            .send();
+                } catch (RuntimeException exc) {
                     throw new MqttException(String.format("subscribing topic '%s' failed", topic), exc);
                 }
             }
@@ -650,8 +634,11 @@ public class SensorThingsService {
                     // Last subscription for this topic removed.
                     mqttSubscriptions.remove(topic);
                     try {
-                        mqttClient.unsubscribe(topic);
-                    } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+                        mqttClient.toBlocking()
+                                .unsubscribeWith()
+                                .addTopicFilter(topic)
+                                .send();
+                    } catch (RuntimeException ex) {
                         throw new MqttException("Failed to unsubscribe", ex);
                     }
                 }
@@ -660,40 +647,52 @@ public class SensorThingsService {
     }
 
     /**
-     * Removed all MqttSubscription for the given topic and unsubscribes.
+     * Removed all MqttSubscription for the given topics and unsubscribes.
      *
-     * @param topic The topic to remove all subscriptions for.
+     * @param topics The topics to remove all subscriptions for.
      * @throws MqttException if unsubscribe fails.
      */
-    public void unSubscribeAll(String topic) throws MqttException {
-        mqttSubscriptions.remove(topic);
+    public void unSubscribeAll(List<String> topics) throws MqttException {
+        topics.forEach(mqttSubscriptions::remove);
         if (mqttClient == null) {
             return;
         }
         try {
-            mqttClient.unsubscribe(topic);
-        } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+            mqttClient.unsubscribeWith()
+                    .addTopicFilters(topics.stream().map(t -> MqttTopicFilter.of(t)))
+                    .send();
+        } catch (RuntimeException ex) {
             throw new MqttException("Failed to unsubscribe", ex);
         }
     }
 
-    private void handleMessage(String topic, MqttMessage message) {
-        for (MqttSubscription sub : mqttSubscriptions.getOrDefault(topic, Collections.emptySet())) {
+    private void handleMessage(Mqtt5Publish message) {
+        for (MqttSubscription sub : mqttSubscriptions.getOrDefault(message.getTopic().toString(), Collections.emptySet())) {
             try {
-                Entity entity = jsonReader.parseEntity(sub.getReturnType(), message.toString());
+                final String payloadString = new String(message.getPayloadAsBytes(), StandardCharsets.UTF_8);
+                Entity entity = jsonReader.parseEntity(sub.getReturnType(), payloadString);
                 entity.setService(this);
                 Predicate<Entity> filter = sub.getFilter();
                 if (filter == null || filter.test(entity)) {
                     sub.getHandler().accept(entity);
                 }
-            } catch (RuntimeException | IOException ex) {
+            } catch (IOException | RuntimeException ex) {
                 LOGGER.error("Exception while handling message.", ex);
             }
         }
     }
 
     public boolean isMqttConnected() {
-        return mqttClient != null && mqttClient.isConnected();
+        return mqttClient != null && mqttClient.getState().isConnected();
+    }
+
+    public void connectComplete(MqttClientConnectedContext context) {
+        LOGGER.info("MQTT connection established");
+        try {
+            mqttResubscribe();
+        } catch (MqttException ex) {
+            LOGGER.error("Failed to resubscribe to topics after connect.", ex);
+        }
     }
 
     public void mqttResubscribe() throws MqttException {
@@ -719,40 +718,64 @@ public class SensorThingsService {
 
     private void sendSubscribe(List<String> topics) throws MqttException {
         try {
-            mqttClient.subscribe(topics.toArray(String[]::new));
-        } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
-            throw new MqttException("Failed to resubscribe", ex);
+            MqttQos qos = mqttConfig.getMqttQos();
+            Mqtt5Subscribe subscribe = Mqtt5Subscribe.builder()
+                    .addSubscriptions(
+                            topics.stream()
+                                    .map(t -> Mqtt5Subscription.builder().topicFilter(t).qos(qos).build()))
+                    .build();
+
+            mqttClient.toBlocking().subscribe(subscribe);
+
+        } catch (Mqtt5SubAckException ex) {
+            throw new MqttException("Failed to (re)subscribe", ex);
         }
     }
 
     private void ensureMqttConnected() throws MqttException {
         ensureMqttConfigured();
-        if (mqttClient.isConnected()) {
+        if (mqttClient.getState().isConnected()) {
             return;
         }
         try {
-            final MqttConnectOptions options = mqttConfig.getOptions();
+            var connectWith = mqttClient.toBlocking()
+                    .connectWith();
             if (mqttConfig.isAuthSet()) {
-                options.setUserName(mqttConfig.getUsername());
-                options.setPassword(mqttConfig.getPassword().toCharArray());
+                connectWith = connectWith.simpleAuth()
+                        .username(mqttConfig.getUsername())
+                        .password(mqttConfig.getPassword().getBytes())
+                        .applySimpleAuth();
             }
-            options.setAutomaticReconnect(true);
-            mqttClient.connect(options);
-        } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
+            connectWith.send();
+        } catch (RuntimeException exc) {
             throw new MqttException("MQTT connection failed", exc);
         }
     }
 
     private void ensureMqttConfigured() throws MqttException {
         if (mqttClient == null) {
-            if (mqttConfig == null) {
-                LOGGER.info("Using default MQTT configuration");
-                mqttConfig = new MqttConfig();
-            }
+            getOrCreateMqttConfig();
             try {
-                mqttClient = new MqttClient(serverInfo.getMqttUrl(), mqttConfig.getClientId(), mqttConfig.getPersistence());
-                mqttClient.setCallback(mqttCallback);
-            } catch (org.eclipse.paho.client.mqttv3.MqttException exc) {
+                URI mqttUri = new URI(serverInfo.getMqttUrl());
+                Mqtt5ClientBuilder mqttClientBuilder = Mqtt5Client.builder()
+                        .identifier(mqttConfig.getClientId())
+                        .serverHost(mqttUri.getHost())
+                        .addConnectedListener(this::connectComplete)
+                        .addDisconnectedListener((context) -> {
+                            LOGGER.info("MQTT Disconnected.");
+                        })
+                        .automaticReconnectWithDefaultConfig();
+                if (mqttUri.getScheme().startsWith("ws")) {
+                    var wsBuilder = mqttClientBuilder.webSocketConfig()
+                            .serverPath(mqttUri.getPath());
+                    if (mqttUri.getQuery() != null) {
+                        wsBuilder = wsBuilder.queryString(mqttUri.getQuery());
+                    }
+                    mqttClientBuilder = wsBuilder.applyWebSocketConfig();
+                }
+                mqttClient = mqttClientBuilder.buildAsync();
+                mqttClient.publishes(MqttGlobalPublishFilter.ALL, this::handleMessage);
+            } catch (RuntimeException | URISyntaxException exc) {
                 throw new MqttException("could not create MQTT client", exc);
             }
         }
@@ -764,25 +787,15 @@ public class SensorThingsService {
     public void cleanupMqtt() {
         // Copy the topics, since unsubscribing changes the mqttSubscriptions.
         List<String> topics = new ArrayList<>(mqttSubscriptions.keySet());
-        topics.forEach((topic) -> {
-            try {
-                unSubscribeAll(topic);
-            } catch (MqttException ex) {
-                LOGGER.warn("error unsubscribing from MQTT", ex);
-            }
-        });
+        try {
+            unSubscribeAll(topics);
+        } catch (MqttException ex) {
+            LOGGER.warn("error unsubscribing from MQTT", ex);
+        }
         if (mqttClient != null) {
-            if (mqttClient.isConnected()) {
-                try {
-                    mqttClient.disconnect();
-                } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
-                    LOGGER.warn("error disconnecting MQTT conection", ex);
-                }
-            }
-            try {
-                mqttClient.close(true);
-            } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
-                LOGGER.warn("error closing MQTT client", ex);
+            Mqtt5BlockingClient bc = mqttClient.toBlocking();
+            if (bc.getState().isConnected()) {
+                bc.disconnect();
             }
         }
         mqttClient = null;

@@ -3,6 +3,7 @@
 ## Version 2.38-SNAPSHOT
 
 **Updates**
+* Changed MQTT client from paho to hivemq.
 
 
 ## Version 2.37
