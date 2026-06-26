@@ -756,24 +756,29 @@ public class SensorThingsService {
         if (mqttClient == null) {
             getOrCreateMqttConfig();
             try {
-                URI mqttUri = new URI(serverInfo.getMqttUrl());
-                Mqtt5ClientBuilder mqttClientBuilder = Mqtt5Client.builder()
+                final String mqttUrl = serverInfo.getMqttUrl();
+                final URI mqttUri = new URI(mqttUrl);
+                final String scheme = mqttUri.getScheme();
+                Mqtt5ClientBuilder cBuilder = Mqtt5Client.builder()
                         .identifier(mqttConfig.getClientId())
                         .serverHost(mqttUri.getHost())
                         .addConnectedListener(this::connectComplete)
                         .addDisconnectedListener((context) -> {
-                            LOGGER.info("MQTT Disconnected.");
+                            LOGGER.info("MQTT Disconnected from {}: {}", mqttUrl, context.getCause().getMessage());
                         })
                         .automaticReconnectWithDefaultConfig();
-                if (mqttUri.getScheme().startsWith("ws")) {
-                    var wsBuilder = mqttClientBuilder.webSocketConfig()
+                if (scheme.startsWith("ws")) {
+                    var wsBuilder = cBuilder.webSocketConfig()
                             .serverPath(mqttUri.getPath());
                     if (mqttUri.getQuery() != null) {
                         wsBuilder = wsBuilder.queryString(mqttUri.getQuery());
                     }
-                    mqttClientBuilder = wsBuilder.applyWebSocketConfig();
+                    cBuilder = wsBuilder.applyWebSocketConfig();
                 }
-                mqttClient = mqttClientBuilder.buildAsync();
+                if (scheme.startsWith("wss") || scheme.startsWith("mqtts") || scheme.startsWith("ssl")) {
+                    cBuilder = cBuilder.sslWithDefaultConfig();
+                }
+                mqttClient = cBuilder.buildAsync();
                 mqttClient.publishes(MqttGlobalPublishFilter.ALL, this::handleMessage);
             } catch (RuntimeException | URISyntaxException exc) {
                 throw new MqttException("could not create MQTT client", exc);
