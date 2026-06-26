@@ -67,7 +67,7 @@
         <version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
         <version.jsonwebtoken>0.13.0</version.jsonwebtoken>
         <version.junit>6.1.0</version.junit>
-        <version.logback>1.5.35</version.logback>
+        <version.logback>1.5.37</version.logback>
 
         <version.maven.plugin.central-publishing>0.11.0</version.maven.plugin.central-publishing>
         <version.maven.plugin.compiler>3.15.0</version.maven.plugin.compiler>
