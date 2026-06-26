@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.38-SNAPSHOT
+## Version 2.38
 
 **Updates**
+* Bumped Dependencies.
 * Changed MQTT client from paho to hivemq.
 
 
