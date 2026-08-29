@@ -25,13 +25,16 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.util.Arrays;
 import java.util.Iterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A wrapper for an Object array holding primary key values. This class
  * implements equals, which an array does not.
  */
-public class PkValue implements Iterable<Object> {
+public class PkValue implements Iterable<Object>, Comparable<PkValue> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PkValue.class.getName());
     private final Object[] values;
 
     public PkValue(int size) {
@@ -115,6 +118,22 @@ public class PkValue implements Iterable<Object> {
     @Override
     public String toString() {
         return Arrays.toString(values);
+    }
+
+    @Override
+    public int compareTo(PkValue o) {
+        for (int idx = 0; idx < values.length; idx++) {
+            final Object value = values[idx];
+            if (value instanceof Comparable cmp) {
+                int c = cmp.compareTo(o.values[idx]);
+                if (c != 0) {
+                    return c;
+                }
+            } else {
+                LOGGER.warn("Non-Comparable primary key component {}", value);
+            }
+        }
+        return 0;
     }
 
 }

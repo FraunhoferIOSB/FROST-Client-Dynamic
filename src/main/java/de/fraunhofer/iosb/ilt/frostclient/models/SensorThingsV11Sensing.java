@@ -341,7 +341,7 @@ public class SensorThingsV11Sensing implements DataModel {
                 .setPrimaryKeyValues(PkValue.of(id));
     }
 
-    public Entity newSensor(String name, String description, String encodingType, String metaData) {
+    public Entity newSensor(String name, String description, String encodingType, Object metaData) {
         return newSensor()
                 .setProperty(EP_NAME, name)
                 .setProperty(EP_DESCRIPTION, description)
