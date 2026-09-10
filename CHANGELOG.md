@@ -3,6 +3,7 @@
 ## Version 2.39-SNAPSHOT
 
 **Updates**
+* Changed PkValue to be Comparable.
 
 
 ## Version 2.38
