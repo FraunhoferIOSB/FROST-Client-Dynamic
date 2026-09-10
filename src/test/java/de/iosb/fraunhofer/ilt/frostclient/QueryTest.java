@@ -34,13 +34,13 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import java.net.MalformedURLException;
 import org.junit.jupiter.api.Test;
 
-public class QueryTest {
+class QueryTest {
 
     public QueryTest() {
     }
 
     @Test
-    public void testFullQuery() throws MalformedURLException, ServiceFailureException {
+    void testFullQuery() throws MalformedURLException, ServiceFailureException {
         final SensorThingsV11Sensing mdlSensing = new SensorThingsV11Sensing();
         SensorThingsService service = new SensorThingsService(mdlSensing)
                 .setBaseUrl(SensorThingsService.NULL_URL_V11)
@@ -61,7 +61,7 @@ public class QueryTest {
     }
 
     @Test
-    public void testExpand() throws MalformedURLException, ServiceFailureException {
+    void testExpand() throws MalformedURLException, ServiceFailureException {
         final SensorThingsV11Sensing mdlSensing = new SensorThingsV11Sensing();
         ExpandItem expandItem = new ExpandItem(mdlSensing.npThingDatastreams)
                 .top(5)

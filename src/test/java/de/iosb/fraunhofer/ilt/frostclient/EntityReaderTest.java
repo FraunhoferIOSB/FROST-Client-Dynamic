@@ -50,14 +50,14 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class EntityReaderTest {
+class EntityReaderTest {
 
     private SensorThingsV11Sensing modelSensing;
     private SensorThingsV11Tasking modelTasking;
     private SensorThingsService service;
 
     @BeforeEach
-    public void setUp() throws MalformedURLException {
+    void setUp() throws MalformedURLException {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         service = new SensorThingsService(modelSensing, modelTasking)
@@ -66,7 +66,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readEntity() throws IOException {
+    void readEntity() throws IOException {
         String json = """
                 {
                     "phenomenonTime": "2016-01-07T02:00:00.000Z",
@@ -89,7 +89,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readEntityV2() throws IOException {
+    void readEntityV2() throws IOException {
         String json = """
                 {
                     "phenomenonTime": {"start": "2016-01-07T02:00:00.000Z"},
@@ -112,7 +112,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readEntityList() throws IOException {
+    void readEntityList() throws IOException {
         String json = """
                 {
                     "@iot.nextLink" : "https://server.de/SensorThingsService/v1.0/Things?$top=2&$skip=14&$expand=Datastreams%28%24top%3D2%3B%24count%3Dtrue%29",
@@ -213,7 +213,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readEmptyEntityList() throws IOException {
+    void readEmptyEntityList() throws IOException {
         String json = """
                 {
                     "value" : [ ]
@@ -227,7 +227,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readTaskingCapabilities() throws IOException {
+    void readTaskingCapabilities() throws IOException {
         String json = """
                 {
                     "name" : "createNewVA",
@@ -279,7 +279,7 @@ public class EntityReaderTest {
     }
 
     @Test
-    public void readTaskingCapabilitiesWithConstraint() throws IOException {
+    void readTaskingCapabilitiesWithConstraint() throws IOException {
         String json = """
                 {
                     "name": "DatastreamCopierCapability",
