@@ -68,7 +68,7 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.EnumFeature;
 import tools.jackson.databind.json.JsonMapper;
 
-public class EntityFormatterTest {
+class EntityFormatterTest {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EntityFormatterTest.class.getName());
 
@@ -79,7 +79,7 @@ public class EntityFormatterTest {
     private SensorThingsService serviceV2;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         modelSensing = new SensorThingsV11Sensing();
         modelTasking = new SensorThingsV11Tasking();
         modelV2Core = new SensorThingsV20Core();
@@ -96,7 +96,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeThing_Basic_Success() throws IOException {
+    void writeThing_Basic_Success() throws IOException {
         String expResultV1 = """
                 {
                   "@iot.id": 1,
@@ -136,7 +136,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeThing_Basic_StringId_Success() throws IOException {
+    void writeThing_Basic_StringId_Success() throws IOException {
         String expResultV1 = """
                 {
                   "@iot.id": "aStringAsId",
@@ -172,7 +172,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeThing_CompletelyEmpty_Success() throws IOException {
+    void writeThing_CompletelyEmpty_Success() throws IOException {
         String expResult = "{}";
         Entity entity = new Entity(modelSensing.etThing);
         String json = JsonWriter.writeEntity(Version.V_1_1, entity);
@@ -180,7 +180,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeThingWithLocation() throws IOException {
+    void writeThingWithLocation() throws IOException {
         String expResultV1 = """
                 {
                   "@iot.id": 1,
@@ -216,7 +216,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void testNestedLocation() throws IOException {
+    void testNestedLocation() throws IOException {
         LOGGER.info("  testNestedLocation");
         String expResult = """
                 {
@@ -244,7 +244,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeLocation_GeoJson() throws Exception {
+    void writeLocation_GeoJson() throws Exception {
         String expResult = """
                 {
                     "@iot.id": 1,
@@ -267,7 +267,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeLocation_String() throws Exception {
+    void writeLocation_String() throws Exception {
         String expResult = """
                 {
                     "@iot.id": 1,
@@ -287,7 +287,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeEverything() throws Exception {
+    void writeEverything() throws Exception {
         String expResult = """
                 {
                     "description": "thing 1",
@@ -490,7 +490,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeObservationDateTime() throws IOException {
+    void writeObservationDateTime() throws IOException {
         String expResult = """
                 {
                     "@iot.id": 1,
@@ -511,7 +511,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeObservationInterval() throws IOException {
+    void writeObservationInterval() throws IOException {
         String expResultV1 = """
                 {
                     "@iot.id": 1,
@@ -542,7 +542,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeObservationNull() throws IOException {
+    void writeObservationNull() throws IOException {
         String expResult = """
                 {
                     "@iot.id": 1,
@@ -563,7 +563,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeObservationNoResult() throws IOException {
+    void writeObservationNoResult() throws IOException {
         String expResult = """
                 {
                     "phenomenonTime": "2014-12-31T11:59:59Z"
@@ -580,7 +580,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeObservationZero() throws IOException {
+    void writeObservationZero() throws IOException {
         String expResult = """
                 {
                     "result": 0.0
@@ -615,7 +615,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeTaskingParameter() throws IOException {
+    void writeTaskingParameter() throws IOException {
         String expResult = """
                 {
                     "@iot.id": 1,
@@ -675,7 +675,7 @@ public class EntityFormatterTest {
     }
 
     @Test
-    public void writeReference() {
+    void writeReference() {
         String expResult = """
                 {
                     "@id": "Things(1)"

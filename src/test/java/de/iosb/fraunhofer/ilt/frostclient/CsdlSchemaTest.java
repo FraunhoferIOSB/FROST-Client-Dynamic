@@ -37,10 +37,10 @@ import tools.jackson.databind.ObjectMapper;
 /**
  * Tests for the CSDL Schema generation and parsing.
  */
-public class CsdlSchemaTest {
+class CsdlSchemaTest {
 
     @Test
-    public void testSchemaExplicit() throws IOException {
+    void testSchemaExplicit() throws IOException {
         final ObjectMapper objectMapper = SimpleJsonMapper.getSimpleObjectMapper();
         final String schemaData = IOUtils.resourceToString("model/csdl_sensorthings_explicit.json", StandardCharsets.UTF_8, getClass().getClassLoader());
         CsdlDocument csdlDocument = objectMapper.readValue(schemaData, CsdlDocument.class);
@@ -49,7 +49,7 @@ public class CsdlSchemaTest {
     }
 
     @Test
-    public void testSchemaImplicit() throws IOException {
+    void testSchemaImplicit() throws IOException {
         final ObjectMapper objectMapper = SimpleJsonMapper.getSimpleObjectMapper();
         final String schemaDataExplicit = IOUtils.resourceToString("model/csdl_sensorthings_explicit.json", StandardCharsets.UTF_8, getClass().getClassLoader());
         final String schemaData = IOUtils.resourceToString("model/csdl_sensorthings.json", StandardCharsets.UTF_8, getClass().getClassLoader());
@@ -65,7 +65,7 @@ public class CsdlSchemaTest {
      * @throws IOException if JSON reading/writing fails.
      */
     @Test
-    public void testLoadSchemaExplicit() throws IOException {
+    void testLoadSchemaExplicit() throws IOException {
         final ObjectMapper objectMapper = SimpleJsonMapper.getSimpleObjectMapper();
         final String schemaData = IOUtils.resourceToString("model/csdl_sensorthings_explicit.json", StandardCharsets.UTF_8, getClass().getClassLoader());
         CsdlDocument csdlDocument = objectMapper.readValue(schemaData, CsdlDocument.class);

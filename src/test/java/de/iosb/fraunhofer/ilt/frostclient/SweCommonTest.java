@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
-public class SweCommonTest {
+class SweCommonTest {
 
     private final static String DATA_RECORD = """
             {
@@ -69,7 +69,7 @@ public class SweCommonTest {
             }""";
 
     @Test
-    public void testDataRecord() throws JacksonException {
+    void testDataRecord() throws JacksonException {
         ObjectMapper om = SimpleJsonMapper.getSimpleObjectMapper();
         DataRecord dr = om.readValue(DATA_RECORD, DataRecord.class);
         Map<String, Object> value = CollectionsHelper.propertiesBuilder()
