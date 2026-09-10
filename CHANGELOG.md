@@ -3,6 +3,7 @@
 ## Version 2.39-SNAPSHOT
 
 **Updates**
+* Added STA v1.1 DataArray support.
 * Changed PkValue to be Comparable.
 
 
