@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 2.39-SNAPSHOT
+## Version 2.39
 
 **Updates**
 * Allowed Sensor.metadata to be any Object.
