@@ -134,6 +134,7 @@ public class SensorThingsV20Tasking implements DataModel {
         etActuator
                 .registerProperty(CommonProperties.EP_ID)
                 .registerProperty(CommonProperties.EP_NAME)
+                .registerProperty(CommonProperties.EP_DEFINITION)
                 .registerProperty(CommonProperties.EP_DESCRIPTION)
                 .registerProperty(CommonProperties.EP_ENCODINGTYPE)
                 .registerProperty(SensorThingsV11Sensing.EP_METADATA)
@@ -152,6 +153,7 @@ public class SensorThingsV20Tasking implements DataModel {
         etTaskingCapability
                 .registerProperty(CommonProperties.EP_ID)
                 .registerProperty(CommonProperties.EP_NAME)
+                .registerProperty(CommonProperties.EP_DEFINITION)
                 .registerProperty(CommonProperties.EP_DESCRIPTION)
                 .registerProperty(CommonProperties.EP_PROPERTIES)
                 .registerProperty(EP_TASKINGPARAMETERS_TC)

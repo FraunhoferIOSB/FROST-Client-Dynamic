@@ -3,6 +3,7 @@
 ## Version 2.40-SNAPSHOT
 
 **Updates**
+* Added definition attribute to Actuator and TaskingCapability for STA V2.
 * Added methods to Entity for relation editing.
 
 
