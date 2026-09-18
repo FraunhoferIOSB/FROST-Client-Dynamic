@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 2.40-SNAPSHOT
+## Version 2.40
 
 **Updates**
 * Added definition attribute to Actuator and TaskingCapability for STA V2.
