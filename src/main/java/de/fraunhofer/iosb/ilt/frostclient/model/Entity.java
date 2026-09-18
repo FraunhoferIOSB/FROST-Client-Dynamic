@@ -25,9 +25,11 @@ package de.fraunhofer.iosb.ilt.frostclient.model;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.dao.BaseDao;
 import de.fraunhofer.iosb.ilt.frostclient.dao.Dao;
+import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
 import de.fraunhofer.iosb.ilt.frostclient.exception.MqttException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.exception.StatusCodeException;
+import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationProperty;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
@@ -35,9 +37,12 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntit
 import de.fraunhofer.iosb.ilt.frostclient.query.Expand;
 import de.fraunhofer.iosb.ilt.frostclient.query.Expand.ExpandItem;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
+import de.fraunhofer.iosb.ilt.frostclient.utils.CollectionsHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.MqttSubscription;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
+import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +50,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -318,6 +328,68 @@ public class Entity implements ComplexValue<Entity> {
         for (Entity linkedEntity : linkedEntities) {
             addNavigationEntity(navProperty, linkedEntity);
         }
+        return this;
+    }
+
+    /**
+     * Directly create a link to the given entity, using the given navigation
+     * property. This is followed by un-setting the given property.
+     *
+     * @param np The navigation property to use to link to the given entity.
+     * @param target The entity to link, using the given navigation property.
+     * @return this.
+     * @throws ServiceFailureException if the creation fails.
+     */
+    public Entity addLink(NavigationPropertyEntitySet np, Entity target) throws ServiceFailureException {
+        Exceptions.illegalArgumentIf(service == null, "Service not set, create the entity {} on the service first.", this);
+        String selfLinkSrc = getSelfLink(true);
+        String refLink = selfLinkSrc + "/" + np.getName() + "/$ref";
+
+        Map<String, Object> data = CollectionsHelper.propertiesBuilder()
+                .addItem("@id", target.getSelfLink(false))
+                .buildMap();
+        String body = SimpleJsonMapper.getSimpleObjectMapper()
+                .writeValueAsString(data);
+
+        HttpPost httpPost = new HttpPost(refLink);
+        httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+        httpPost.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
+
+        try (CloseableHttpResponse response = service.execute(httpPost)) {
+            Utils.throwIfNotOk(httpPost, response);
+        } catch (IOException exc) {
+            throw new ServiceFailureException("Failed to create entity.", exc);
+        }
+
+        unsetProperty(np);
+        return this;
+    }
+
+    /**
+     * Directly remove a link to the given entity, using the given navigation
+     * property. This is followed by un-setting the given property.
+     *
+     * @param np The navigation property to remove the link to the given entity
+     * from.
+     * @param target The entity to un-link, using the given navigation property.
+     * @return this.
+     * @throws ServiceFailureException if the creation fails.
+     */
+    public Entity unLink(NavigationPropertyEntitySet np, Entity target) throws ServiceFailureException {
+        Exceptions.illegalArgumentIf(service == null, "Service not set, create the entity {} on the service first.", this);
+        String selfLinkSrc = getSelfLink(true);
+        String refLink = selfLinkSrc + "/" + np.getName() + "(" + StringHelper.formatKeyValuesForUrl(target) + ")" + "/$ref";
+
+        HttpDelete httpDelete = new HttpDelete(refLink);
+        httpDelete.addHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
+
+        try (CloseableHttpResponse response = service.execute(httpDelete)) {
+            Utils.throwIfNotOk(httpDelete, response);
+        } catch (IOException exc) {
+            throw new ServiceFailureException("Failed to delete entity.", exc);
+        }
+
+        unsetProperty(np);
         return this;
     }
 

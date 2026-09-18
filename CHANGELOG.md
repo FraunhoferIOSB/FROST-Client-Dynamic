@@ -3,6 +3,7 @@
 ## Version 2.40-SNAPSHOT
 
 **Updates**
+* Added methods to Entity for relation editing.
 
 
 ## Version 2.39

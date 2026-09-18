@@ -106,7 +106,7 @@ public class Utils {
 
     /**
      * Throws a StatusCodeException if the given response did not have status
-     * code 2xx or if it has status code 204 (NoContent)
+     * code 2xx.
      *
      * @param request The request that generated the response.
      * @param response The response to check the status code of.
