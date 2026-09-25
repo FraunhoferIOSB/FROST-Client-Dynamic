@@ -25,6 +25,7 @@ package de.fraunhofer.iosb.ilt.frostclient.models.ext;
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
+import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
@@ -106,12 +107,11 @@ public class DataArrayDocument {
      */
     public List<String> create(SensorThingsService service) throws ServiceFailureException {
         List<String> result = new ArrayList<>();
-        final ObjectMapper mapper = SimpleJsonMapper.getSimpleObjectMapper();
         URIBuilder uriBuilder;
         HttpPost httpPost;
         String json;
         try {
-            json = mapper.writeValueAsString(this.getValue());
+            json = JsonWriter.writeObject(service.getVersion(), getValue());
             uriBuilder = new URIBuilder(service.getBaseUrl() + "CreateObservations");
             httpPost = new HttpPost(uriBuilder.build());
         } catch (JacksonException | URISyntaxException ex) {
@@ -126,6 +126,7 @@ public class DataArrayDocument {
             Utils.throwIfNotOk(httpPost, response);
 
             String jsonResponse = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+            final ObjectMapper mapper = SimpleJsonMapper.getSimpleObjectMapper();
             result = mapper.readValue(jsonResponse, LIST_OF_STRING);
             List<Entity> observations = this.getObservations();
             if (observations.size() != result.size()) {

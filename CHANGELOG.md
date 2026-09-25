@@ -3,6 +3,7 @@
 ## Version 2.41-SNAPSHOT
 
 **Updates**
+* Fixed serialisation of DataArray documents.
 
 
 ## Version 2.40
