@@ -3,6 +3,7 @@
 ## Version 2.41-SNAPSHOT
 
 **Updates**
+* Fixed ConcurrentModificationException.
 * Added a hook system that can modify HTTP requests before they are executed.
 * Fixed serialisation of DataArray documents.
 

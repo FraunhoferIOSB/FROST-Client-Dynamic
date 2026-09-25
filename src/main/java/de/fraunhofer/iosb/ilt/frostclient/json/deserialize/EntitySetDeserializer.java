@@ -44,6 +44,18 @@ public class EntitySetDeserializer extends ValueDeserializer<EntitySet> {
     private static final Map<ModelRegistry, Map<EntityType, EntitySetDeserializer>> instancePerModelAndType = new HashMap<>();
 
     public static EntitySetDeserializer getInstance(final ModelRegistry modelRegistry, final EntityType entityType) {
+        var perType = instancePerModelAndType.get(modelRegistry);
+        if (perType == null) {
+            return createInstance(modelRegistry, entityType);
+        }
+        var forType = perType.get(entityType);
+        if (forType == null) {
+            return createInstance(modelRegistry, entityType);
+        }
+        return forType;
+    }
+
+    public static synchronized EntitySetDeserializer createInstance(final ModelRegistry modelRegistry, final EntityType entityType) {
         return instancePerModelAndType
                 .computeIfAbsent(
                         modelRegistry,
