@@ -757,11 +757,11 @@ public class SensorThingsV11Sensing implements DataModel {
             return getThis();
         }
 
-        public Query queryHistoricalLocation() {
+        public Query queryHistoricalLocations() {
             return entity.query(mdlCore.npThingHistoricallocations);
         }
 
-        public EntitySet getHistoricalLocation() {
+        public EntitySet getHistoricalLocations() {
             return entity.getProperty(mdlCore.npThingHistoricallocations);
         }
 
@@ -770,11 +770,11 @@ public class SensorThingsV11Sensing implements DataModel {
             return getThis();
         }
 
-        public Query queryLocation() {
+        public Query queryLocations() {
             return entity.query(mdlCore.npThingLocations);
         }
 
-        public EntitySet getLocation() {
+        public EntitySet getLocations() {
             return entity.getProperty(mdlCore.npThingLocations);
         }
 

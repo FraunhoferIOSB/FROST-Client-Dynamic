@@ -23,6 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_DESCRIPTION;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ID;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_NAME;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_PROPERTIES;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_DATASTREAM;
@@ -35,7 +36,9 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_TH
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THINGS;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
@@ -44,7 +47,11 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntit
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive;
+import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.Builder;
+import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.BuilderId;
+import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.BuilderIdNameDesProp;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
+import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import java.util.Map;
 
 /**
@@ -126,11 +133,11 @@ public class SensorThingsV11Projects implements DataModel {
         mr.registerEntityType(etUserProjectRole);
 
         etProject
-                .registerProperty(CommonProperties.EP_ID)
-                .registerProperty(CommonProperties.EP_NAME)
-                .registerProperty(CommonProperties.EP_DESCRIPTION)
+                .registerProperty(EP_ID)
+                .registerProperty(EP_NAME)
+                .registerProperty(EP_DESCRIPTION)
                 .registerProperty(EP_PUBLIC)
-                .registerProperty(CommonProperties.EP_PROPERTIES)
+                .registerProperty(EP_PROPERTIES)
                 .registerProperty(npProjectFeaturesOfInterest)
                 .registerProperty(npProjectLocations)
                 .registerProperty(npProjectSensors)
@@ -139,8 +146,8 @@ public class SensorThingsV11Projects implements DataModel {
 
         etRole
                 .registerProperty(EP_ROLENAME)
-                .registerProperty(CommonProperties.EP_DESCRIPTION)
-                .registerProperty(CommonProperties.EP_PROPERTIES)
+                .registerProperty(EP_DESCRIPTION)
+                .registerProperty(EP_PROPERTIES)
                 .registerProperty(npRoleUserProjectRoles)
                 .registerProperty(npRoleUsers);
 
@@ -151,7 +158,7 @@ public class SensorThingsV11Projects implements DataModel {
                 .registerProperty(npUserUserProjectRoles);
 
         etUserProjectRole
-                .registerProperty(CommonProperties.EP_ID)
+                .registerProperty(EP_ID)
                 .registerProperty(npUserProjectRoleProject)
                 .registerProperty(npUserProjectRoleRole)
                 .registerProperty(npUserProjectRoleUser);
@@ -179,68 +186,435 @@ public class SensorThingsV11Projects implements DataModel {
         return mr;
     }
 
+    public ProjectBuilder buildProject() {
+        return new ProjectBuilder(this);
+    }
+
+    public ProjectBuilder editProject(Entity entity) {
+        return new ProjectBuilder(this, entity);
+    }
+
+    public static class ProjectBuilder extends BuilderIdNameDesProp<ProjectBuilder> {
+
+        SensorThingsV11Projects mdlProjects;
+
+        public ProjectBuilder(SensorThingsV11Projects mdlProjects) {
+            super(new Entity(mdlProjects.etProject));
+            this.mdlProjects = mdlProjects;
+        }
+
+        public ProjectBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(entity);
+            this.mdlProjects = mdlProjects;
+        }
+
+        public Query queryFeaturesOfInterest() {
+            return entity.query(mdlProjects.npProjectFeaturesOfInterest);
+        }
+
+        public EntitySet getFeaturesOfInterest() {
+            return entity.getProperty(mdlProjects.npProjectFeaturesOfInterest);
+        }
+
+        public ProjectBuilder addFeatureOfInterest(Entity foi) {
+            entity.addNavigationEntity(mdlProjects.npProjectFeaturesOfInterest, foi);
+            return getThis();
+        }
+
+        public Query queryLocations() {
+            return entity.query(mdlProjects.npProjectLocations);
+        }
+
+        public EntitySet getLocations() {
+            return entity.getProperty(mdlProjects.npProjectLocations);
+        }
+
+        public ProjectBuilder addLocation(Entity location) {
+            entity.addNavigationEntity(mdlProjects.npProjectLocations, location);
+            return getThis();
+        }
+
+        public Query queryHistoricalSensors() {
+            return entity.query(mdlProjects.npProjectSensors);
+        }
+
+        public EntitySet getHistoricalSensors() {
+            return entity.getProperty(mdlProjects.npProjectSensors);
+        }
+
+        public ProjectBuilder addSensor(Entity sensor) {
+            entity.addNavigationEntity(mdlProjects.npProjectSensors, sensor);
+            return getThis();
+        }
+
+        public Query queryThings() {
+            return entity.query(mdlProjects.npProjectThings);
+        }
+
+        public EntitySet getThings() {
+            return entity.getProperty(mdlProjects.npProjectThings);
+        }
+
+        public ProjectBuilder addThing(Entity thing) {
+            entity.addNavigationEntity(mdlProjects.npProjectThings, thing);
+            return getThis();
+        }
+
+        public Query queryUserProjectRoles() {
+            return entity.query(mdlProjects.npProjectUserProjectRoles);
+        }
+
+        public EntitySet getUserProjectRoles() {
+            return entity.getProperty(mdlProjects.npProjectUserProjectRoles);
+        }
+
+        public ProjectBuilder addUserProjectRole(Entity upr) {
+            entity.addNavigationEntity(mdlProjects.npProjectUserProjectRoles, upr);
+            return getThis();
+        }
+    }
+
+    public static class RoleBuilder extends Builder<RoleBuilder> {
+
+        SensorThingsV11Projects mdlProjects;
+
+        public RoleBuilder(SensorThingsV11Projects mdlProjects) {
+            super(new Entity(mdlProjects.etRole));
+            this.mdlProjects = mdlProjects;
+        }
+
+        public RoleBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(entity);
+            this.mdlProjects = mdlProjects;
+        }
+
+        public String getRolename() {
+            return entity.getProperty(EP_ROLENAME);
+        }
+
+        public RoleBuilder setRolename(String name) {
+            entity.setProperty(EP_ROLENAME, name);
+            return getThis();
+        }
+
+        public String getDescription() {
+            return entity.getProperty(EP_DESCRIPTION);
+        }
+
+        public RoleBuilder setDescription(String desc) {
+            entity.setProperty(EP_DESCRIPTION, desc);
+            return getThis();
+        }
+
+        public MapValue getProperties() {
+            return entity.getProperty(EP_PROPERTIES);
+        }
+
+        public RoleBuilder setProperties(MapValue properties) {
+            entity.setProperty(EP_PROPERTIES, properties);
+            return getThis();
+        }
+
+        public Query queryUsers() {
+            return entity.query(mdlProjects.npRoleUsers);
+        }
+
+        public EntitySet getUsers() {
+            return entity.getProperty(mdlProjects.npRoleUsers);
+        }
+
+        public RoleBuilder addUser(Entity user) {
+            entity.addNavigationEntity(mdlProjects.npRoleUsers, user);
+            return getThis();
+        }
+
+        public Query queryUserProjectRoles() {
+            return entity.query(mdlProjects.npRoleUserProjectRoles);
+        }
+
+        public EntitySet getUserProjectRoles() {
+            return entity.getProperty(mdlProjects.npRoleUserProjectRoles);
+        }
+
+        public RoleBuilder addUserProjectRole(Entity upr) {
+            entity.addNavigationEntity(mdlProjects.npRoleUserProjectRoles, upr);
+            return getThis();
+        }
+    }
+
+    public static class UserBuilder extends Builder<UserBuilder> {
+
+        SensorThingsV11Projects mdlProjects;
+
+        public UserBuilder(SensorThingsV11Projects mdlProjects) {
+            super(new Entity(mdlProjects.etUser));
+            this.mdlProjects = mdlProjects;
+        }
+
+        public UserBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(entity);
+            this.mdlProjects = mdlProjects;
+        }
+
+        public String getUsername() {
+            return entity.getProperty(EP_USERNAME);
+        }
+
+        public UserBuilder setUsername(String name) {
+            entity.setProperty(EP_USERNAME, name);
+            return getThis();
+        }
+
+        public UserBuilder setUserpass(String pass) {
+            entity.setProperty(EP_USERPASS, pass);
+            return getThis();
+        }
+
+        public Query queryRoles() {
+            return entity.query(mdlProjects.npUserRoles);
+        }
+
+        public EntitySet getRoles() {
+            return entity.getProperty(mdlProjects.npUserRoles);
+        }
+
+        public UserBuilder addRole(Entity upr) {
+            entity.addNavigationEntity(mdlProjects.npUserRoles, upr);
+            return getThis();
+        }
+
+        public Query queryUserProjectRoles() {
+            return entity.query(mdlProjects.npUserUserProjectRoles);
+        }
+
+        public EntitySet getUserProjectRoles() {
+            return entity.getProperty(mdlProjects.npUserUserProjectRoles);
+        }
+
+        public UserBuilder addUserProjectRole(Entity upr) {
+            entity.addNavigationEntity(mdlProjects.npUserUserProjectRoles, upr);
+            return getThis();
+        }
+    }
+
+    public static class UserProjectRoleBuilder extends BuilderId<UserProjectRoleBuilder> {
+
+        SensorThingsV11Projects mdlProjects;
+
+        public UserProjectRoleBuilder(SensorThingsV11Projects mdlProjects) {
+            super(new Entity(mdlProjects.etUserProjectRole));
+            this.mdlProjects = mdlProjects;
+        }
+
+        public UserProjectRoleBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(entity);
+            this.mdlProjects = mdlProjects;
+        }
+
+        public Entity getProject() throws ServiceFailureException {
+            return entity.getProperty(mdlProjects.npUserProjectRoleProject);
+        }
+
+        public UserProjectRoleBuilder setProject(Entity project) {
+            entity.setProperty(mdlProjects.npUserProjectRoleProject, project);
+            return getThis();
+        }
+
+        public Entity getRole() throws ServiceFailureException {
+            return entity.getProperty(mdlProjects.npUserProjectRoleRole);
+        }
+
+        public UserProjectRoleBuilder setRole(Entity role) {
+            entity.setProperty(mdlProjects.npUserProjectRoleRole, role);
+            return getThis();
+        }
+
+        public Entity getUser() throws ServiceFailureException {
+            return entity.getProperty(mdlProjects.npUserProjectRoleUser);
+        }
+
+        public UserProjectRoleBuilder setUser(Entity role) {
+            entity.setProperty(mdlProjects.npUserProjectRoleUser, role);
+            return getThis();
+        }
+    }
+
+    public static class DatastreamExtensionBuilder extends ExtensionBuilderRestricted<DatastreamExtensionBuilder> {
+
+        public DatastreamExtensionBuilder() {
+        }
+
+        public DatastreamExtensionBuilder(Entity entity) {
+            super(entity);
+        }
+    }
+
+    public static class FeatureOfInterestExtensionBuilder extends ExtensionBuilderProjectsRestricted<FeatureOfInterestExtensionBuilder> {
+
+        public FeatureOfInterestExtensionBuilder(SensorThingsV11Projects mdlProjects) {
+            super(mdlProjects.npFeatureOfInterestProjects);
+        }
+
+        public FeatureOfInterestExtensionBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(mdlProjects.npFeatureOfInterestProjects, entity);
+        }
+    }
+
+    public static class LocationExtensionBuilder extends ExtensionBuilderProjectsRestricted<LocationExtensionBuilder> {
+
+        public LocationExtensionBuilder(SensorThingsV11Projects mdlProjects) {
+            super(mdlProjects.npLocationProjects);
+        }
+
+        public LocationExtensionBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(mdlProjects.npLocationProjects, entity);
+        }
+    }
+
+    public static class SensorExtensionBuilder extends ExtensionBuilderProjectsRestricted<SensorExtensionBuilder> {
+
+        public SensorExtensionBuilder(SensorThingsV11Projects mdlProjects) {
+            super(mdlProjects.npSensorProjects);
+        }
+
+        public SensorExtensionBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(mdlProjects.npSensorProjects, entity);
+        }
+    }
+
+    public static class ThingExtensionBuilder extends ExtensionBuilderProjectsRestricted<ThingExtensionBuilder> {
+
+        public ThingExtensionBuilder(SensorThingsV11Projects mdlProjects) {
+            super(mdlProjects.npThingProjects);
+        }
+
+        public ThingExtensionBuilder(SensorThingsV11Projects mdlProjects, Entity entity) {
+            super(mdlProjects.npThingProjects, entity);
+        }
+    }
+
+    public static abstract class ExtensionBuilderProjectsRestricted<T extends ExtensionBuilderProjectsRestricted<T>> extends ExtensionBuilderRestricted<T> {
+
+        private NavigationPropertyEntitySet npProjects;
+
+        public ExtensionBuilderProjectsRestricted(NavigationPropertyEntitySet npProjects) {
+            this.npProjects = npProjects;
+        }
+
+        public ExtensionBuilderProjectsRestricted(NavigationPropertyEntitySet npProjects, Entity entity) {
+            super(entity);
+            this.npProjects = npProjects;
+        }
+
+        public Query queryProjects(Entity tc) {
+            return entity.query(npProjects);
+        }
+
+        public EntitySet getProjects(Entity tc) {
+            return entity.getProperty(npProjects);
+        }
+
+        public T addProject(Entity project) {
+            entity.addNavigationEntity(npProjects, project);
+            return getThis();
+        }
+    }
+
+    public static abstract class ExtensionBuilderRestricted<T extends ExtensionBuilderRestricted<T>> extends Builder<T> {
+
+        public ExtensionBuilderRestricted() {
+        }
+
+        public ExtensionBuilderRestricted(Entity entity) {
+            super(entity);
+        }
+
+        public Boolean getRestricted() {
+            return entity.getProperty(EP_RESTRICTED);
+        }
+
+        public T setRestricted(boolean restricted) {
+            entity.setProperty(EP_RESTRICTED, restricted);
+            return getThis();
+        }
+    }
+
+    @Deprecated
     public Entity newUser() {
         return new Entity(etUser);
     }
 
+    @Deprecated
     public Entity newUser(String username, String password) {
         return newUser()
                 .setProperty(EP_USERNAME, username)
                 .setProperty(EP_USERPASS, password);
     }
 
+    @Deprecated
     public Entity newRole() {
         return new Entity(etRole);
     }
 
+    @Deprecated
     public Entity newRole(String rolename, String description) {
         return newRole()
                 .setProperty(EP_ROLENAME, rolename)
                 .setProperty(EP_DESCRIPTION, description);
     }
 
+    @Deprecated
     public Entity newRole(String rolename, String description, MapValue properties) {
         return newRole(rolename, description)
                 .setProperty(EP_PROPERTIES, properties);
     }
 
+    @Deprecated
     public Entity newRole(String rolename, String description, Map<String, Object> properties) {
         return newRole(rolename, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
+    @Deprecated
     public Entity newProject() {
         return new Entity(etProject);
     }
 
+    @Deprecated
     public Entity newProject(String projectname, String description) {
         return newProject()
                 .setProperty(EP_NAME, projectname)
                 .setProperty(EP_DESCRIPTION, description);
     }
 
+    @Deprecated
     public Entity newProject(String rolename, String description, MapValue properties) {
         return newProject(rolename, description)
                 .setProperty(EP_PROPERTIES, properties);
     }
 
+    @Deprecated
     public Entity newProject(String rolename, String description, Map<String, Object> properties) {
         return newProject(rolename, description, new MapValue(TypeComplex.STA_MAP, properties));
     }
 
+    @Deprecated
     public Entity newUserProjectRole() {
         return new Entity(etUserProjectRole);
     }
 
+    @Deprecated
     public Entity newUserProjectRole(Object... pk) {
         return newUserProjectRole()
                 .setPrimaryKeyValues(PkValue.of(pk));
     }
 
+    @Deprecated
     public Entity newUserProjectRole(PkValue pk) {
         return newUserProjectRole()
                 .setPrimaryKeyValues(pk);
     }
 
+    @Deprecated
     public Entity newUserProjectRole(Entity user, Entity project, Entity role) {
         return newUserProjectRole()
                 .setProperty(npUserProjectRoleUser, user)
