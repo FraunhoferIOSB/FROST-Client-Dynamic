@@ -43,7 +43,9 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE
 import static de.fraunhofer.iosb.ilt.frostclient.utils.TypeReferencesHelper.TYPE_REFERENCE_LIST_UOM;
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
+import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
@@ -54,6 +56,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeCollection;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInterval;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.UnitOfMeasurement;
+import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Constants;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -137,19 +140,142 @@ public class SensorThingsV11MultiDatastream implements DataModel {
         return mr;
     }
 
+    public MultiDatastreamBuilder buildMultiDatastream() {
+        return new MultiDatastreamBuilder(this);
+    }
+
+    public MultiDatastreamBuilder editMultiDatastream(Entity entity) {
+        return new MultiDatastreamBuilder(this, entity);
+    }
+
+    public ObservationExtensionBuilder observationExtender() {
+        return new ObservationExtensionBuilder(this);
+    }
+
+    public static class MultiDatastreamBuilder extends CommonProperties.BuilderIdNameDesProp<MultiDatastreamBuilder> {
+
+        SensorThingsV11MultiDatastream mdlMds;
+
+        public MultiDatastreamBuilder(SensorThingsV11MultiDatastream mdlMds) {
+            super(new Entity(mdlMds.etMultiDatastream));
+            this.mdlMds = mdlMds;
+            entity.setProperty(EP_OBSERVATIONTYPE, Constants.OM_COMPLEXOBSERVATION);
+        }
+
+        public MultiDatastreamBuilder(SensorThingsV11MultiDatastream mdlMds, Entity entity) {
+            super(entity);
+            this.mdlMds = mdlMds;
+            entity.setProperty(EP_OBSERVATIONTYPE, Constants.OM_COMPLEXOBSERVATION);
+        }
+
+        public List<String> getMultiObservationDataTypes() throws ServiceFailureException {
+            return entity.getProperty(EP_MULTIOBSERVATIONDATATYPES);
+        }
+
+        public MultiDatastreamBuilder createMultiObservationDataType() {
+            List<UnitOfMeasurement> uoms = entity.getProperty(EP_UNITOFMEASUREMENTS);
+            List<String> obsTypes = new ArrayList<>();
+            for (int i = 0; i < uoms.size(); i++) {
+                obsTypes.add(Constants.OM_MEASUREMENT);
+            }
+            entity.setProperty(EP_MULTIOBSERVATIONDATATYPES, obsTypes);
+            return getThis();
+        }
+
+        public MultiDatastreamBuilder setMultiObservationDataTypes(List<String> obsTypes) {
+            entity.setProperty(EP_MULTIOBSERVATIONDATATYPES, obsTypes);
+            return getThis();
+        }
+
+        public List<UnitOfMeasurement> getUnitOfMeasurements() throws ServiceFailureException {
+            return entity.getProperty(EP_UNITOFMEASUREMENTS);
+        }
+
+        public MultiDatastreamBuilder setUnitOfMeasurements(List<UnitOfMeasurement> uoms) {
+            entity.setProperty(EP_UNITOFMEASUREMENTS, uoms);
+            return getThis();
+        }
+
+        public EntitySet getObservations() throws ServiceFailureException {
+            return entity.getProperty(mdlMds.npMultidatastreamObservations);
+        }
+
+        public Query queryObservations() throws ServiceFailureException {
+            return entity.query(mdlMds.npMultidatastreamObservations);
+        }
+
+        public MultiDatastreamBuilder addObservation(Entity obs) {
+            entity.addNavigationEntity(mdlMds.npMultidatastreamObservations, obs);
+            return getThis();
+        }
+
+        public EntitySet getObservedproperties() throws ServiceFailureException {
+            return entity.getProperty(mdlMds.npMultidatastreamObservedproperties);
+        }
+
+        public Query queryObservedproperties() throws ServiceFailureException {
+            return entity.query(mdlMds.npMultidatastreamObservedproperties);
+        }
+
+        public MultiDatastreamBuilder addObservedProperty(Entity ds) {
+            entity.addNavigationEntity(mdlMds.npMultidatastreamObservedproperties, ds);
+            return getThis();
+        }
+
+        public Entity getSensor() throws ServiceFailureException {
+            return entity.getProperty(mdlMds.npMultidatastreamSensor);
+        }
+
+        public MultiDatastreamBuilder setSensor(Entity sensor) {
+            entity.setProperty(mdlMds.npMultidatastreamSensor, sensor);
+            return getThis();
+        }
+
+        public Entity getThing() throws ServiceFailureException {
+            return entity.getProperty(mdlMds.npMultidatastreamThing);
+        }
+
+        public MultiDatastreamBuilder setThing(Entity thing) {
+            entity.setProperty(mdlMds.npMultidatastreamThing, thing);
+            return getThis();
+        }
+    }
+
+    public static class ObservationExtensionBuilder extends CommonProperties.Builder<ObservationExtensionBuilder> {
+
+        SensorThingsV11MultiDatastream mdlMds;
+
+        public ObservationExtensionBuilder(SensorThingsV11MultiDatastream mdlMds) {
+            this.mdlMds = mdlMds;
+        }
+
+        public Entity getMultiDatastream() throws ServiceFailureException {
+            return entity.getProperty(mdlMds.npObservationMultidatastream);
+        }
+
+        public ObservationExtensionBuilder setMultiDatastream(Entity mds) {
+            entity.setProperty(mdlMds.npObservationMultidatastream, mds);
+            return getThis();
+        }
+    }
+
+    @Deprecated
     public Entity newMultiDatastream() {
         return new Entity(etMultiDatastream);
     }
 
+    @Deprecated
     public Entity newMultiDatastream(Object id) {
         return new Entity(etMultiDatastream)
                 .setPrimaryKeyValues(PkValue.of(id));
     }
 
+    @Deprecated
     public Entity newMultiDatastream(String name, String description, UnitOfMeasurement... uoms) {
         return newMultiDatastream(name, description, Arrays.asList(uoms));
     }
 
+    @Deprecated
     public Entity newMultiDatastream(String name, String description, List<UnitOfMeasurement> uoms) {
         List<String> obsTypes = new ArrayList<>();
         for (int i = 0; i < uoms.size(); i++) {
@@ -163,15 +289,18 @@ public class SensorThingsV11MultiDatastream implements DataModel {
                 .setProperty(EP_UNITOFMEASUREMENTS, uoms);
     }
 
+    @Deprecated
     public Entity newObservation() {
         return new Entity(mr.getEntityTypeForName(NAME_OBSERVATION));
     }
 
+    @Deprecated
     public Entity newObservation(Object result) {
         return newObservation()
                 .setProperty(EP_RESULT, result);
     }
 
+    @Deprecated
     public Entity newObservation(Object result, Entity datastream) {
         if (!etMultiDatastream.equals(datastream.getType())) {
             throw new IllegalArgumentException("Datastream must have entityType Datastream, not " + datastream.getType());
@@ -181,21 +310,25 @@ public class SensorThingsV11MultiDatastream implements DataModel {
                 .setProperty(npObservationMultidatastream, datastream);
     }
 
+    @Deprecated
     public Entity newObservation(Object result, ZonedDateTime phenomenonTime) {
         return newObservation(result)
                 .setProperty(EP_PHENOMENONTIME, TimeValue.create(phenomenonTime));
     }
 
+    @Deprecated
     public Entity newObservation(Object result, ZonedDateTime phenomenonTime, Entity datastream) {
         return newObservation(result, datastream)
                 .setProperty(EP_PHENOMENONTIME, TimeValue.create(phenomenonTime));
     }
 
+    @Deprecated
     public Entity newObservation(Object result, TimeInterval phenomenonTime) {
         return newObservation(result)
                 .setProperty(EP_PHENOMENONTIME, new TimeValue(phenomenonTime));
     }
 
+    @Deprecated
     public Entity newObservation(Object result, TimeInterval phenomenonTime, Entity datastream) {
         return newObservation(result, datastream)
                 .setProperty(EP_PHENOMENONTIME, new TimeValue(phenomenonTime));

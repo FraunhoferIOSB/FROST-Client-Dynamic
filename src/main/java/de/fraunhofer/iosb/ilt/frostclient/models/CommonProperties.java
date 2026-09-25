@@ -26,6 +26,8 @@ import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimiti
 import static de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypePrimitive.EDM_UNTYPED;
 import static de.fraunhofer.iosb.ilt.frostclient.utils.SpecialNames.AT_IOT_ID;
 
+import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.type.TypeComplex;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.MapValue;
@@ -73,5 +75,107 @@ public class CommonProperties {
     public static final EntityPropertyMain<String> EP_NAME = new EntityPropertyMain<>(NAME_EP_NAME, EDM_STRING);
     public static final EntityPropertyMain<MapValue> EP_PROPERTIES = new EntityPropertyMain<>(NAME_EP_PROPERTIES, TypeComplex.STA_MAP);
     public static final EntityPropertyMain<String> EP_ENCODINGTYPE = new EntityPropertyMain<>(NAME_EP_ENCODINGTYPE, EDM_STRING);
+
+    public static class Builder<T extends Builder<T>> {
+
+        protected Entity entity;
+
+        public Builder() {
+        }
+
+        public Builder(Entity entity) {
+            this.entity = entity;
+        }
+
+        protected void setEntity(Entity entity) {
+            this.entity = entity;
+        }
+
+        public Entity build() {
+            return entity;
+        }
+
+        public T getThis() {
+            return (T) this;
+        }
+
+        public <U extends BuilderId<U>> U extend(U extension) {
+            extension.setEntity(entity);
+            return extension;
+        }
+    }
+
+    public static class BuilderId<T extends BuilderId<T>> extends Builder<T> {
+
+        public BuilderId(Entity entity) {
+            super(entity);
+        }
+
+        public PkValue getPrimaryKeyValues() {
+            return entity.getPrimaryKeyValues();
+        }
+
+        public T setId(Object... value) {
+            entity.setPrimaryKeyValues(PkValue.of(value));
+            return getThis();
+        }
+
+        public T setId(PkValue value) {
+            entity.setPrimaryKeyValues(value);
+            return getThis();
+        }
+
+    }
+
+    public static class BuilderIdNameDesProp<T extends BuilderIdNameDesProp<T>> extends BuilderId<T> {
+
+        public BuilderIdNameDesProp(Entity entity) {
+            super(entity);
+        }
+
+        public String getName() {
+            return entity.getProperty(EP_NAME);
+        }
+
+        public T setName(String value) {
+            entity.setProperty(EP_NAME, value);
+            return getThis();
+        }
+
+        public String getDescription() {
+            return entity.getProperty(EP_DESCRIPTION);
+        }
+
+        public T setDescription(String value) {
+            entity.setProperty(EP_DESCRIPTION, value);
+            return getThis();
+        }
+
+        public MapValue getProperties() {
+            return entity.getProperty(EP_PROPERTIES);
+        }
+
+        public T setProperties(MapValue properties) {
+            entity.setProperty(EP_PROPERTIES, properties);
+            return getThis();
+        }
+    }
+
+    public static class BuilderIdNameDefDesProp<T extends BuilderIdNameDefDesProp<T>> extends BuilderIdNameDesProp<T> {
+
+        public BuilderIdNameDefDesProp(Entity entity) {
+            super(entity);
+        }
+
+        public String getDefinition() {
+            return entity.getProperty(EP_DEFINITION);
+        }
+
+        public T setDefinition(String value) {
+            entity.setProperty(EP_DEFINITION, value);
+            return getThis();
+        }
+
+    }
 
 }

@@ -200,10 +200,13 @@ public class DataArrayValue {
         this.components = visibleProperties.getComponents();
     }
 
+    @JsonProperty("Datastream")
     public Entity getDatastream() {
-        if (datastream != null) {
-            return datastream;
-        }
+        return datastream;
+    }
+
+    @JsonProperty("MultiDatastream")
+    public Entity getMultiDatastream() {
         return multiDatastream;
     }
 
@@ -223,6 +226,7 @@ public class DataArrayValue {
         }
     }
 
+    @JsonProperty("components")
     public List<String> getComponents() {
         return components;
     }
@@ -252,10 +256,12 @@ public class DataArrayValue {
         observations.add(o);
     }
 
+    @JsonIgnore
     public List<Entity> getObservations() {
         return observations;
     }
 
+    @JsonProperty("dataArray")
     public List<List<Object>> getDataArray() {
         return dataArray;
     }
