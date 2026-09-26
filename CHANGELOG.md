@@ -3,6 +3,8 @@
 ## Version 2.41-SNAPSHOT
 
 **Updates**
+* Added builder pattern for creating and editing Entities.
+* Added ModelOM data model.
 * Fixed ConcurrentModificationException.
 * Added a hook system that can modify HTTP requests before they are executed.
 * Fixed serialisation of DataArray documents.
