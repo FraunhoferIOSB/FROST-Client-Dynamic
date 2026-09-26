@@ -191,6 +191,10 @@ public class SensorThingsV11MultiDatastream implements DataModel {
             return entity.getProperty(EP_UNITOFMEASUREMENTS);
         }
 
+        public MultiDatastreamBuilder setUnitOfMeasurements(UnitOfMeasurement... uoms) {
+            return setUnitOfMeasurements(Arrays.asList(uoms));
+        }
+
         public MultiDatastreamBuilder setUnitOfMeasurements(List<UnitOfMeasurement> uoms) {
             entity.setProperty(EP_UNITOFMEASUREMENTS, uoms);
             return getThis();

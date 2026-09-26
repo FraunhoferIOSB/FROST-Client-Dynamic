@@ -426,6 +426,24 @@ public class SensorThingsV11Sensing implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public String getEncodingType() {
+            return entity.getProperty(EP_ENCODINGTYPE);
+        }
+
+        public FeatureOfInterestBuilder setEncodingType(String encodingType) {
+            entity.setProperty(EP_ENCODINGTYPE, encodingType);
+            return getThis();
+        }
+
+        public Object getFeature() {
+            return entity.getProperty(EP_FEATURE);
+        }
+
+        public FeatureOfInterestBuilder setFeature(Object feature) {
+            entity.setProperty(EP_FEATURE, feature);
+            return getThis();
+        }
+
         public Query queryObservations() {
             return entity.query(mdlCore.npFeatureObservations);
         }
@@ -629,12 +647,12 @@ public class SensorThingsV11Sensing implements DataModel {
             return getThis();
         }
 
-        public MapValue getPropertiesTime() {
-            return entity.getProperty(EP_PROPERTIES);
+        public MapValue getParameters() {
+            return entity.getProperty(EP_PARAMETERS);
         }
 
-        public ObservationBuilder setProperties(MapValue properties) {
-            entity.setProperty(EP_PROPERTIES, properties);
+        public ObservationBuilder setParameters(MapValue properties) {
+            entity.setProperty(EP_PARAMETERS, properties);
             return getThis();
         }
 

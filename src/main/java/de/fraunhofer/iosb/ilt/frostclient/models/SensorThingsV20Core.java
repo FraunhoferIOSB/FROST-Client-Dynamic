@@ -366,6 +366,13 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public DatastreamBuilder withQuantity(String definition, UnitOfMeasurement uom) {
+            return setResultType(
+                    new Quantity()
+                            .setDefinition(definition)
+                            .setUom(uom));
+        }
+
         public DatastreamBuilder addObservations(Entity ds) {
             entity.addNavigationEntity(mdlCore.npDatastreamObservations, ds);
             return getThis();
@@ -404,6 +411,16 @@ public class SensorThingsV20Core implements DataModel {
         public FeatureBuilder(SensorThingsV20Core mdlCore, Entity entity) {
             super(entity);
             this.mdlCore = mdlCore;
+        }
+
+        public FeatureBuilder setEncodingType(String encodingType) {
+            entity.setProperty(EP_ENCODINGTYPE, encodingType);
+            return getThis();
+        }
+
+        public FeatureBuilder setFeature(Object feature) {
+            entity.setProperty(EP_FEATURE, feature);
+            return getThis();
         }
 
         public FeatureBuilder addDatastreamProximate(Entity ds) {
