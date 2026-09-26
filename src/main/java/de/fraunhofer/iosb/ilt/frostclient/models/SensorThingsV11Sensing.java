@@ -345,6 +345,7 @@ public class SensorThingsV11Sensing implements DataModel {
         public DatastreamBuilder(SensorThingsV11Sensing mdlCore) {
             super(new Entity(mdlCore.etDatastream));
             this.mdlCore = mdlCore;
+            entity.setProperty(EP_OBSERVATIONTYPE, Constants.OM_MEASUREMENT);
         }
 
         public DatastreamBuilder(SensorThingsV11Sensing mdlCore, Entity entity) {
