@@ -435,6 +435,10 @@ public class SensorThingsV11Sensing implements DataModel {
             return getThis();
         }
 
+        public FeatureOfInterestBuilder usingGeoJson() {
+            return setEncodingType(CONTENT_TYPE_APPLICATION_GEOJSON);
+        }
+
         public Object getFeature() {
             return entity.getProperty(EP_FEATURE);
         }
@@ -531,6 +535,10 @@ public class SensorThingsV11Sensing implements DataModel {
         public LocationBuilder setEncodingType(String encodingType) {
             entity.setProperty(EP_ENCODINGTYPE, encodingType);
             return getThis();
+        }
+
+        public LocationBuilder usingGeoJson() {
+            return setEncodingType(CONTENT_TYPE_APPLICATION_GEOJSON);
         }
 
         public Object getLocation() {
