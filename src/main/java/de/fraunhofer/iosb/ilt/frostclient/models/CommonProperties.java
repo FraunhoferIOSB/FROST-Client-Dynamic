@@ -99,7 +99,7 @@ public class CommonProperties {
             return (T) this;
         }
 
-        public <U extends BuilderId<U>> U extend(U extension) {
+        public <U extends Builder<U>> U extend(U extension) {
             extension.setEntity(entity);
             return extension;
         }
