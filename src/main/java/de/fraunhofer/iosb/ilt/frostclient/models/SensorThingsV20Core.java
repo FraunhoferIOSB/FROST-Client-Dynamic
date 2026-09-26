@@ -52,7 +52,9 @@ import static de.fraunhofer.iosb.ilt.frostclient.utils.Constants.CONTENT_TYPE_AP
 
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
+import de.fraunhofer.iosb.ilt.frostclient.exception.ServiceFailureException;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
@@ -69,6 +71,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.AbstractDataComponent;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.simple.Quantity;
 import de.fraunhofer.iosb.ilt.frostclient.models.swecommon.util.UnitOfMeasurement;
+import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import net.time4j.Moment;
@@ -361,6 +364,10 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public AbstractDataComponent getResultType() {
+            return entity.getProperty(EP_RESULTTYPE);
+        }
+
         public DatastreamBuilder setResultType(AbstractDataComponent resultType) {
             entity.setProperty(EP_RESULTTYPE, resultType);
             return getThis();
@@ -373,9 +380,25 @@ public class SensorThingsV20Core implements DataModel {
                             .setUom(uom));
         }
 
+        public Query queryObservations() {
+            return entity.query(mdlCore.npDatastreamObservations);
+        }
+
+        public EntitySet getObservations() {
+            return entity.getProperty(mdlCore.npDatastreamObservations);
+        }
+
         public DatastreamBuilder addObservations(Entity ds) {
             entity.addNavigationEntity(mdlCore.npDatastreamObservations, ds);
             return getThis();
+        }
+
+        public Query queryUltimateFois() {
+            return entity.query(mdlCore.npDatastreamUltimateFois);
+        }
+
+        public EntitySet getUltimateFois() {
+            return entity.getProperty(mdlCore.npDatastreamUltimateFois);
         }
 
         public DatastreamBuilder addUltimateFoi(Entity uFoi) {
@@ -383,14 +406,26 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Entity getProximateFoi() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npDatastreamProximateFoi);
+        }
+
         public DatastreamBuilder setProximateFoi(Entity pFoi) {
             entity.setProperty(mdlCore.npDatastreamProximateFoi, pFoi);
             return getThis();
         }
 
+        public Entity getSensor() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npDatastreamSensor);
+        }
+
         public DatastreamBuilder setSensor(Entity sensor) {
             entity.setProperty(mdlCore.npDatastreamSensor, sensor);
             return getThis();
+        }
+
+        public Entity getThing() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npDatastreamThing);
         }
 
         public DatastreamBuilder setThing(Entity thing) {
@@ -413,9 +448,21 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public String getEncodingType() {
+            return entity.getProperty(EP_ENCODINGTYPE);
+        }
+
         public FeatureBuilder setEncodingType(String encodingType) {
             entity.setProperty(EP_ENCODINGTYPE, encodingType);
             return getThis();
+        }
+
+        public FeatureBuilder usingGeoJson() {
+            return setEncodingType(CONTENT_TYPE_APPLICATION_GEOJSON);
+        }
+
+        public Object getFeatureType() {
+            return entity.getProperty(EP_FEATURE);
         }
 
         public FeatureBuilder setFeature(Object feature) {
@@ -423,9 +470,25 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Query queryDatastreamsProximate() {
+            return entity.query(mdlCore.npFeatureDatastreamsProximate);
+        }
+
+        public EntitySet getDatastreamsProximate() {
+            return entity.getProperty(mdlCore.npFeatureDatastreamsProximate);
+        }
+
         public FeatureBuilder addDatastreamProximate(Entity ds) {
             entity.addNavigationEntity(mdlCore.npFeatureDatastreamsProximate, ds);
             return getThis();
+        }
+
+        public Query queryDatastreamsUltimate() {
+            return entity.query(mdlCore.npFeatureDatastreamsUltimate);
+        }
+
+        public EntitySet getDatastreamsUltimate() {
+            return entity.getProperty(mdlCore.npFeatureDatastreamsUltimate);
         }
 
         public FeatureBuilder addDatastreamUltimate(Entity ds) {
@@ -433,9 +496,25 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Query queryFeatureTypes() {
+            return entity.query(mdlCore.npFeatureFeatureTypes);
+        }
+
+        public EntitySet getFeatureTypes() {
+            return entity.getProperty(mdlCore.npFeatureFeatureTypes);
+        }
+
         public FeatureBuilder addFeatureType(Entity ft) {
             entity.addNavigationEntity(mdlCore.npFeatureFeatureTypes, ft);
             return getThis();
+        }
+
+        public Query queryObservations() {
+            return entity.query(mdlCore.npFeatureObservations);
+        }
+
+        public EntitySet getObservations() {
+            return entity.getProperty(mdlCore.npFeatureObservations);
         }
 
         public FeatureBuilder addObservation(Entity obs) {
@@ -458,6 +537,14 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public Query queryFeatures() {
+            return entity.query(mdlCore.npFeatureTypeFeatures);
+        }
+
+        public EntitySet getFeatures() {
+            return entity.getProperty(mdlCore.npFeatureTypeFeatures);
+        }
+
         public FeatureTypeBuilder addFeature(Entity feature) {
             entity.addNavigationEntity(mdlCore.npFeatureTypeFeatures, feature);
             return getThis();
@@ -478,6 +565,10 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public TimeInstant getTime() {
+            return entity.getProperty(EP_TIME);
+        }
+
         public HistoricalLocationBuilder setTime(TimeInstant time) {
             entity.setProperty(EP_TIME, time);
             return getThis();
@@ -488,16 +579,27 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Query queryLocations() {
+            return entity.query(mdlCore.npHistlocLocations);
+        }
+
+        public EntitySet getLocations() {
+            return entity.getProperty(mdlCore.npHistlocLocations);
+        }
+
         public HistoricalLocationBuilder addLocation(Entity location) {
             entity.addNavigationEntity(mdlCore.npHistlocLocations, location);
             return getThis();
+        }
+
+        public Entity getThing() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npHistlocThing);
         }
 
         public HistoricalLocationBuilder setThing(Entity thing) {
             entity.setProperty(mdlCore.npHistlocThing, thing);
             return getThis();
         }
-
     }
 
     public static class LocationBuilder extends BuilderIdNameDefDesProp<LocationBuilder> {
@@ -514,9 +616,21 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public String getEncodingType() {
+            return entity.getProperty(EP_ENCODINGTYPE);
+        }
+
         public LocationBuilder setEncodingType(String encodingType) {
             entity.setProperty(EP_ENCODINGTYPE, encodingType);
             return getThis();
+        }
+
+        public LocationBuilder usingGeoJson() {
+            return setEncodingType(CONTENT_TYPE_APPLICATION_GEOJSON);
+        }
+
+        public Object getLocation() {
+            return entity.getProperty(EP_LOCATION);
         }
 
         public LocationBuilder setLocation(Object location) {
@@ -524,9 +638,25 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Query queryHistoricalLocations() {
+            return entity.query(mdlCore.npLocationHistoricallocations);
+        }
+
+        public EntitySet getHistoricalLocations() {
+            return entity.getProperty(mdlCore.npLocationHistoricallocations);
+        }
+
         public LocationBuilder addHistoricalLocation(Entity hl) {
             entity.addNavigationEntity(mdlCore.npLocationHistoricallocations, hl);
             return getThis();
+        }
+
+        public Query queryThings() {
+            return entity.query(mdlCore.npLocationThings);
+        }
+
+        public EntitySet getThings() {
+            return entity.getProperty(mdlCore.npLocationThings);
         }
 
         public LocationBuilder addThing(Entity thing) {
@@ -549,9 +679,17 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public Object getResult() {
+            return entity.getProperty(EP_RESULT);
+        }
+
         public ObservationBuilder setResult(Object result) {
             entity.setProperty(EP_RESULT, result);
             return getThis();
+        }
+
+        public TimeValue getPhenomenonTime() {
+            return entity.getProperty(EP_PHENOMENONTIME);
         }
 
         public ObservationBuilder setPhenomenonTime(TimeValue phenTime) {
@@ -577,6 +715,10 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public TimeInstant getResultTime() {
+            return entity.getProperty(EP_RESULTTIME);
+        }
+
         public ObservationBuilder setResultTime(TimeInstant resultTime) {
             entity.setProperty(EP_RESULTTIME, resultTime);
             return getThis();
@@ -587,9 +729,17 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public TimeInterval getValidTime() {
+            return entity.getProperty(EP_VALIDTIME);
+        }
+
         public ObservationBuilder setValidTime(TimeInterval validTime) {
             entity.setProperty(EP_VALIDTIME, validTime);
             return getThis();
+        }
+
+        public MapValue getParameters() {
+            return entity.getProperty(EP_PROPERTIES);
         }
 
         public ObservationBuilder setProperties(MapValue properties) {
@@ -597,9 +747,17 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
+        public Entity getDatastream() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npObservationDatastream);
+        }
+
         public ObservationBuilder setDatastream(Entity ds) {
             entity.setProperty(mdlCore.npObservationDatastream, ds);
             return getThis();
+        }
+
+        public Entity getFeatureOfInterest() throws ServiceFailureException {
+            return entity.getProperty(mdlCore.npObservationProximateFoi);
         }
 
         public ObservationBuilder setProximateFoi(Entity pFoi) {
@@ -622,6 +780,14 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public Query queryDatastreams() {
+            return entity.query(mdlCore.npObspropDatastreams);
+        }
+
+        public EntitySet getDatastreams() {
+            return entity.getProperty(mdlCore.npObspropDatastreams);
+        }
+
         public ObservedPropertyBuilder addDatastream(Entity ds) {
             entity.addNavigationEntity(mdlCore.npObspropDatastreams, ds);
             return getThis();
@@ -642,14 +808,30 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public String getEncodingType() {
+            return entity.getProperty(EP_ENCODINGTYPE);
+        }
+
         public SensorBuilder setEncodingType(String encodingType) {
             entity.setProperty(EP_ENCODINGTYPE, encodingType);
             return getThis();
         }
 
+        public Object getMetadata() {
+            return entity.getProperty(EP_METADATA);
+        }
+
         public SensorBuilder setMetadata(Object metadata) {
             entity.setProperty(EP_METADATA, metadata);
             return getThis();
+        }
+
+        public Query queryDatastreams() {
+            return entity.query(mdlCore.npSensorDatastreams);
+        }
+
+        public EntitySet getDatastreams() {
+            return entity.getProperty(mdlCore.npSensorDatastreams);
         }
 
         public SensorBuilder addDatastream(Entity ds) {
@@ -672,14 +854,38 @@ public class SensorThingsV20Core implements DataModel {
             this.mdlCore = mdlCore;
         }
 
+        public Query queryDatastreams() {
+            return entity.query(mdlCore.npThingDatastreams);
+        }
+
+        public EntitySet getDatastreams() {
+            return entity.getProperty(mdlCore.npThingDatastreams);
+        }
+
         public ThingBuilder addDatastream(Entity ds) {
             entity.addNavigationEntity(mdlCore.npThingDatastreams, ds);
             return getThis();
         }
 
+        public Query queryHistoricallocations() {
+            return entity.query(mdlCore.npThingHistoricallocations);
+        }
+
+        public EntitySet getHistoricallocations() {
+            return entity.getProperty(mdlCore.npThingHistoricallocations);
+        }
+
         public ThingBuilder addHistoricallocation(Entity hl) {
             entity.addNavigationEntity(mdlCore.npThingHistoricallocations, hl);
             return getThis();
+        }
+
+        public Query queryLocations() {
+            return entity.query(mdlCore.npThingLocations);
+        }
+
+        public EntitySet getLocations() {
+            return entity.getProperty(mdlCore.npThingLocations);
         }
 
         public ThingBuilder addLocation(Entity location) {
