@@ -194,6 +194,50 @@ public class SensorThingsV11Projects implements DataModel {
         return new ProjectBuilder(this, entity);
     }
 
+    public RoleBuilder buildRole() {
+        return new RoleBuilder(this);
+    }
+
+    public RoleBuilder editRole(Entity entity) {
+        return new RoleBuilder(this, entity);
+    }
+
+    public UserBuilder buildUser() {
+        return new UserBuilder(this);
+    }
+
+    public UserBuilder editUser(Entity entity) {
+        return new UserBuilder(this, entity);
+    }
+
+    public UserProjectRoleBuilder buildUserProjectRole() {
+        return new UserProjectRoleBuilder(this);
+    }
+
+    public UserProjectRoleBuilder editUserProjectRole(Entity entity) {
+        return new UserProjectRoleBuilder(this, entity);
+    }
+
+    public DatastreamExtensionBuilder datastreamExtender() {
+        return new DatastreamExtensionBuilder();
+    }
+
+    public FeatureOfInterestExtensionBuilder featureOfInterestExtender() {
+        return new FeatureOfInterestExtensionBuilder(this);
+    }
+
+    public LocationExtensionBuilder locationExtender() {
+        return new LocationExtensionBuilder(this);
+    }
+
+    public SensorExtensionBuilder sensorExtender() {
+        return new SensorExtensionBuilder(this);
+    }
+
+    public ThingExtensionBuilder thingExtender() {
+        return new ThingExtensionBuilder(this);
+    }
+
     public static class ProjectBuilder extends BuilderIdNameDesProp<ProjectBuilder> {
 
         SensorThingsV11Projects mdlProjects;
@@ -544,9 +588,8 @@ public class SensorThingsV11Projects implements DataModel {
         return new Entity(etUser);
     }
 
-    @Deprecated
     public Entity newUser(String username, String password) {
-        return newUser()
+        return new Entity(etUser)
                 .setProperty(EP_USERNAME, username)
                 .setProperty(EP_USERPASS, password);
     }
