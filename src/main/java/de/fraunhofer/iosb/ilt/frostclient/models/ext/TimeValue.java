@@ -64,6 +64,10 @@ public class TimeValue implements TimeObject, ComplexValue<TimeValue> {
         return TypeComplex.STA_TIMEVALUE;
     }
 
+    public static TimeValue create(TimeInstant timeInstant) {
+        return new TimeValue(timeInstant);
+    }
+
     public static TimeValue create(TimeInterval timeInterval) {
         return new TimeValue(timeInterval);
     }
