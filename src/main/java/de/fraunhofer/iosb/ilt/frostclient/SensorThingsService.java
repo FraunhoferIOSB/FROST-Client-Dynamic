@@ -57,7 +57,6 @@ import de.fraunhofer.iosb.ilt.frostclient.utils.ServerInfo;
 import de.fraunhofer.iosb.ilt.frostclient.utils.TokenManager;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
 import de.fraunhofer.iosb.ilt.settings.Settings;
-import jakarta.json.JsonPatch;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -81,6 +80,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.opentmf.commons.patch.JsonPatch;
 import org.slf4j.LoggerFactory;
 
 /**

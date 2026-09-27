@@ -35,7 +35,6 @@ import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import de.fraunhofer.iosb.ilt.frostclient.utils.ParserUtils;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
 import de.fraunhofer.iosb.ilt.frostclient.utils.Utils;
-import jakarta.json.JsonPatch;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -54,9 +53,11 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.opentmf.commons.patch.JsonPatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
 
 /**
  * The implementation of a data access object.
@@ -210,15 +211,16 @@ public class BaseDao implements Dao {
     public void patch(Entity entity, JsonPatch patch) throws ServiceFailureException {
         HttpPatch httpPatch;
         String json;
+        final JsonNode patchAsNode = patch.toJsonNode();
         try {
             final URI uri = buildUri(entity.getPrimaryKeyValues());
-            json = JsonWriter.writeObject(service.getVersion(), patch);
+            json = JsonWriter.writeObject(service.getVersion(), patchAsNode);
             httpPatch = new HttpPatch(uri);
         } catch (URISyntaxException | JacksonException ex) {
             throw new ServiceFailureException(ex);
         }
 
-        LOGGER.debug("Patching: {} with patch {}", httpPatch.getURI(), patch);
+        LOGGER.debug("Patching: {} with patch {}", httpPatch.getURI(), patchAsNode);
         httpPatch.setEntity(new StringEntity(json, APPLICATION_JSON_PATCH));
 
         try (CloseableHttpResponse response = service.execute(httpPatch)) {

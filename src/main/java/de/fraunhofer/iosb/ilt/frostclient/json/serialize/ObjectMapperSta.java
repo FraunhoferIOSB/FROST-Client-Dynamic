@@ -35,7 +35,6 @@ import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.cfg.EnumFeature;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
-import tools.jackson.datatype.jsonp.JSONPModule;
 
 /**
  * Enables serialization of entities as JSON.
@@ -70,7 +69,6 @@ public class ObjectMapperSta {
                 .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .addModule(module)
-                .addModules(new JSONPModule())
                 .build();
 
         return mapper;

@@ -39,7 +39,6 @@ import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.EnumFeature;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.module.SimpleModule;
-import tools.jackson.datatype.jsonp.JSONPModule;
 
 /**
  * A mapper handler for simple json serialisations.
@@ -73,7 +72,6 @@ public class SimpleJsonMapper {
                     .disable(EnumFeature.WRITE_ENUMS_USING_TO_STRING)
                     .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
                     .addModule(module)
-                    .addModule(new JSONPModule())
                     .build();
         }
         return simpleObjectMapper;

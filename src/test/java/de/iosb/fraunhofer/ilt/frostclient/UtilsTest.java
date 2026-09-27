@@ -25,13 +25,10 @@ package de.iosb.fraunhofer.ilt.frostclient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.fraunhofer.iosb.ilt.frostclient.Version;
-import de.fraunhofer.iosb.ilt.frostclient.json.SimpleJsonMapper;
 import de.fraunhofer.iosb.ilt.frostclient.json.serialize.JsonWriter;
 import de.fraunhofer.iosb.ilt.frostclient.utils.StringHelper;
-import jakarta.json.Json;
-import jakarta.json.JsonPatch;
-import jakarta.json.JsonValue;
 import org.junit.jupiter.api.Test;
+import org.opentmf.commons.patch.JsonPatch;
 
 class UtilsTest {
 
@@ -53,12 +50,12 @@ class UtilsTest {
 
     @Test
     void testJsonPatch() {
-        JsonPatch patch = Json.createPatchBuilder()
-                .add("/test1", JsonValue.FALSE)
+        JsonPatch patch = JsonPatch.builder()
+                .add("/test1", false)
                 .add("/sub/test2", 2)
                 .build();
-        String json = JsonWriter.writeObject(Version.V_1_1, patch);
-        JsonPatch patch2 = SimpleJsonMapper.getSimpleObjectMapper().readValue(json, JsonPatch.class);
-        assertEquals(patch, patch2);
+        String json = JsonWriter.writeObject(Version.V_1_1, patch.toJsonNode());
+        JsonPatch patch2 = JsonPatch.fromJson(json);
+        assertEquals(patch.toJsonNode(), patch2.toJsonNode());
     }
 }

@@ -27,6 +27,7 @@ import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
 import java.io.IOException;
 import java.io.Writer;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Enables serialization of entities as JSON.
@@ -54,5 +55,9 @@ public class JsonWriter {
 
     public static String writeObject(Version v, Object object) throws JacksonException {
         return v.getObjectMapper().writeValueAsString(object);
+    }
+
+    public static JsonNode valueToTree(Version v, Object object) throws JacksonException {
+        return v.getObjectMapper().valueToTree(object);
     }
 }

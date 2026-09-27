@@ -30,10 +30,10 @@ import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.PkValue;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.NavigationPropertyEntity;
 import de.fraunhofer.iosb.ilt.frostclient.query.Query;
-import jakarta.json.JsonPatch;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import org.opentmf.commons.patch.JsonPatch;
 
 /**
  * CRUD operations for Entity Types.
