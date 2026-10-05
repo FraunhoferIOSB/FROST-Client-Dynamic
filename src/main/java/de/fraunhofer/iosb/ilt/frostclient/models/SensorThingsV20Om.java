@@ -289,7 +289,7 @@ public class SensorThingsV20Om implements DataModel {
         return new ThingExtensionBuilder(this);
     }
 
-    public static class BuilderIdNameDefDesPropTime<T extends BuilderIdNameDefDesPropTime<T>> extends BuilderIdNameDefDesProp<T> {
+    public abstract static class BuilderIdNameDefDesPropTime<T extends BuilderIdNameDefDesPropTime<T>> extends BuilderIdNameDefDesProp<T> {
 
         public BuilderIdNameDefDesPropTime(Entity entity) {
             super(entity);
