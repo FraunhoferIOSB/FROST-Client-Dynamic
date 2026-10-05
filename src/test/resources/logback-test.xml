@@ -9,7 +9,8 @@
 
     <logger name="de.fraunhofer.iosb.ilt.frostclient" level="INFO"/>
     <logger name="de.fraunhofer.iosb.ilt.frostclient.model" level="WARN"/>
-    <logger name="de.fraunhofer.iosb.ilt.frostclient.settings.Settings" level="WARN"/>
+    <logger name="de.fraunhofer.iosb.ilt.settings.Settings" level="WARN"/>
+    <logger name="org.reflections.Reflections" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
