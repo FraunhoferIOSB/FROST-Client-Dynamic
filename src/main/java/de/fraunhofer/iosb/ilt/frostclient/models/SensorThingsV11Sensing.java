@@ -563,7 +563,7 @@ public class SensorThingsV11Sensing implements DataModel {
             return getThis();
         }
 
-        public EntitySet getThing() {
+        public EntitySet getThings() {
             return entity.getProperty(mdlCore.npLocationThings);
         }
 

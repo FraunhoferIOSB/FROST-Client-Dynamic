@@ -867,15 +867,15 @@ public class SensorThingsV20Core implements DataModel {
             return getThis();
         }
 
-        public Query queryHistoricallocations() {
+        public Query queryHistoricalLocations() {
             return entity.query(mdlCore.npThingHistoricallocations);
         }
 
-        public EntitySet getHistoricallocations() {
+        public EntitySet getHistoricalLocations() {
             return entity.getProperty(mdlCore.npThingHistoricallocations);
         }
 
-        public ThingBuilder addHistoricallocation(Entity hl) {
+        public ThingBuilder addHistoricalLocation(Entity hl) {
             entity.addNavigationEntity(mdlCore.npThingHistoricallocations, hl);
             return getThis();
         }

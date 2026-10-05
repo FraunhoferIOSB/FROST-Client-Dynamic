@@ -383,7 +383,7 @@ public class SensorThingsV20Om implements DataModel {
             return getThis();
         }
 
-        public LinkingTimeBuilder addThing(Entity thing) {
+        public LinkingTimeBuilder setThing(Entity thing) {
             entity.setProperty(mdlOm.npLinkingtimeThing, thing);
             return getThis();
         }
