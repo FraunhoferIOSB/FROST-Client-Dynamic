@@ -23,7 +23,7 @@
 package de.fraunhofer.iosb.ilt.frostclient.models;
 
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.EP_ENCODINGTYPE;
-import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATUREOFINTEREST;
+import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_FEATURE;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_OBSERVEDPROPERTY;
 import static de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.NAME_THING;
 import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV20Core.EP_METADATA;
@@ -177,7 +177,7 @@ public class SensorThingsV20Tasking implements DataModel {
                 .registerProperty(npThingTaskingcapabilities);
         mr.getEntityTypeForName(NAME_OBSERVEDPROPERTY)
                 .registerProperty(npObspropTaskingcaps);
-        mr.getEntityTypeForName(NAME_FEATUREOFINTEREST)
+        mr.getEntityTypeForName(NAME_FEATURE)
                 .registerProperty(npFeatureTaskingcaps)
                 .registerProperty(npFeatureTasks);
     }
