@@ -370,7 +370,7 @@ public class SensorThingsV20Tasking implements DataModel {
         SensorThingsV20Tasking mdlTsk;
 
         public TaskingCapabilityBuilder(SensorThingsV20Tasking mdlTsk) {
-            super(new Entity(mdlTsk.etTask));
+            super(new Entity(mdlTsk.etTaskingCapability));
             this.mdlTsk = mdlTsk;
         }
 

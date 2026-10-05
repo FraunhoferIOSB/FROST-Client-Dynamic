@@ -268,7 +268,7 @@ public class SensorThingsV11Tasking implements DataModel {
         SensorThingsV11Tasking mdlTsk;
 
         public TaskingCapabilityBuilder(SensorThingsV11Tasking mdlTsk) {
-            super(new Entity(mdlTsk.etTask));
+            super(new Entity(mdlTsk.etTaskingCapability));
             this.mdlTsk = mdlTsk;
         }
 
