@@ -378,6 +378,33 @@ public class SensorThingsV20Om implements DataModel {
             this.mdlOm = mdlOm;
         }
 
+        public TimeValue getTime() {
+            return entity.getProperty(EP_TIME);
+        }
+
+        public LinkingTimeBuilder setTime(TimeValue time) {
+            entity.setProperty(EP_TIME, time);
+            return getThis();
+        }
+
+        public LinkingTimeBuilder setTimeStart(Moment start) {
+            TimeValue time = entity.getProperty(EP_TIME);
+            if (time == null) {
+                time = TimeValue.create(start);
+                entity.setProperty(EP_TIME, time);
+            } else {
+                time.setProperty(TimeValue.EP_START_TIME, TimeInstant.create(start));
+            }
+            return getThis();
+        }
+
+        public LinkingTimeBuilder setTimeEnd(Moment end) {
+            TimeValue time = entity.getProperty(EP_TIME);
+            Exceptions.illegalArgumentIf(time == null, "Set the start time first.");
+            time.setProperty(TimeValue.EP_END_TIME, TimeInstant.create(end));
+            return getThis();
+        }
+
         public LinkingTimeBuilder addMonitoringNetwork(Entity monNet) {
             entity.setProperty(mdlOm.npLinkingtimeNetwork, monNet);
             return getThis();
