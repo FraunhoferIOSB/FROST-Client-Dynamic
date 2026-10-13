@@ -35,6 +35,7 @@ import static de.fraunhofer.iosb.ilt.frostclient.models.SensorThingsV20Core.NAME
 import de.fraunhofer.iosb.ilt.frostclient.SensorThingsService;
 import de.fraunhofer.iosb.ilt.frostclient.exception.Exceptions;
 import de.fraunhofer.iosb.ilt.frostclient.model.Entity;
+import de.fraunhofer.iosb.ilt.frostclient.model.EntitySet;
 import de.fraunhofer.iosb.ilt.frostclient.model.EntityType;
 import de.fraunhofer.iosb.ilt.frostclient.model.ModelRegistry;
 import de.fraunhofer.iosb.ilt.frostclient.model.property.EntityPropertyMain;
@@ -47,6 +48,7 @@ import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.BuilderId;
 import de.fraunhofer.iosb.ilt.frostclient.models.CommonProperties.BuilderIdNameDefDesProp;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeInstant;
 import de.fraunhofer.iosb.ilt.frostclient.models.ext.TimeValue;
+import de.fraunhofer.iosb.ilt.frostclient.query.Query;
 import net.time4j.Moment;
 
 /**
@@ -535,14 +537,38 @@ public class SensorThingsV20Om implements DataModel {
             return getThis();
         }
 
+        public Query queryDeployments() {
+            return entity.query(mdlOm.npThingDeployments);
+        }
+
+        public EntitySet getDeployments() {
+            return entity.getProperty(mdlOm.npThingDeployments);
+        }
+
         public ThingExtensionBuilder addLinkingTime(Entity lt) {
             entity.addNavigationEntity(mdlOm.npThingLinkingTimes, lt);
             return getThis();
         }
 
+        public Query queryLinkingTimes() {
+            return entity.query(mdlOm.npThingLinkingTimes);
+        }
+
+        public EntitySet getLinkingTimes() {
+            return entity.getProperty(mdlOm.npThingLinkingTimes);
+        }
+
         public ThingExtensionBuilder addMonitoringNetwork(Entity monNet) {
             entity.addNavigationEntity(mdlOm.npThingMonitoringnetworks, monNet);
             return getThis();
+        }
+
+        public Query queryMonitoringNetworks() {
+            return entity.query(mdlOm.npThingMonitoringnetworks);
+        }
+
+        public EntitySet getMonitoringNetworks() {
+            return entity.getProperty(mdlOm.npThingMonitoringnetworks);
         }
     }
 }

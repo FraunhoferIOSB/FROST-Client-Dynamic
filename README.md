@@ -51,6 +51,7 @@ Data models for the SensorThings API exist, but you can also create your own dat
 
 The source code below demonstrates the CRUD operations for Thing objects. Operations for other entities work similarly.
 
+Initialisation:
 ```java
 SensorThingsV11Sensing modelSensing = new SensorThingsV11Sensing();
 SensorThingsV11Tasking modelTasking = new SensorThingsV11Tasking();
@@ -60,6 +61,7 @@ SensorThingsService service = new SensorThingsService(modelSensing, modelTasking
     .init();
 ```
 
+Creating a Thing the manual way:
 ```java
 Entity thing = new Entity(modelSensing.etThing)
     .setProperty(SensorThingsV11Sensing.EP_NAME, "Thingything")
@@ -77,9 +79,37 @@ service.update(thing);
 service.delete(thing);
 ```
 
+Creating a Thing using builders:
+```java
+        SensorThingsV11Sensing modelSensing = new SensorThingsV11Sensing();
+        SensorThingsV11Tasking modelTasking = new SensorThingsV11Tasking();
+        URL serviceEndpoint = new URL("http://example.org/v1.1/");
+        SensorThingsService service = new SensorThingsService(modelSensing, modelTasking)
+                .setBaseUrl(serviceEndpoint)
+                .init();
+
+        Entity thing = modelSensing.buildThing()
+                .setName("Thingything")
+                .setDescription("I'm a thing!")
+                .build();
+        service.create(thing);
+
+        modelSensing.editThing(thing)
+                .setDescription("Things change...");
+        service.update(thing);
+        
+        EntitySet firstFiveTaskingCapabilities = modelSensing.editThing(thing)
+                .extend(modelTasking.thingExtender())
+                .queryTaskingcapabilities()
+                .top(5)
+                .list();
+
+        service.delete(thing);
+ ```
+
 ### Entity Sets
 
-Entity Sets are represented by instances of `EntityList<>`. The query parameters specified by the SensorThingsAPI standard can be applied to queries.
+Entity Sets are represented by instances of `EntitySet`. The query parameters specified by the SensorThingsAPI standard can be applied to queries.
 
 ```java
 EntitySet things = service.query(modelSensing.etThing)

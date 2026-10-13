@@ -454,11 +454,11 @@ public class SensorThingsV20Tasking implements DataModel {
             this.mdlTsk = mdlTsk;
         }
 
-        public Query queryTaskingcapabilities(Entity tc) {
+        public Query queryTaskingcapabilities() {
             return entity.query(mdlTsk.npThingTaskingcapabilities);
         }
 
-        public EntitySet getTaskingcapabilities(Entity tc) {
+        public EntitySet getTaskingcapabilities() {
             return entity.getProperty(mdlTsk.npThingTaskingcapabilities);
         }
 

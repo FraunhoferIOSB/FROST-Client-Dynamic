@@ -550,11 +550,11 @@ public class SensorThingsV11Projects implements DataModel {
             this.npProjects = npProjects;
         }
 
-        public Query queryProjects(Entity tc) {
+        public Query queryProjects() {
             return entity.query(npProjects);
         }
 
-        public EntitySet getProjects(Entity tc) {
+        public EntitySet getProjects() {
             return entity.getProperty(npProjects);
         }
 
