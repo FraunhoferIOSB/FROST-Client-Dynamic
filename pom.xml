@@ -69,7 +69,7 @@
         <version.junit>6.1.3</version.junit>
         <version.logback>1.6.5</version.logback>
 
-        <version.maven.plugin.central-publishing>0.11.0</version.maven.plugin.central-publishing>
+        <version.maven.plugin.central-publishing>0.12.0</version.maven.plugin.central-publishing>
         <version.maven.plugin.compiler>3.16.0</version.maven.plugin.compiler>
         <version.maven.plugin.gpg>3.2.8</version.maven.plugin.gpg>
         <version.maven.plugin.jacoco>0.8.15</version.maven.plugin.jacoco>
