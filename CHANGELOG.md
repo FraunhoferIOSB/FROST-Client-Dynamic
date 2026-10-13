@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 2.41-SNAPSHOT
+## Version 2.41
 
 **Updates**
+* Bumped Dependencies.
 * Changed JsonPatch implementation to much simpler [opentmf-json-patch](https://github.com/opentmf/opentmf-json-patch).
 * Added builder pattern for creating and editing Entities.
 * Added ModelOM data model.
