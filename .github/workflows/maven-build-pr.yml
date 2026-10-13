@@ -36,5 +36,5 @@ jobs:
       env:
         OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
         OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
-      run: mvn -B install --file pom.xml -Ddependency-check.autoUpdate=false -Ddependency-check.skip=true --settings scripts/maven-ci-settings.xml
+      run: ./mvnw -B install --file pom.xml -Ddependency-check.autoUpdate=false -Ddependency-check.skip=true --settings scripts/maven-ci-settings.xml
 
