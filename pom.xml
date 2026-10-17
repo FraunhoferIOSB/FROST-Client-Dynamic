@@ -60,7 +60,7 @@
 
         <version.commons-io>2.22.0</version.commons-io>
         <version.commons-lang3>3.21.0</version.commons-lang3>
-        <version.hivemq-mqtt-client>1.4.0</version.hivemq-mqtt-client>
+        <version.hivemq-mqtt-client>1.4.1</version.hivemq-mqtt-client>
         <version.httpclient>4.5.14</version.httpclient>
         <version.jackson>3.2.3</version.jackson>
         <version.jacksonGeojson>3.0</version.jacksonGeojson>
@@ -75,7 +75,7 @@
         <version.maven.plugin.jacoco>0.8.15</version.maven.plugin.jacoco>
         <version.maven.plugin.javadoc>3.12.0</version.maven.plugin.javadoc>
         <version.maven.plugin.source>3.4.0</version.maven.plugin.source>
-        <version.maven.plugin.spotless>3.10.3</version.maven.plugin.spotless>
+        <version.maven.plugin.spotless>3.10.4</version.maven.plugin.spotless>
         <version.maven.plugin.surefire>3.6.0</version.maven.plugin.surefire>
 
         <version.mockito>5.24.0</version.mockito>
